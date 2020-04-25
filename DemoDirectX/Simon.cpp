@@ -100,31 +100,6 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void Simon::Render()
 {
 	animation_set->at(state)->Render(nx, x, y);
-
-	/*if (nx > 0)
-	{
-		whip->SetNx(1);
-	}
-	else
-	{
-		whip->SetNx(-1);
-	}*/
-
-	/*if ((state == simon_ani_stand_hit || state == simon_ani_sit_hit)&&!isHitSubWeapon||(isHitSubWeapon&&currentWeapon==-1))	
-	{		
-		whip->Render(animation_set->at(state)->GetcurrentFrame());		
-	}
-	else
-		whip->Render(-1);*/
-	
-
-	
-	/*if(currentWeapon!=-1)
-	{	
-		knife->Render();
-	}*/
-		
-	
 	
 	RenderBoundingBox();
 }

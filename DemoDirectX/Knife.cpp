@@ -7,97 +7,35 @@ Knife::Knife()
 	SetAnimationSet(CAnimationSets::GetInstance()->Get(knife_ani_set));
 }
 
+void Knife::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+{
+	SubWeapon::collisionwith(dt, coObjects);
+}
+
 void Knife::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	CGameObject::Update(dt);
+	SubWeapon::Update(dt);
+
 	if (CheckPosKnife(POSX))
 	{
 		isDone = true;
 		return;
 	}
-	
 
-	//SubWeapon::Update(dt);
-	
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-
-	coEvents.clear();
-
-	vector<LPGAMEOBJECT> COOBJECTS;
-	COOBJECTS.clear();
-	//LPGAMEOBJECT a;
-	//dynamic_cast<Candle*>(a);
-	for (int i = 0; i < coObjects->size(); i++)
-	{
-		if (coObjects->at(i) != dynamic_cast<Gate*>(coObjects->at(i))&& coObjects->at(i) != dynamic_cast<Ground*>(coObjects->at(i)))
-		{
-			COOBJECTS.push_back(coObjects->at(i));
-		}
-	}
-
-
-	CalcPotentialCollisions(&COOBJECTS, coEvents);
-	
-	
-
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
-	}
-	else
-	{
-		// kiểm tra va chạm với object
-		float min_tx, min_ty, nx = 0, ny;
-
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-		x += min_tx * dx + nx * 0.4f;		
-		y += min_ty * dy + ny * 0.4f;
-
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (dynamic_cast<Candle *>(e->obj))
-			{
-				Candle *candle = dynamic_cast<Candle *>(e->obj);
-
-				if (e->nx != 0)
-				{
-					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + 10));
-					candle->SetState(break_candle);
-					isDone = true;
-				}					
-
-			}
-
-		}
-	}	
-
-	for (UINT i = 0; i < coEvents.size(); i++)
-		delete coEvents[i];
+	collisionwith(dt, coObjects);
 
 }
 
-Hit* Knife::CreateHit(float x, float y)
-{
-	return new Hit(x, y);
-}
+
 void Knife::Render()
 {
-	if(!isDone&&!CheckPosKnife(POSX))
+	if (!isDone && !CheckPosKnife(POSX))
 		SubWeapon::Render();
 
-	for (int i = 0; i < listHit.size(); i++)
-		listHit[i]->Render();
+	SubWeapon::renderlisthit();
 
 	RenderBoundingBox();
-	
+
 }
 
 
@@ -135,7 +73,7 @@ bool Knife::CheckPosKnife(float a)
 {
 	if (vx > 0)
 	{
-		if (x - a >= ((SCREEN_WIDTH/2) + 100))
+		if (x - a >= ((SCREEN_WIDTH / 2) + 100))
 			return true;
 	}
 	else if (vx < 0)
