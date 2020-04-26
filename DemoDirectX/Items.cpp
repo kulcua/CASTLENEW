@@ -58,7 +58,7 @@ void Items::Render()
 		return;
 	
 	animation_set->at(state)->Render(-1, x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Items::GetBoundingBox(float &l, float &t, float &r, float &b)

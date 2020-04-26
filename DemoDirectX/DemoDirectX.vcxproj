@@ -100,7 +100,6 @@
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="PlayScence.cpp" />
     <ClCompile Include="Scence.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="SubWeapon.cpp" />
@@ -125,7 +124,6 @@
     <ClInclude Include="Number.h" />
     <ClInclude Include="PlayScence.h" />
     <ClInclude Include="Scence.h" />
-    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="SubWeapon.h" />

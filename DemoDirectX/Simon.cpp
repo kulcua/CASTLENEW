@@ -101,7 +101,7 @@ void Simon::Render()
 {
 	animation_set->at(state)->Render(nx, x, y);
 	
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 

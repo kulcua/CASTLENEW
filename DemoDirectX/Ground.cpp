@@ -8,7 +8,7 @@ Ground::Ground()
 void Ground::Render()
 {
 	animation_set->at(ground_ani)->Render(nx, x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Ground::GetBoundingBox(float &l, float &t, float &r, float &b)

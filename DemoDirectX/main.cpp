@@ -1,23 +1,4 @@
-﻿/* =============================================================
-	INTRODUCTION TO GAME PROGRAMMING SE102
-
-	SAMPLE 04 - COLLISION
-
-	This sample illustrates how to:
-
-		1/ Implement SweptAABB algorithm between moving objects
-		2/ Implement a simple (yet effective) collision frame work
-
-	Key functions:
-		CGame::SweptAABB
-		CGameObject::SweptAABBEx
-		CGameObject::CalcPotentialCollisions
-		CGameObject::FilterCollision
-
-		CGameObject::GetBoundingBox
-
-================================================================ */
-
+﻿
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
@@ -30,8 +11,8 @@
 #include"Ground.h"
 #include"Candle.h"
 #include"Items.h"
+#include"PlayScence.h"
 
-#include"SceneManager.h";
 
 
 
@@ -47,7 +28,7 @@
 
 
 CGame *game;
-SceneManager *scenemanager;
+CPlayScene *playscene;
 //Simon *simon;
 //
 //vector<LPGAMEOBJECT> objects;
@@ -492,7 +473,7 @@ void Update(DWORD dt)
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*y*/);
 
 	//CGame::GetInstance()->GetCurrentScene()->Update(dt);
-	scenemanager->Update(dt);
+	playscene->Update(dt);
 }
 
 /*
@@ -522,7 +503,7 @@ void Render()
 
 		
 		//CGame::GetInstance()->GetCurrentScene()->Render();
-		scenemanager->Render();
+		playscene->Render();
 		
 
 
@@ -624,13 +605,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	HWND hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	scenemanager = SceneManager::GetInstance();
 	game = CGame::GetInstance();
 	game->Init(hWnd);
 	game->InitKeyboard();
-
-	//game->Load(L"Scenes\\Castlevania.txt");
-	scenemanager->SetScene(new CPlayScene());
+	
+	playscene = new CPlayScene();
 	
 
 
