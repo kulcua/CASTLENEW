@@ -37,6 +37,12 @@
 13	120	198	180	262	0
 14	60	198	120	262	0
 15	0	198	60	262	0
+#stair up
+16	240	66	300	130	0
+17	300	66	360	130	0
+#stair down
+18	120	66	180	130	0
+19	180	66	240	130	0
 #Whip
 #whiplv1
 50	0	0	240	66	2
@@ -120,6 +126,10 @@
 5	10	100	11	100	12	100
 #led
 6	13	100	14	100	15	100
+#stairup
+7	16	100	17	100
+#stairdown
+8	18	100	19	100
 # ==== WHIP=========
 #lv1
 40	50	100	51	100	52	100
@@ -169,7 +179,7 @@
 #
 [ANIMATION_SETS]
 # Simon
-1	0	1	2	3	4	5	6
+1	0	1	2	3	4	5	6	7	8
 # GROUND
 2	50
 #Candle
@@ -188,9 +198,8 @@
 9	93	94	95
 
 [SETTINGS]
-start	3
+start	1
 [LINKMAP]
 Scenes\Map1full.txt
 Scenes\Map2full.txt
-Scenes\Map1full.txt
-	
+Scenes\Map3full.txt

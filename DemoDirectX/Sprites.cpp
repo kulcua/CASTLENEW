@@ -46,13 +46,13 @@ LPSPRITE CSprites::Get(int id)
 /*
 	Clear all loaded textures
 */
-void CSprites::Clear()
+void CSprites::Clear(int id)
 {
-	for (auto x : sprites)
-	{
-		LPSPRITE s = x.second;
-		delete s;
-	}
+	//if (sprites[id] == NULL)
+		//return;
+	LPSPRITE s = sprites[id];
+	delete s;
 
-	sprites.clear();
+	sprites.erase(id);
+	//DebugOut(L"[INFO] MAXSIZESPRITES SAU CLEAR %d \n", sprites.size());
 }

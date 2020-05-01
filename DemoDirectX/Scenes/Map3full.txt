@@ -1,17 +1,3 @@
-#####
-[CLEARTEXT]
-11
-#
-[CLEARSP]
-139	140
-#
-[CLEARANI]
-96	97
-#
-[CLEARANISET]
-10
-##
-
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 11	textures\Stair.png	1	1	1
@@ -34,7 +20,7 @@
 
 
 [SCENEOBJECT]
-Scenes\scene2.txt
+Scenes\scene3.txt
 [TILEMAP]
 4000	TileMap\Scene2.png	TileMap\Scene2_map.txt	12	17	4	7	32	32	2
 

@@ -18,6 +18,13 @@
 #define SCENE_SECTION_SCENEOBJECT	9
 #define SCENE_SECTION_INFOMAP	10
 
+#define SCENE_SECTION_CLEARTEXT	11
+#define SCENE_SECTION_CLEARSP	12
+#define SCENE_SECTION_CLEARANI	13
+#define SCENE_SECTION_CLEARANISET	14
+
+
+
 #define OBJECT_TYPE_SIMON	0
 #define OBJECT_TYPE_GROUND	1
 #define OBJECT_TYPE_CANDLE	2
@@ -34,8 +41,8 @@ using namespace std;
 CPlayScene::CPlayScene() :	CScene()
 {
 	key_handler = new CPlayScenceKeyHandler(this);
-	sceneFilePath = L"Scenes\\Castlevania.txt";
-	Load();//load ani sprites texture
+	//sceneFilePath = L"Scenes\\Castlevania.txt";
+	Load(L"Scenes\\Castlevania.txt");//load ani sprites texture
 	LoadBaseObject();
 	SwitchScene(current_scene);
 
@@ -62,26 +69,7 @@ void CPlayScene::LoadBaseObject()
 
 void CPlayScene::SwitchScene(int idmap)
 {
-	/*switch (idmap)
-	{
-	case SCENE_1:		
-		CGame::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-		idstage = 1;
-		sceneObject = L"Scenes\\scene1.txt";
-
-		tilemap->LoadMap(SCENE_1, L"TileMap\\Scene1.png", L"TileMap\\Scene1_map.txt");
-		LoadObject();
-		break;
-	case SCENE_2:
-		CGame::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());	
-		idstage = 2;	
-		sceneObject = L"Scenes\\scene2.txt";
-		tilemap->LoadMap(SCENE_2, L"TileMap\\Scene2.png", L"TileMap\\Scene2_map.txt");
-		LoadObject();
-		break;
-	default:
-		break;
-	}*/
+	
 	Unload();
 	CGame::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
 	LPCWSTR a = ToLPCWSTR(linkmap[idmap - 1]);
@@ -102,12 +90,81 @@ Items* CPlayScene::DropItem(float x, float y,int id)
 	return a;
 }
 
+void CPlayScene::_ParseSection_CLEARTEXTURES(string line)
+{
+	vector<string> tokens = split(line);
+	for (int i = 0; i < tokens.size(); i++)
+		CTextures::GetInstance()->Clear(atoi(tokens[i].c_str()));
+}
+
+void CPlayScene::_ParseSection_CLEARSPRITES(string line)
+{
+	vector<string> tokens = split(line);
+	for (int i = 0; i < tokens.size(); i++)
+		CSprites::GetInstance()->Clear(atoi(tokens[i].c_str()));
+}
+
+void CPlayScene::_ParseSection_CLERANIMATIONS(string line)
+{
+	vector<string> tokens = split(line);
+	for (int i = 0; i < tokens.size(); i++)
+		CAnimations::GetInstance()->Clear(atoi(tokens[i].c_str()));
+}
+
+void CPlayScene::_ParseSection_CLERANIMATIONSSET(string line)
+{
+	vector<string> tokens = split(line);
+	for (int i = 0; i < tokens.size(); i++)
+		CAnimationSets::GetInstance()->Clear(atoi(tokens[i].c_str()));
+}
+
 void CPlayScene::_ParseSection_LINKOBJECTS(string line)
 {
 	vector<string> tokens = split(line);
 	if (tokens.size() < 1) return;
 
 	sceneObject= ToLPCWSTR(tokens[0]);
+}
+
+void CPlayScene::ClearAll(LPCWSTR a)
+{
+	ifstream f;
+	f.open(a);
+
+	int section = SCENE_SECTION_UNKNOWN;
+
+	char str[MAX_SCENE_LINE];
+	while (f.getline(str, MAX_SCENE_LINE))
+	{
+		string line(str);
+
+		if (line[0] == '#') continue;
+
+		if (line == "[CLEARTEXT]") {
+			section = SCENE_SECTION_CLEARTEXT; continue;
+		}
+		if (line == "[CLEARSP]") {
+			section = SCENE_SECTION_CLEARSP; continue;
+		}
+		if (line == "[CLEARANI]") {
+			section = SCENE_SECTION_CLEARANI; continue;
+		}
+		if (line == "[CLEARANISET]") {
+			section = SCENE_SECTION_CLEARANISET; continue;
+		}
+
+		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
+
+
+		switch (section)
+		{
+		case SCENE_SECTION_CLEARTEXT:_ParseSection_CLEARTEXTURES(line); break;
+		case SCENE_SECTION_CLEARSP:_ParseSection_CLEARSPRITES(line); break;
+		case SCENE_SECTION_CLEARANI:_ParseSection_CLERANIMATIONS(line); break;
+		case SCENE_SECTION_CLEARANISET:_ParseSection_CLERANIMATIONSSET(line); break;
+		}
+	}
+	f.close();
 }
 
 void CPlayScene::_ParseSection_INFOMAP(string line)
@@ -388,7 +445,7 @@ void CPlayScene::LoadObject()
 	DebugOut(L"[INFO] Done LOAD OBJECT  resources from %s\n", sceneObject);
 }
 
-void CPlayScene::Load()
+void CPlayScene::Load(LPCWSTR sceneFilePath)
 {
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
@@ -553,9 +610,9 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 
-	//if (tilemap->getid() == SCENE_1)
+	if (tilemap->getid() != 4000)
 	{
-		if (simon->GetPositionX() > (SCREEN_WIDTH / 2) && simon->GetPositionX() + (SCREEN_WIDTH / 2) < tilemap->getwidthmap()/*1536*/)
+		if (simon->GetPositionX() > (SCREEN_WIDTH / 2) && simon->GetPositionX() + (SCREEN_WIDTH / 2) < tilemap->getwidthmap())
 		{
 			cx = simon->GetPositionX() - (SCREEN_WIDTH / 2);
 			CGame::GetInstance()->SetCamPos(cx, 0.0f );

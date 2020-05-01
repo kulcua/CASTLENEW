@@ -67,15 +67,15 @@ LPDIRECT3DTEXTURE9 CTextures::Get(unsigned int i)
 /*
 	Clear all loaded textures
 */
-void CTextures::Clear()
+void CTextures::Clear(unsigned int id)
 {
-	for (auto x : textures)
-	{
-		LPDIRECT3DTEXTURE9 tex = x.second; 
-		if (tex!=NULL) tex->Release();
-	}
-	
-	textures.clear();
+
+	LPDIRECT3DTEXTURE9 tex = textures[id];
+	if (tex != NULL) tex->Release();
+
+	textures.erase(id);
+
+	//DebugOut(L"[INFO] MAXSIZETEXTURESAUCLEAR %d \n", textures.size());
 }
 
 

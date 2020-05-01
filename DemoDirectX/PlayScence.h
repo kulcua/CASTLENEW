@@ -26,10 +26,13 @@ protected:
 	Board *board;
 	
 	vector<LPGAMEOBJECT> objects;
-	//vector<LPGAMEOBJECT> objectsstatic;
-	//vector<LPGAMEOBJECT> allobject;
+	
 	vector<LPGAMEOBJECT> listitems;
-	//vector<LPHIT> listHit;
+	
+	void _ParseSection_CLEARTEXTURES(string line);
+	void _ParseSection_CLEARSPRITES(string line);
+	void _ParseSection_CLERANIMATIONS(string line);
+	void _ParseSection_CLERANIMATIONSSET(string line);
 
 
 
@@ -50,7 +53,9 @@ public:
 	
 	CPlayScene(/*int id, LPCWSTR filePath*/);
 
-	virtual void Load();
+	virtual void ClearAll(LPCWSTR a);
+
+	virtual void Load(LPCWSTR sceneFilePath);
 	virtual void LoadObject();
 	virtual void LoadMap(LPCWSTR map);
 	virtual void LoadBaseObject();
