@@ -1,3 +1,8 @@
+[SCENEOBJECT]
+Scenes\scene3.txt
+[TILEMAP]
+6000	TileMap\Scene2.png	TileMap\Scene3_map.txt	12	34	4	7	32	32	2
+
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 11	textures\Stair.png	1	1	1
@@ -17,11 +22,5 @@
 [ANIMATION_SETS]
 #STAIR
 10	96	97
-
-
-[SCENEOBJECT]
-Scenes\scene3.txt
-[TILEMAP]
-4000	TileMap\Scene2.png	TileMap\Scene2_map.txt	12	17	4	7	32	32	2
 
 	

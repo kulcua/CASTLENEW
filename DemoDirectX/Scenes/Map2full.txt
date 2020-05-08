@@ -1,15 +1,15 @@
 #####
-[CLEARTEXT]
-11
+#[CLEARTEXT]
+#11
 #
-[CLEARSP]
-139	140
+#[CLEARSP]
+#139	140
 #
-[CLEARANI]
-96	97
+#[CLEARANI]
+#96	97
 #
-[CLEARANISET]
-10
+#[CLEARANISET]
+#10
 ##
 
 # id	file_path	transparent_color_r	g	b

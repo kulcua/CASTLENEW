@@ -61,6 +61,8 @@ public:
 	bool isDone;
 	bool isFire;
 
+	int nextscene;
+
 	DWORD dt;
 
 	//vector<LPANIMATION> animations;

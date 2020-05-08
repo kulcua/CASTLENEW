@@ -75,10 +75,12 @@ void CPlayScene::SwitchScene(int idmap)
 	if (idmap > 1)
 		ClearAll(ToLPCWSTR(linkmap[idmap - 2]));
 	CGame::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
-	LPCWSTR a = ToLPCWSTR(linkmap[idmap - 1]);
+	LPCWSTR a = ToLPCWSTR(linkmap[idmap - 1]);	
+	CGame::GetInstance()->SetCamPos(0.0f, 0.0f);
 	Load(a);
 	LoadMap(a);
 	LoadObject();
+	simon->currentscene = idmap;
 }
 
 
@@ -318,9 +320,26 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 	case OBJECT_TYPE_SIMON:
 	{
+		int nx1= atof(tokens[3].c_str());
+		int state1= atof(tokens[4].c_str());
+		float x2= atof(tokens[5].c_str());
+		float y2 = atof(tokens[6].c_str());
+		int nx2= atof(tokens[7].c_str());
+		int state2 = atof(tokens[8].c_str());
 
-		simon->SetPosition(x, y);
-
+		if (simon->currentscene < simon->nextscene)
+		{
+			simon->SetNx(nx1);
+			simon->SetPosition(x, y);	
+			simon->SetState(state1);
+		}
+		else if (simon->currentscene > simon->nextscene)
+		{
+			simon->SetPosition(x2, y2);
+			simon->SetNx(nx2);
+			simon->SetState(state2);
+		}
+		
 		break;
 	}
 	case OBJECT_TYPE_GROUND:
@@ -347,8 +366,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GATE:
 	{
 		obj = new Gate();
-		int NEXTMAP = atof(tokens[3].c_str());
-		current_scene = NEXTMAP;
+		obj->nextscene = atof(tokens[3].c_str());
+		/*current_scene = NEXTMAP;*/
 		obj->SetPosition(x, y);
 		objects.push_back(obj);
 		break;
@@ -513,16 +532,24 @@ void CPlayScene::Load(LPCWSTR sceneFilePath)
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
-	 //L"TileMap\\TilesetStage1.png", L"TileMap\\TilesetStage1Text.txt");
-	//tilemaps->Add(2000, L"TileMap\\Scene1.png", L"TileMap\\Scene1_map.txt");
+	
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
 void CPlayScene::Update(DWORD dt)
 {
-	
+	/*if ((simon->currentscene == 2 && simon->GetState() == 8))
+	{
+		simon->isGrounded = true;
+		simon->isWalkStair = false;
+	}*/
 
+	/*if (simon->currentscene == 3 && simon->GetState() == 7)
+	{
+		simon->isGrounded = true;
+		simon->isWalkStair = false;
+	}*/
 
 	
 
@@ -609,15 +636,13 @@ void CPlayScene::Update(DWORD dt)
 	CGame *game = CGame::GetInstance();
 
 	if (simon->isChangeScene)
-	{
-		
-		SwitchScene(current_scene);
-		CGame::GetInstance()->SetCamPos(0.0f, 0.0f);
+	{	
+		SwitchScene(simon->nextscene);
 		simon->isChangeScene = false;	
 	}
 
 
-	if (tilemap->getid() != 4000)
+	//if (tilemap->getid() != 4000)
 	{
 		if (simon->GetPositionX() > (SCREEN_WIDTH / 2) && simon->GetPositionX() + (SCREEN_WIDTH / 2) < tilemap->getwidthmap())
 		{

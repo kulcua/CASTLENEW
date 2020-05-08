@@ -14,6 +14,7 @@ Simon::Simon()
 	score = 0;
 	mana = 5;
 	life = 3;
+	this->nextscene = 1;
 }
 
 void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -24,7 +25,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (x < max_screen_left) //để cài không cho simon đi ngược màn hình
 		x = max_screen_left;
 
-	if (coObjects == NULL)
+	/*if (coObjects == NULL)
 	{
 		if (!isWalkStair)
 		{
@@ -32,7 +33,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			y += dy;
 		}
 		return;
-	}
+	}*/
 
 
 	if (isStandOnStair == false && isWalkStair == false)
@@ -112,8 +113,12 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Gate*>(e->obj))
 			{
+
 				Gate *p = dynamic_cast<Gate*>(e->obj);
+				this->nextscene = p->nextscene;
 				isChangeScene = true;
+				isWalkStair = false;
+				
 			}
 		}
 	}
@@ -177,17 +182,17 @@ void Simon::SetState(int State)
 		break;
 	case simon_ani_stair_up:
 		isStandOnStair = true;
-		if (nx > 0) vx = 0.079;
-		else vx = -0.079;
-		vy = -0.079;
+		if (nx > 0) vx = simon_stair;
+		else vx = -simon_stair;
+		vy = -simon_stair;
 		animation_set->at(State)->ResetcurrentFrame();
 		animation_set->at(State)->StartAni();
 		break;
 	case simon_ani_stair_down:
 		isStandOnStair = true;
-		if (nx > 0) vx = 0.079;
-		else vx = -0.079;
-		vy = 0.079;
+		if (nx > 0) vx = simon_stair;
+		else vx = -simon_stair;
+		vy = simon_stair;
 		animation_set->at(State)->ResetcurrentFrame();
 		animation_set->at(State)->StartAni();
 		break;
@@ -298,11 +303,9 @@ bool Simon::SimonColliWithStair(vector<LPGAMEOBJECT> *liststair)
 				float dx = abs(upstair_x - l_stair);
 				float dy = upstair_y - t_stair;
 
-				if (dx == 32 && dy == -32) 
+				if (dx == stair_box_width && dy == -stair_box_height)
 					canmoveupstair = true;
-
-
-				if (dx == 32 && dy == 32) 
+				if (dx == stair_box_width && dy == stair_box_height)
 					canmovedownstair = true;
 			}
 

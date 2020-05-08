@@ -5,7 +5,8 @@
 #include "Items.h"
 #include "SubWeapon.h"
 #include "Knife.h"
-#include"Gate.h"
+#include "Gate.h"
+#include "Stair.h"
 
 #define simon_jump -0.5f
 #define simon_run 0.15f
@@ -23,6 +24,7 @@
 #define simon_ani_stair_up_hit 9
 #define simon_ani_stair_down_hit 10
 
+#define simon_stair 0.079
 
 #define simon_ani_set 1
 
@@ -46,6 +48,8 @@ class Simon :public CGameObject
 
 	
 public:
+
+	int currentscene;
 
 	float newPosX;
 	int stateAfterAutoWalk = -1;	

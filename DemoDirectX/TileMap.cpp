@@ -7,6 +7,16 @@ TileMap::TileMap()
 	this->tile_height = TILE_HEIGHT;
 	
 }
+int TileMap::getwidthmap()
+{
+	if(id==6000)
+		return ((num_col * tile_width)-48);
+	else if(id==4000)
+		return ((num_col * tile_width) - 32);
+	else
+		return num_col * tile_width;
+}
+
 void TileMap::Load()
 {
 	
