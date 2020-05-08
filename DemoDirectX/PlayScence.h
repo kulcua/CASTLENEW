@@ -13,6 +13,7 @@
 #include "TileMap.h"
 #include "Gate.h"
 #include "Board.h"
+#include "Stair.h"
 
 class CPlayScene : public CScene
 {
@@ -28,6 +29,9 @@ protected:
 	vector<LPGAMEOBJECT> objects;
 	
 	vector<LPGAMEOBJECT> listitems;
+	
+	vector<LPGAMEOBJECT> liststairleft;
+	vector<LPGAMEOBJECT> liststairright;
 	
 	void _ParseSection_CLEARTEXTURES(string line);
 	void _ParseSection_CLEARSPRITES(string line);
@@ -64,7 +68,10 @@ public:
 	virtual void Render();
 	virtual void Unload();
 	Items* DropItem(float x, float y,int id);
-	//Hit* CreateHit(float x, float y);
+
+	vector<LPGAMEOBJECT> * GetListStairsLeft() { return &(liststairleft); }
+	vector<LPGAMEOBJECT> * GetListStairsRight() { return &(liststairright); }
+	
 	friend class CPlayScenceKeyHandler;
 };
 
@@ -81,8 +88,12 @@ public:
 	void Sit();
 	void Hit();
 	void Hit_SubWeapon();
-	
 
+	void Stair_Up();
+	void Stair_Down();
+	bool Simon_Stair_Stand();
+	bool StairCollisionsDetectionLeft();
+	bool StairCollisionsDetectionRight();
 	CPlayScenceKeyHandler(CScene *s) :CScenceKeyHandler(s) {};
 };
 

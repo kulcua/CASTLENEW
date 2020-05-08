@@ -18,12 +18,17 @@
 #define simon_ani_stand_hit 4
 #define simon_ani_sit_hit   5
 #define simon_ani_led 6
+#define simon_ani_stair_up 7
+#define simon_ani_stair_down 8
+#define simon_ani_stair_up_hit 9
+#define simon_ani_stair_down_hit 10
+
 
 #define simon_ani_set 1
 
 #define simon_max_health 16
 
-#define simon_box_width 34
+#define simon_box_width 30
 #define simon_box_height 62
 
 #define simon_delay_hit 300
@@ -41,6 +46,21 @@ class Simon :public CGameObject
 
 	
 public:
+
+	float newPosX;
+	int stateAfterAutoWalk = -1;	
+	int nxAfterAutoWalk;
+
+	bool StairLeftFirst;
+
+	bool isWalkStair;
+	bool isStandOnStair;
+	bool canmoveupstair;
+	bool canmovedownstair;
+	int stairNx;
+
+	LPGAMEOBJECT stairCollided;
+
 	bool isGrounded;
 	bool isHitSubWeapon;
 	bool isChangeScene;
@@ -65,6 +85,10 @@ public:
 	int getlife() { return life; }
 	void usemana(int a) { mana -= a; }
 	void SimonColliWithItems(vector<LPGAMEOBJECT> *listitems);
+	bool SimonColliWithStair(vector<LPGAMEOBJECT> *liststair);
+	void StandOnStair();
+	void AutoWalkStair(float newPosX, int stateAfterAutoWalk, int nxAfterAutoWalk);
+	void DoAutoWalkStair();
 	int GetHealth() { return health; }
 };
 
