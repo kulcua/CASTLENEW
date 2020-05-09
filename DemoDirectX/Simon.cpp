@@ -25,15 +25,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (x < max_screen_left) //để cài không cho simon đi ngược màn hình
 		x = max_screen_left;
 
-	/*if (coObjects == NULL)
-	{
-		if (!isWalkStair)
-		{
-			x += dx;
-			y += dy;
-		}
-		return;
-	}*/
+	
 
 
 	if (isStandOnStair == false && isWalkStair == false)

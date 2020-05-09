@@ -34,7 +34,7 @@ void Knife::Render()
 
 	SubWeapon::renderlisthit();
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 
 }
 

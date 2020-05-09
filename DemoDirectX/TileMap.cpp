@@ -9,9 +9,9 @@ TileMap::TileMap()
 }
 int TileMap::getwidthmap()
 {
-	if(id==6000)
+	if(id==map3)
 		return ((num_col * tile_width)-48);
-	else if(id==4000)
+	else if(id==map2)
 		return ((num_col * tile_width) - 32);
 	else
 		return num_col * tile_width;
@@ -64,28 +64,7 @@ void TileMap::LoadMap(int id, LPCWSTR file_pic, LPCWSTR filePath_data,int num_ro
 	texture->Add(id, file_pic, D3DCOLOR_XRGB(255, 0, 255));
 
 	LPDIRECT3DTEXTURE9 texTileMap = texture->Get(id);
-	/*int num_row_read, num_col_read;
-	switch (id)
-	{
-	case SCENE_1:
-	{
-		num_row = SCENE_1_ROW;
-		num_col = SCENE_1_COL;
-		num_row_read = SCENE_1_ROW_READ;
-		num_col_read = SCENE_1_COL_READ;
-		break;
-	}
-	case SCENE_2:
-	{
-		num_row = SCENE_2_ROW;
-		num_col = SCENE_2_COL;
-		num_row_read = SCENE_2_ROW_READ;
-		num_col_read = SCENE_2_COL_READ;	
-		break;
-	}
-	default:
-		break;
-	}*/
+	
 
 	int idsprite = 1;
 	for (UINT i = 0; i < num_row_read; i++)

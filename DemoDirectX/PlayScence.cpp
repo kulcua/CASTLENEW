@@ -50,10 +50,7 @@ CPlayScene::CPlayScene() :	CScene()
 }
 
 
-/*
-	Load scene resources from scene file (textures, sprites, animations and objects)
-	See scene1.txt, scene2.txt for detail format specification
-*/
+
 
 
 void CPlayScene::LoadBaseObject()

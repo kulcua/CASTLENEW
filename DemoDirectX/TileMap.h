@@ -22,7 +22,8 @@
 #define TILE_HEIGHT 32
 
 #define MAX_SCENE_LINE 1024
-
+#define map2 4000
+#define map3 6000
 
 class TileMap
 {
