@@ -90,6 +90,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					if (e->ny == -1)
 					{
+						checkgroundmove = false;
 						isGrounded = true;
 						vy = 0;
 					}
@@ -111,6 +112,24 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				isChangeScene = true;
 				isWalkStair = false;
 				
+			}
+			else if(dynamic_cast<GroundMoving*>(e->obj))
+			{
+				if (e->ny != 0)
+				{
+					if (e->ny == -1)
+					{
+						checkgroundmove = true;
+						isGrounded = true;
+						vx = e->obj->vx;
+						vy = 0;
+					}
+					else
+						y += dy;
+				}
+				//if (e->nx != 0)
+					//x += dx;
+			
 			}
 		}
 	}
@@ -142,7 +161,8 @@ void Simon::SetState(int State)
 		break;
 	case simon_ani_idle:
 		this->StairLeftFirst = false;
-		vx = 0;
+		if (!checkgroundmove)
+			vx = 0;
 		isStandOnStair = false;
 		break;
 	case simon_ani_jump:
@@ -173,6 +193,7 @@ void Simon::SetState(int State)
 		animation_set->at(State)->StartAni();
 		break;
 	case simon_ani_stair_up:
+		isGrounded = true;
 		isStandOnStair = true;
 		if (nx > 0) vx = simon_stair;
 		else vx = -simon_stair;
@@ -181,6 +202,7 @@ void Simon::SetState(int State)
 		animation_set->at(State)->StartAni();
 		break;
 	case simon_ani_stair_down:
+		isGrounded = true;
 		isStandOnStair = true;
 		if (nx > 0) vx = simon_stair;
 		else vx = -simon_stair;

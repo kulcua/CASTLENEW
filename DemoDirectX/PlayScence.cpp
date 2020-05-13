@@ -30,6 +30,7 @@
 #define OBJECT_TYPE_CANDLE	2
 #define OBJECT_TYPE_GATE	3
 #define OBJECT_TYPE_STAIR	4
+#define OBJECT_TYPE_GROUNDMOVING 5
 
 
 #define OBJECT_TYPE_PORTAL	50
@@ -378,10 +379,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		obj->stairdir = stairnx;
-		if(stairnx==-1)/*(obj->GetState() == 2 || obj->GetState() == 3 || obj->GetState() == 4 || obj->GetState() == 7)*/
+		if(stairnx==-1)
 			liststairright.push_back(obj);
 		else
 			liststairleft.push_back(obj);
+		break;
+	}
+	case OBJECT_TYPE_GROUNDMOVING:
+	{
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new GroundMoving();
+		obj->SetAnimationSet(ani_set);
+		obj->SetPosition(x, y);
+		objects.push_back(obj);
 		break;
 	}
 	default:
@@ -545,10 +555,9 @@ void CPlayScene::Update(DWORD dt)
 		simon->isWalkStair = false;
 	}*/
 
-	/*if (simon->currentscene == 3 && simon->GetState() == 7)
+	/*if (simon->GetState() == 7)
 	{
 		simon->isGrounded = true;
-		simon->isWalkStair = false;
 	}*/
 
 	

@@ -1,26 +1,33 @@
-[SCENEOBJECT]
-Scenes\scene3.txt
-[TILEMAP]
-6000	TileMap\Scene2.png	TileMap\Scene3_map.txt	12	34	4	7	32	32	2
-
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 11	textures\Stair.png	1	1	1
+12	textures\GroundMove.png	255	0	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 #STAIR
 139	0	0	32	32	11
 140	32	0	64	32	11
+#MOVINGGOURND
+141	0	0	64	16	12
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 #====STAIR======
 96	139	100
 97	140	100
+#====moveground=====
+98	141	100
 #
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
 #STAIR
-10	96	97
+10	96
+#movegournd
+24	98
+[SCENEOBJECT]
+Scenes\scene3.txt
+[TILEMAP]
+6000	TileMap\Scene2.png	TileMap\Scene3_map.txt	12	34	4	7	32	32	2
+
 
 	

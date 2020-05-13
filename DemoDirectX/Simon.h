@@ -4,6 +4,7 @@
 #include "Whip.h"
 #include "Items.h"
 #include "SubWeapon.h"
+#include "GroundMoving.h"
 #include "Knife.h"
 #include "Gate.h"
 #include "Stair.h"
@@ -48,6 +49,9 @@ class Simon :public CGameObject
 
 	
 public:
+
+	bool checkgroundmove=false;
+
 
 	int currentscene;
 
