@@ -273,10 +273,8 @@ bool Simon::SimonColliWithStair(vector<LPGAMEOBJECT> *liststair)
 
 		if (CGameObject::AABBCheck(l_simon, t_simon, r_simon, b_simon, l_stair, t_stair, r_stair, b_stair))
 		{
-			if (liststair->at(i)->GetState() == 2|| liststair->at(i)->GetState() == 3|| liststair->at(i)->GetState() == 4|| liststair->at(i)->GetState() == 7)
-				stairNx = -1;
-			else
-				stairNx = 1;
+			
+			stairNx = liststair->at(i)->stairdir;
 
 			stairCollided = liststair->at(i);
 

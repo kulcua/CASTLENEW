@@ -309,7 +309,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	int ani_set_id = atoi(tokens[3].c_str());
 
-	//CAnimationSets * animation_sets = CAnimationSets::GetInstance();
+	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
 	CGameObject *obj = NULL;
 	
@@ -341,9 +341,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_GROUND:
 	{
-		int state= atof(tokens[4].c_str());
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		
 		obj = new Ground();
-		obj->SetState(state);
+		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		objects.push_back(obj);
 		break;
@@ -371,11 +372,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_STAIR:
 	{
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new Stair();
-		int state = atof(tokens[4].c_str());
+		int stairnx = atof(tokens[4].c_str());
+		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		obj->SetState(state);
-		if (obj->GetState() == 2 || obj->GetState() == 3 || obj->GetState() == 4 || obj->GetState() == 7)
+		obj->stairdir = stairnx;
+		if(stairnx==-1)/*(obj->GetState() == 2 || obj->GetState() == 3 || obj->GetState() == 4 || obj->GetState() == 7)*/
 			liststairright.push_back(obj);
 		else
 			liststairleft.push_back(obj);

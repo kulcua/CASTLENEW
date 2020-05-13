@@ -2,12 +2,11 @@
 
 Stair::Stair()
 {
-	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(10));
-	//SetState(1);
+	
 }
 void Stair::Render()
 {
-	animation_set->at(state)->Render(-1, x, y);
+	animation_set->at(0)->Render(-1, x, y);
 	//RenderBoundingBox();
 }
 void Stair::GetBoundingBox(float &l, float &t, float &r, float &b)

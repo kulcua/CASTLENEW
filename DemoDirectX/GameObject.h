@@ -60,6 +60,7 @@ public:
 	int idItems;
 	bool isDone;
 	bool isFire;
+	int stairdir;
 
 	int nextscene;
 

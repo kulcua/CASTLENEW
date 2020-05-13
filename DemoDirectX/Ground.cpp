@@ -2,13 +2,12 @@
 
 Ground::Ground()
 {
-	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(ground_ani_set));
 }
 
 void Ground::Render()
 {
-	animation_set->at(state)->Render(nx, x, y);
-	//RenderBoundingBox();
+	animation_set->at(0)->Render(nx, x, y);
+	
 }
 
 void Ground::GetBoundingBox(float &l, float &t, float &r, float &b)
