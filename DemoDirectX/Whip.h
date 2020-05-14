@@ -1,6 +1,8 @@
 #pragma once
 #include"GameObject.h"
 #include"Hit.h"
+#include"Knight.h"
+#include"Bat.h"
 #define whip_lv1 0
 #define whip_lv2 1
 #define whip_lv3 2
@@ -14,6 +16,7 @@
 class Whip :public CGameObject
 {
 	vector<LPHIT> listHit;
+	bool delaydamage;
 public:
 	Whip();
 	~Whip();
@@ -23,6 +26,7 @@ public:
 	void Render(int currentID = -1);
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	void SetPosWhip(D3DXVECTOR3 pos, bool isstanding);
+	void Setdelaydamage(bool a) { delaydamage = a; }
 	bool WhipCheckColli(float l_b, float t_b, float r_b, float b_b);
 	void SetLvWhip(int state)
 	{

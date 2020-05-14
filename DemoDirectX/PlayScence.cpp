@@ -6,7 +6,9 @@
 #include "Textures.h"
 #include "Sprites.h"
 
-
+#define map1 1
+#define map2 2
+#define map3 3
 #define SCENE_SECTION_UNKNOWN -1
 #define SCENE_SECTION_TEXTURES 2
 #define SCENE_SECTION_SPRITES 3
@@ -31,6 +33,8 @@
 #define OBJECT_TYPE_GATE	3
 #define OBJECT_TYPE_STAIR	4
 #define OBJECT_TYPE_GROUNDMOVING 5
+#define OBJECT_TYPE_KNIGHT 6
+#define OBJECT_TYPE_BAT 7
 
 
 #define OBJECT_TYPE_PORTAL	50
@@ -389,6 +393,26 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new GroundMoving();
+		obj->SetAnimationSet(ani_set);
+		obj->SetPosition(x, y);
+		objects.push_back(obj);
+		break;
+	}
+	case OBJECT_TYPE_KNIGHT:
+	{
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		float maxX1 = atof(tokens[4].c_str());
+		float maxX2 = atof(tokens[5].c_str());
+		obj = new Knight(maxX1, maxX2);
+		obj->SetAnimationSet(ani_set);
+		obj->SetPosition(x, y);
+		objects.push_back(obj);
+		break;
+	}
+	case OBJECT_TYPE_BAT:
+	{
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new Bat(simon);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		objects.push_back(obj);
@@ -966,6 +990,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CGame *game = CGame::GetInstance();
 	Simon *simon = ((CPlayScene*)scence)->simon;
+	CPlayScene* playscene = ((CPlayScene*)scence);
 	switch (KeyCode)
 	{
 	case DIK_A:
@@ -977,6 +1002,21 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_S:
 		if (simon->isStandOnStair == false)
 			Jump();
+		break;
+	case DIK_Q:
+		simon->currentscene = 0;
+		simon->nextscene = map1;
+		playscene->SwitchScene(map1);
+		break;
+	case DIK_W:
+		simon->currentscene = map1;
+		simon->nextscene = map2;
+		playscene->SwitchScene(map2);
+		break;
+	case DIK_E:
+		simon->currentscene = map2;
+		simon->nextscene = map3;
+		playscene->SwitchScene(map3);
 		break;
 	}
 }
@@ -1024,7 +1064,10 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		return;
 	}
 	else
+	{
+		simon->GetWhip()->Setdelaydamage(false);
 		simon->isHitSubWeapon = false;
+	}
 
 
 

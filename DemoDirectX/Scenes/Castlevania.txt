@@ -214,7 +214,7 @@
 9	93	94	95
 
 [SETTINGS]
-start	3
+start	1
 [LINKMAP]
 Scenes\Map1full.txt
 Scenes\Map2full.txt

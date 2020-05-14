@@ -27,11 +27,58 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					if(e->GetState()!=break_candle)
 						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
-					e->SetState(break_candle);
-					
+					e->SetState(break_candle);			
 					
 				}
 
+			}
+			else if (dynamic_cast<Knight*>(obj))
+			{
+				Knight * e = dynamic_cast<Knight*>(obj);
+
+				float left, top, right, bottom;
+				e->GetBoundingBox(left, top, right, bottom);
+
+				if (WhipCheckColli(left, top, right, bottom))
+				{
+					if (!delaydamage)
+					{
+						if (state == whip_lv1)
+							e->loseHp(1);
+						else
+							e->loseHp(2);
+						delaydamage = true;
+					}
+
+					if (e->GetState() != knight_ani_die)
+						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
+					
+					if (e->getHp()<=0)
+						e->SetState(knight_ani_die);
+
+				}
+			}
+			else if (dynamic_cast<Bat*>(obj))
+			{
+				Bat * e = dynamic_cast<Bat*>(obj);
+
+				float left, top, right, bottom;
+				e->GetBoundingBox(left, top, right, bottom);
+
+				if (WhipCheckColli(left, top, right, bottom))
+				{
+					if (state == whip_lv1)
+						e->loseHp(1);
+					else
+						e->loseHp(2);
+
+					if (e->GetState() != bat_ani_die )
+						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
+
+					if (e->getHp() <= 0)
+						e->SetState(bat_ani_die);
+
+				}
 			}
 		}
 

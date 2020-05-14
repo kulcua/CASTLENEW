@@ -86,8 +86,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Candle.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gate.cpp" />
@@ -97,6 +99,7 @@
     <ClCompile Include="Hit.cpp" />
     <ClCompile Include="Items.cpp" />
     <ClCompile Include="Knife.cpp" />
+    <ClCompile Include="Knight.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="PlayScence.cpp" />
@@ -112,8 +115,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Bat.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Candle.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gate.h" />
@@ -124,6 +129,7 @@
     <ClInclude Include="Items.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Knife.h" />
+    <ClInclude Include="Knight.h" />
     <ClInclude Include="Number.h" />
     <ClInclude Include="PlayScence.h" />
     <ClInclude Include="Scence.h" />

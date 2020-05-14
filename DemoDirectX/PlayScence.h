@@ -15,6 +15,8 @@
 #include "Board.h"
 #include "Stair.h"
 #include "GroundMoving.h"
+#include "Knight.h"
+#include "Bat.h"
 
 class CPlayScene : public CScene
 {
