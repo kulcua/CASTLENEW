@@ -1,0 +1,43 @@
+#####
+[CLEARTEXT]
+11
+#
+[CLEARSP]
+139	141
+#
+[CLEARANI]
+96	98
+#
+[CLEARANISET]
+10	24
+##
+
+# id	file_path	transparent_color_r	g	b
+[TEXTURES]
+11	textures\Stair.png	1	1	1
+#
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#STAIR
+139	64	0	96	32	11
+#GROUND
+141	64	0	96	32	1
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+#====STAIR======
+96	139	100
+#====GROUND=====
+98	141	100
+#
+# id	ani1	ani2	ani3
+#
+[ANIMATION_SETS]
+#STAIR
+10	96
+#GROUND
+24	98
+
+[SCENEOBJECT]
+Scenes\scene4.txt
+[TILEMAP]
+8000	TileMap\Scene3.png	TileMap\Scene4_map.txt	12	50	5	12	32	32	3	1020	0

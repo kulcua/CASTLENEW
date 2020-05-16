@@ -26,7 +26,8 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (untouchtime->IsTimeUp())
 		untouchtime->Stop();
-
+	if (watertime->IsTimeUp())
+		watertime->Stop();
 	/*if (state == simon_ani_dead)
 		return;*/
 
@@ -158,11 +159,11 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Knight*>(e->obj))
 			{
-				if (untouchtime->IsTimeUp())
+				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
 				{
 					untouchtime->Start();
 					Knight* knight = dynamic_cast<Knight*>(e->obj);
-					loseHp(14/*knight->getDamage()*/);
+					loseHp(knight->getDamage());
 					//health -= 12;//knight->getDamage();
 					{
 						if (isStandOnStair == false || health == 0)
@@ -181,7 +182,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Bat*>(e->obj))
 			{
-				if (untouchtime->IsTimeUp()&&state!=simon_ani_led)
+				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
 				{
 					untouchtime->Start();
 					Bat* bat = dynamic_cast<Bat*>(e->obj);
@@ -215,6 +216,17 @@ void Simon::Render()
 	int alpha = 255;
 	if (!untouchtime->IsTimeUp())
 		alpha = rand() % 255;
+	if (!watertime->IsTimeUp() && state != simon_ani_led)
+	{
+		if ((float)(GetTickCount() - watertime->GetTimeStart()) < 1000)
+			alpha = 0;
+		else if (1000 <= (float)(GetTickCount() - watertime->GetTimeStart()) < 2500)
+		{
+			alpha = rand() % 76 + 100;
+		}
+		else
+			alpha = rand() & 155 + 176;
+	}
 	animation_set->at(state)->Render(nx, x, y, alpha);
 	
 	//RenderBoundingBox();
@@ -362,6 +374,7 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 			else if (e->idItems == items_watterbottle)
 			{
 				e->isDone = true;
+				watertime->Start();
 			}
 			else if (e->idItems == items_corss)
 			{

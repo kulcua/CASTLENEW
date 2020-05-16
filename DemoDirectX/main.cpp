@@ -64,10 +64,10 @@ void Render()
 	if (d3ddv->BeginScene())
 	{
 		// Clear back buffer with a color
-		/*if(!playscene->timecross->IsTimeUp()&&rand()%2==1)
+		if (!playscene->timecross->IsTimeUp() && rand() % 2 == 1)
 			d3ddv->ColorFill(bb, NULL, CROSS_COLOR);
-		else*/
-		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
+		else
+			d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 

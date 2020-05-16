@@ -79,10 +79,11 @@ void CPlayScene::SwitchScene(int idmap)
 		ClearAll(ToLPCWSTR(linkmap[simon->beforescene-1/*idmap - 2*/]));
 	CGame::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
 	LPCWSTR a = ToLPCWSTR(linkmap[idmap - 1]);	
-	CGame::GetInstance()->SetCamPos(0.0f, 0.0f);
+	/*CGame::GetInstance()->SetCamPos(0.0f, 0.0f);*/
 	Load(a);
 	LoadMap(a);
 	LoadObject();
+	CGame::GetInstance()->SetCamPos(CGame::GetInstance()->GetCamPosX(), 0.0f);
 	simon->currentscene=simon->beforescene = idmap;
 }
 
@@ -192,6 +193,10 @@ void CPlayScene::_ParseSection_INFOMAP(string line)
 	idstage = atoi(tokens[9].c_str());
 
 	tilemap->LoadMap(IDmap, pathpic.c_str(), pathtxt.c_str(), num_row, num_col, num_row_read, num_col_read, tile_width, tile_height);
+	if(simon->currentscene<=simon->nextscene)
+		CGame::GetInstance()->SetCamPosX(atof(tokens[10].c_str()));
+	else
+		CGame::GetInstance()->SetCamPosX(atof(tokens[11].c_str()));
 }
 
 void CPlayScene::_ParseSection_LINKMAP(string line)
@@ -606,6 +611,7 @@ void CPlayScene::UseCross()
 
 void CPlayScene::Revival()
 {
+	//CGame* game = CGame::GetInstance();
 	if (!CheckInCam(simon))
 		simon->SetState(simon_ani_dead);
 	if (board->getCheckTime())
@@ -818,9 +824,9 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	
-	board->Render(idstage, CGame::GetInstance()->GetCamPosX(), 0, simon);
 	tilemap->Draw();
+	board->Render(idstage, CGame::GetInstance()->GetCamPosX(), 0, simon);
+	
 	
 	
 	
@@ -1154,9 +1160,37 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			playscene->SwitchScene(map3);
 		}
 		break;
+	case DIK_R:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->currentscene = map3;
+			simon->nextscene = 4;
+			playscene->SwitchScene(4);
+		}
+		break;
+	case DIK_T:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->currentscene = 4;
+			simon->nextscene = 5;
+			playscene->SwitchScene(5);
+		}
+		break;
+	case DIK_Y:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->currentscene = 5;
+			simon->nextscene = 6;
+			playscene->SwitchScene(6);
+		}
+		break;
 	case DIK_0:
 		if(simon->GetState()!=simon_ani_dead)
 			simon->isCross = true;
+		break;
+	case DIK_9:
+		if (simon->GetState() != simon_ani_dead)
+			simon->watertime->Start();
 		break;
 	}
 }

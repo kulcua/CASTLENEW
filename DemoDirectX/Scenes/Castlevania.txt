@@ -235,3 +235,6 @@ start	1
 Scenes\Map1full.txt
 Scenes\Map2full.txt
 Scenes\Map3full.txt
+Scenes\Map4full.txt
+Scenes\Map5full.txt
+Scenes\Map6full.txt

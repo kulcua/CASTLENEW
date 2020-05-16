@@ -6,7 +6,7 @@ Ground::Ground()
 
 void Ground::Render()
 {
-	animation_set->at(0)->Render(nx, x, y);
+	animation_set->at(0)->Render(-1, x, y);
 	
 }
 

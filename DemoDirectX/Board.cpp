@@ -14,7 +14,7 @@ Board::Board(int HealSimon,int HealBoss)
 	subweapon.push_back(CSprites::GetInstance()->Get(82));
 	subweapon.push_back(CSprites::GetInstance()->Get(83));
 
-	timemax = 3;//300;
+	timemax = 300;
 	time = 0;
 }
 
