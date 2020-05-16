@@ -8,6 +8,9 @@
 #include "Knife.h"
 #include "Gate.h"
 #include "Stair.h"
+#include "Knight.h"
+#include "Bat.h"
+#include "Timer.h"
 
 #define simon_jump -0.5f
 #define simon_run 0.15f
@@ -24,6 +27,8 @@
 #define simon_ani_stair_down 8
 #define simon_ani_stair_up_hit 9
 #define simon_ani_stair_down_hit 10
+#define simon_ani_hurt 11
+#define simon_ani_dead 12
 
 #define simon_stair 0.079
 
@@ -50,10 +55,13 @@ class Simon :public CGameObject
 	
 public:
 
+	Timer* untouchtime = new Timer(1200);
 	bool checkgroundmove=false;
-
+	bool isCross;
+	bool isDead;
 
 	int currentscene;
+	int beforescene;
 
 	float newPosX;
 	int stateAfterAutoWalk = -1;	
@@ -97,6 +105,12 @@ public:
 	void StandOnStair();
 	void AutoWalkStair(float newPosX, int stateAfterAutoWalk, int nxAfterAutoWalk);
 	void DoAutoWalkStair();
+	void loseHp(int x);
+	void setHealth(int a) { health = a; }
+	void setMana(int a) { mana = a; }
+	void setScore(int a) { score = a;}
+	void setLife(int a) { life = a; }
+	void addScore(int a) { score += a; }
 	int GetHealth() { return health; }
 };
 

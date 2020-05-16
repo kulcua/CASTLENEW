@@ -32,11 +32,16 @@ class Board
 	vector<LPSPRITE> subweapon;
 
 	int time, timeremain;
+	int timemax;
+	bool checktime;
 
 public:
 	Board(int healsimon,int healboss);
 	~Board();
 	void Update(DWORD dt,int currentheal,int healboss);
 	void Render(int idmap, int camx, int camy, Simon* simon);
+	bool getCheckTime() {return checktime;}
+	void setCheckTime(bool a) { checktime = a; }
+	void settimeremain(int a) { timemax = a; time = 0; }
 };
 

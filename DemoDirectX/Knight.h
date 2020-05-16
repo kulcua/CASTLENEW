@@ -1,8 +1,9 @@
 #pragma once
 #include"Enemy.h"
+#include"Bat.h"
 #define knight_box_height 80
 #define knight_box_width 40
-#define knight_speed 0.05
+#define knight_speed 0.08
 #define knight_ani_run 0
 #define knight_ani_die 1
 #define knight_ani_die_time 300

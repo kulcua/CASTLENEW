@@ -1,4 +1,4 @@
-#include "Bat.h"
+﻿#include "Bat.h"
 
 
 
@@ -7,6 +7,9 @@ Bat::Bat(LPGAMEOBJECT simon)
 	this->simon = simon;
 	hp = 1;
 	isDone = false;
+	SetState(bat_ani_idle);
+	damage = 2;
+	score = 200;
 }
 
 void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
@@ -14,6 +17,7 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	
 	Enemy::Update(dt);	
 	
+
 	if (state == bat_ani_die && animation_set->at(bat_ani_die)->RenderOver(bat_time))
 	{
 		isDone = true;
@@ -22,24 +26,53 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 	if (state!= bat_ani_die)
 	{
-		if (sqrt(pow(x - simon->GetPositionX(), 2) + pow(y - simon->GetPositionY(), 2)) <= bat_distance_max&&simon->GetState()!= simon_ani_stair_down)
+		if (simon->GetState() != simon_ani_stair_down&& simon->GetState() != simon_ani_stair_up)
 		{
-			SetState(bat_ani_fly);
-			if (abs(y - simon->GetPositionY()) < bat_distance)
+			if (sqrt(pow(x - simon->GetPositionX(), 2) + pow(y - simon->GetPositionY(), 2)) <= bat_distance_max)
 			{
-				vy = 0;
-				checkpos = true;
+				SetState(bat_ani_fly);
+				if (y < bat_distance)
+					vy += bat_gravity;
+				else
+					vy = 0;
+				/*if (abs(y - simon->GetPositionY()) < bat_distance)
+				{
+					vy = 0;
+					checkpos = true;
+				}
+				else if (y < simon->GetPositionY() && simon->GetState() == simon_ani_stair_down)
+				{
+					vy += 0.;
+					checkpos = true;
+				}
+				else if (!checkpos&& simon->GetState() != simon_ani_stair_down)
+					vy += bat_gravity;*/
 			}
-			else if (!checkpos)
-				vy += bat_gravity;
 		}
-		if (x > SCREEN_WIDTH)
-			SetState(bat_ani_die);
-	}
+		else
+		{
+			if (sqrt(pow(x - simon->GetPositionX(), 2) + pow(y - simon->GetPositionY(), 2)) <= bat_distance_min)
+			{
+				SetState(bat_ani_fly);
+				if (y < bat_distance)
+					vy += bat_gravity;
+				else
+					vy = 0;
+			}
 
+		}
+		if (!CheckCam()&&state==bat_ani_fly)/*x > 1200)*///SCREEN_WIDTH)//tạm
+		{
+			/*vx += 1000;
+			if(x>3000)*/
+			SetState(bat_ani_die);
+		}
+		
+	}
 
 	x += dx;
 	y += dy;
+	
 	
 }
 
@@ -62,13 +95,19 @@ void Bat::SetState(int State)
 	case bat_ani_fly:
 		if (nx > 0) vx = bat_speed;
 		else vx = -bat_speed;
-		vy = 0.004;
+		vy = 0.00004;
 		break;
 	case bat_ani_die:
 		vx = vy = 0;
 		animation_set->at(State)->StartAni();
 		break;
 	}
+}
+
+bool Bat::CheckCam()
+{
+	CGame *game = CGame::GetInstance();
+	return (x >= game->GetCamPosX() && x < game->GetCamPosX() + (SCREEN_WIDTH+200)&& y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT+100));
 }
 
 int Bat::getHp()

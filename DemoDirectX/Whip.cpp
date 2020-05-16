@@ -53,8 +53,11 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (e->GetState() != knight_ani_die)
 						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
 					
-					if (e->getHp()<=0)
+					if (e->getHp() <= 0)
+					{
+						score += e->getScore();
 						e->SetState(knight_ani_die);
+					}
 
 				}
 			}
@@ -76,7 +79,10 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
 
 					if (e->getHp() <= 0)
+					{
+						score += e->getScore();
 						e->SetState(bat_ani_die);
+					}
 
 				}
 			}

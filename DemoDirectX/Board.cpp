@@ -14,7 +14,7 @@ Board::Board(int HealSimon,int HealBoss)
 	subweapon.push_back(CSprites::GetInstance()->Get(82));
 	subweapon.push_back(CSprites::GetInstance()->Get(83));
 
-	
+	timemax = 3;//300;
 	time = 0;
 }
 
@@ -29,7 +29,13 @@ void Board::Update(DWORD a,int currenhealsimon,int currenthealboss)
 	healboss->Update(currenthealboss);
 
 	time += a;
-	timeremain = 30000 - (time / CLOCKS_PER_SEC);
+	timeremain = timemax - (time / CLOCKS_PER_SEC);
+
+	if (timeremain <= 0)
+	{
+		timeremain = 0;
+		checktime = true;
+	}
 }
 
 string Board::FillNumber(string s, UINT maxnumb)

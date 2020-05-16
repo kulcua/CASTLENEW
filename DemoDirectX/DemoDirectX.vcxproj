@@ -110,6 +110,7 @@
     <ClCompile Include="SubWeapon.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Whip.cpp" />
   </ItemGroup>
@@ -139,6 +140,7 @@
     <ClInclude Include="SubWeapon.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TileMap.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Whip.h" />
   </ItemGroup>

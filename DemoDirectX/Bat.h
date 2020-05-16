@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include"Enemy.h"
+#include"Game.h"
 #define bat_box_width 32
 #define bat_box_height 32
 #define bat_ani_idle 0
@@ -9,9 +10,11 @@
 #define SCREEN_WIDTH 530
 #define bat_speed 0.23
 #define bat_gravity 0.25
-#define bat_distance 10
+#define bat_distance 160
 #define bat_distance_max 200
+#define bat_distance_min 130
 #define simon_ani_stair_down 8
+#define simon_ani_stair_up 7
 class Bat:public Enemy
 {
 	LPGAMEOBJECT simon;
@@ -25,5 +28,6 @@ public:
 	void GetBoundingBox(float &l, float &t, float &r, float &b);
 	void loseHp(int x);
 	int getHp();
+	bool CheckCam();
 };
 

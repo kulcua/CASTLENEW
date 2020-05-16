@@ -58,7 +58,7 @@ void Items::Render()
 		return;
 	
 	animation_set->at(state)->Render(-1, x, y);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void Items::GetBoundingBox(float &l, float &t, float &r, float &b)
@@ -91,6 +91,18 @@ void Items::GetBoundingBox(float &l, float &t, float &r, float &b)
 			r = l + items_watch_box_width;
 			b = t + items_watch_box_height;
 			break;
+		case items_watterbottle:
+			l = x;
+			t = y;
+			r = l + 29;
+			b = t + 33;
+			break;
+		case items_corss:
+			l = x;
+			t = y;
+			r = l + 32;
+			b = t + 32;
+			break;
 		}
 	}
 }
@@ -115,6 +127,15 @@ void Items::SetState(int State)
 	case items_watch:
 		vx = 0;
 		vy = 0.15;
+		break;
+	case items_watterbottle:
+		vx = 0;
+		vy = 0.15;
+		break;
+	case items_corss:
+		vx = 0;
+		vy = 0.15;
+		break;
 	}
 }
 

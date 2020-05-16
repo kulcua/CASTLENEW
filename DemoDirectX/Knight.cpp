@@ -7,7 +7,9 @@ Knight::Knight(float maxX1, float maxX2)
 	this->maxX1 = maxX1;
 	this->maxX2 = maxX2;
 	hp = 3;
+	damage = 2;
 	SetState(knight_ani_run);
+	score = 400;
 }
 
 void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
@@ -29,8 +31,19 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
+	vector<LPGAMEOBJECT> COOBJECTS;
+	COOBJECTS.clear();
+
+	for (int i = 0; i < coObject->size(); i++)
+	{
+		if (coObject->at(i) != dynamic_cast<Bat*>(coObject->at(i)))
+		{
+			COOBJECTS.push_back(coObject->at(i));
+		}
+	}
+
 	if(state!=1)
-		CalcPotentialCollisions(coObject, coEvents);
+		CalcPotentialCollisions(&COOBJECTS, coEvents);
 
 	if (coEvents.size() == 0)
 	{

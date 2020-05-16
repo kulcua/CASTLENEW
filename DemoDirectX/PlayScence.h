@@ -17,6 +17,7 @@
 #include "GroundMoving.h"
 #include "Knight.h"
 #include "Bat.h"
+#include "Timer.h"
 
 class CPlayScene : public CScene
 {
@@ -71,6 +72,12 @@ public:
 	virtual void Render();
 	virtual void Unload();
 	Items* DropItem(float x, float y,int id);
+	bool CheckInCam(LPGAMEOBJECT a);
+	void UseCross();
+	void Revival();
+
+	Timer* timecross = new Timer(500);
+	Timer* timedeadsimon = new Timer(2000);
 
 	vector<LPGAMEOBJECT> * GetListStairsLeft() { return &(liststairleft); }
 	vector<LPGAMEOBJECT> * GetListStairsRight() { return &(liststairright); }

@@ -14,24 +14,49 @@ Simon::Simon()
 	score = 0;
 	mana = 5;
 	life = 3;
-	this->nextscene = 1;
+	this->nextscene = 99;
 }
 
 void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	CGameObject::Update(dt);
 	
+	
+
+
+	if (untouchtime->IsTimeUp())
+		untouchtime->Stop();
+
+	/*if (state == simon_ani_dead)
+		return;*/
+
+	/*if (health == 0)
+	{
+		SetState(simon_ani_dead);
+		return;
+	}*/
 
 	if (x < max_screen_left) //để cài không cho simon đi ngược màn hình
 		x = max_screen_left;
 
-	
+	//score += whip->getScore();
 
 
 	if (isStandOnStair == false && isWalkStair == false)
 		vy += simon_gravity * dt;
 
 	
+	if (health == 0)
+	{
+		/*if (state == simon_ani_stair_up || state == simon_ani_stair_down)
+		{
+			vy += 1000 * dt;
+		}*/
+		SetState(simon_ani_dead);
+		return;
+	}
+
+
 	if (isWalkStair == true)
 		DoAutoWalkStair();
 
@@ -52,7 +77,6 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			COOBJECTS.push_back(coObjects->at(i));
 		}
 	}
-
 	
 	CalcPotentialCollisions(&COOBJECTS/*coObjects*/, coEvents);
 
@@ -88,11 +112,12 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->ny != 0)
 				{
-					if (e->ny == -1)
+					if (e->ny == -1&&(state!=simon_ani_hurt||(state==simon_ani_hurt&&vy>0)))
 					{
 						checkgroundmove = false;
 						isGrounded = true;
 						vy = 0;
+						
 					}
 					else
 						y += dy;
@@ -131,6 +156,52 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					//x += dx;
 			
 			}
+			else if (dynamic_cast<Knight*>(e->obj))
+			{
+				if (untouchtime->IsTimeUp())
+				{
+					untouchtime->Start();
+					Knight* knight = dynamic_cast<Knight*>(e->obj);
+					loseHp(14/*knight->getDamage()*/);
+					//health -= 12;//knight->getDamage();
+					{
+						if (isStandOnStair == false || health == 0)
+						{
+							if (e->nx != 0)
+							{
+								if (e->nx == 1)
+									SetNx(-1);
+								else
+									SetNx(1);
+							}
+							SetState(simon_ani_hurt);
+						}
+					}
+				}
+			}
+			else if (dynamic_cast<Bat*>(e->obj))
+			{
+				if (untouchtime->IsTimeUp()&&state!=simon_ani_led)
+				{
+					untouchtime->Start();
+					Bat* bat = dynamic_cast<Bat*>(e->obj);
+					bat->SetState(bat_ani_die);
+					loseHp(bat->getDamage());
+					//health -= bat->getDamage();
+
+					if (isStandOnStair == false || health == 0)
+					{
+						if (e->nx != 0)
+						{
+							if (e->nx == 1)
+								SetNx(-1);
+							else
+								SetNx(1);
+						}
+						SetState(simon_ani_hurt);
+					}
+				}
+			}
 		}
 	}
 	
@@ -141,7 +212,10 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void Simon::Render()
 {
-	animation_set->at(state)->Render(nx, x, y);
+	int alpha = 255;
+	if (!untouchtime->IsTimeUp())
+		alpha = rand() % 255;
+	animation_set->at(state)->Render(nx, x, y, alpha);
 	
 	//RenderBoundingBox();
 }
@@ -220,6 +294,19 @@ void Simon::SetState(int State)
 		animation_set->at(State)->ResetcurrentFrame();
 		animation_set->at(State)->StartAni();
 		break;
+	case simon_ani_hurt:
+		vy = -0.3;
+		if (nx > 0) vx = -0.13;
+		else vx = 0.13;
+		animation_set->at(State)->ResetcurrentFrame();
+		animation_set->at(State)->StartAni();
+		break;
+	case simon_ani_dead:
+		untouchtime->Stop();
+		vx = 0;
+		vy = 1000;
+		//life -= 1;
+		break;
 	}
 
 }
@@ -271,6 +358,15 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 			{
 				e->isDone = true;
 				currentWeapon = weapon_watch;
+			}
+			else if (e->idItems == items_watterbottle)
+			{
+				e->isDone = true;
+			}
+			else if (e->idItems == items_corss)
+			{
+				isCross = true;
+				e->isDone = true;
 			}
 		}
 		
@@ -361,6 +457,12 @@ void Simon::StandOnStair()
 	vx = vy = 0;
 }
 
+void Simon::loseHp(int x)
+{
+	health -= x;
+	if (health <= 0)
+		health = 0;
+}
 Simon::~Simon()
 {
 
