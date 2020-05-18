@@ -595,14 +595,14 @@ void CPlayScene::UseCross()
 			if (!CheckInCam(objects[i]))
 				continue;
 
-			if (dynamic_cast<Knight*>(objects[i])/*&&(objects[i]->GetState()!=)*/)
+			if (dynamic_cast<Knight*>(objects[i])/*&&(objects[i]->isDone)*/)
 			{
-				auto knight = dynamic_cast<Knight*>(objects[i]);
+				Knight* knight = dynamic_cast<Knight*>(objects[i]);
 				knight->SetState(knight_ani_die);
 			}
 			else if (dynamic_cast<Bat*>(objects[i]))
 			{
-				auto bat = dynamic_cast<Bat*>(objects[i]);
+				Bat* bat = dynamic_cast<Bat*>(objects[i]);
 				bat->SetState(bat_ani_die);
 			}
 		}
@@ -611,8 +611,8 @@ void CPlayScene::UseCross()
 
 void CPlayScene::Revival()
 {
-	//CGame* game = CGame::GetInstance();
-	if (!CheckInCam(simon))
+	CGame* game = CGame::GetInstance();
+	if ((simon->GetPositionY() >= (game->GetCamPosY() + SCREEN_HEIGHT /*+ 200*/)))
 		simon->SetState(simon_ani_dead);
 	if (board->getCheckTime())
 	{
@@ -668,10 +668,11 @@ void CPlayScene::Update(DWORD dt)
 	
 
 	
-	UseCross();
+	
 
 	if (timecross->IsTimeUp())
 		timecross->Stop();
+	UseCross();
 	vector<LPGAMEOBJECT> coObjects;
 	
 
@@ -696,6 +697,24 @@ void CPlayScene::Update(DWORD dt)
 				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), obj->idItems));
 			}
 			
+		}
+
+		if (dynamic_cast<Knight*>(obj) && obj->GetState() == knight_ani_die && !(obj->isDone) && !(obj->isFire))
+		{
+			if (obj->animation_set->at(knight_ani_die)->RenderOver(knight_ani_die_time))
+			{
+				obj->isFire = true;
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 1));
+			}
+		}
+
+		if (dynamic_cast<Bat*>(obj) && obj->GetState() == bat_ani_die && !(obj->isDone) && !(obj->isFire))
+		{
+			if (obj->animation_set->at(bat_ani_die)->RenderOver(bat_time))
+			{
+				obj->isFire = true;
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 1));
+			}
 		}
 	}
 

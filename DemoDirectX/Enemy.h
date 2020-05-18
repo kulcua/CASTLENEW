@@ -3,7 +3,7 @@
 class Enemy :public CGameObject
 {
 protected:
-	int hp;
+	//int hp;
 	int damage;
 	int score;
 public:

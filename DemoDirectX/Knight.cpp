@@ -74,7 +74,13 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	for (int i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
 
-	if (x <= maxX1 || x >= maxX2)
+	/*if ((rand() % 10000 )< 100)
+	{
+		nx *= -1;
+		vx *= -1;
+	}*/
+
+	if (x <= maxX1 || x >= maxX2|| ((rand() % 10000) < 100))
 	{
 		this->nx *= -1;
 		this->vx *= -1;

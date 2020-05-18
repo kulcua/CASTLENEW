@@ -63,6 +63,7 @@ public:
 	int stairdir;
 
 	int nextscene;
+	int hp;
 
 	DWORD dt;
 
@@ -88,7 +89,7 @@ public:
 	{
 		this->vx = vx;
 	}
-	
+	virtual int getHp() { return hp; }
 
 	int GetState() { return this->state; }
 

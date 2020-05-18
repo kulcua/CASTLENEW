@@ -107,7 +107,7 @@ void Bat::SetState(int State)
 bool Bat::CheckCam()
 {
 	CGame *game = CGame::GetInstance();
-	return (x >= game->GetCamPosX() && x < game->GetCamPosX() + (SCREEN_WIDTH+200)&& y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT+100));
+	return (x >= game->GetCamPosX() && x < game->GetCamPosX() + (SCREEN_WIDTH)&& y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT));
 }
 
 int Bat::getHp()

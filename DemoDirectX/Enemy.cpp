@@ -17,7 +17,7 @@ void Enemy::SetState(int State)
 
 int Enemy::getHp()
 {
-	return hp;
+	return CGameObject::getHp();
 }
 
 void Enemy::loseHp(int x)
