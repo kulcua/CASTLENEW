@@ -97,7 +97,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (!isWalkStair)
 		{
 			x += min_tx * dx + nx * 0.4f;
-			y += min_ty * dy + ny * 0.4f;
+			y += min_ty * dy + ny * 0.00009f;
 		}
 
 		/*if (nx != 0) vx = 0;
@@ -203,6 +203,26 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					}
 				}
 			}
+			else if (dynamic_cast<Monkey*>(e->obj))
+			{
+				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
+				{
+					untouchtime->Start();
+					Monkey* monkey = dynamic_cast<Monkey*>(e->obj);
+					loseHp(monkey->getDamage());
+					if (isStandOnStair == false || health == 0)
+					{
+						if (e->nx != 0 || e->ny != 0)
+						{
+							if (e->nx == 1)
+								SetNx(-1);
+							else
+								SetNx(1);
+						}
+						SetState(simon_ani_hurt);
+					}
+				}
+			}
 		}
 	}
 	
@@ -219,7 +239,7 @@ void Simon::Render()
 	if (!watertime->IsTimeUp() && state != simon_ani_led)
 	{
 		if ((float)(GetTickCount() - watertime->GetTimeStart()) < 1000)
-			alpha = 0;
+			alpha = 70;
 		else if (1000 <= (float)(GetTickCount() - watertime->GetTimeStart()) < 2500)
 		{
 			alpha = rand() % 76 + 100;
@@ -315,6 +335,7 @@ void Simon::SetState(int State)
 		break;
 	case simon_ani_dead:
 		untouchtime->Stop();
+		watertime->Stop();
 		vx = 0;
 		vy = 1000;
 		//life -= 1;

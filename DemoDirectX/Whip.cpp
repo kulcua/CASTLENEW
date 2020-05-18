@@ -70,10 +70,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (WhipCheckColli(left, top, right, bottom))
 				{
-					if (state == whip_lv1)
-						e->loseHp(1);
-					else
-						e->loseHp(2);
+					e->loseHp(1);
 
 					if (e->GetState() != bat_ani_die )
 						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
@@ -84,6 +81,26 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						e->SetState(bat_ani_die);
 					}
 
+				}
+			}
+			else if (dynamic_cast<Monkey*>(obj))
+			{
+				Monkey * e = dynamic_cast<Monkey*>(obj);
+
+				float left, top, right, bottom;
+				e->GetBoundingBox(left, top, right, bottom);
+
+				if (WhipCheckColli(left, top, right, bottom))
+				{
+					e->loseHp(1);
+					if (e->GetState() != 1)
+						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
+
+					if (e->getHp() <= 0)
+					{
+						score += e->getScore();
+						e->SetState(1);
+					}
 				}
 			}
 		}

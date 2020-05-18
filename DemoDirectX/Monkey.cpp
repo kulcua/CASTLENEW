@@ -1,0 +1,141 @@
+#include "Monkey.h"
+
+
+
+Monkey::Monkey(LPGAMEOBJECT simon)
+{
+	this->simon = simon;
+	hp = 1;
+	score = 500;
+	damage = 3;
+}
+
+void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
+{
+
+	if (state == 1 && animation_set->at(1)->RenderOver(300))
+	{
+		isDone = true;
+		return;
+	}
+
+	Enemy::Update(dt);
+	if(state!=1)
+		vy += 0.002 * dt;
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
+
+	coEvents.clear();
+
+	CalcPotentialCollisions(coObject, coEvents);
+
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+		/*vy += 0.002 * dt;*/
+	}
+	else
+	{
+		float min_tx, min_ty, nx = 0, ny = 0;
+
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+
+		x += min_tx * dx + nx * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
+
+		if (ny!=0)
+		{
+			if (ny == -1)
+				vy = 0;
+		}
+		
+	}
+
+	
+	//else
+	if(CheckCam())
+	{
+		if (x < simon->GetPositionX())
+		{
+			if (abs(simon->GetPositionX() - x) > 100)
+			{
+				vx = 0.2;
+				nx = 1;
+			}
+		}
+		else if (x > simon->GetPositionX())
+		{
+			if ((abs(simon->GetPositionX() - x) > 100))
+			{
+				vx = -0.2;
+				nx = -1;
+			}
+		}
+		
+		if ((/*simon->GetState()==4*//*simon->animation_set->at(4)->GetcurrentFrame() == 0*/rand()%10000<500)&&y>330)
+			vy = -0.35;
+	}
+
+	// clean up collision events
+	for (int i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+
+}
+
+void Monkey::Render()
+{
+	if (!isDone)
+		animation_set->at(state)->Render(nx, x, y);
+	else return;
+	RenderBoundingBox();
+}
+
+void Monkey::SetState(int State)
+{
+	Enemy::SetState(State);
+	switch (State)
+	{
+	case 0:
+		vx = vy = 0;
+		break;
+	case 1:
+		vx = vy = 0;
+		animation_set->at(State)->StartAni();
+		break;
+	default:
+		break;
+	}
+}
+
+int Monkey::getHp()
+{
+	return Enemy::getHp();
+}
+
+void Monkey::GetBoundingBox(float &l, float &t, float &r, float &b)
+{
+	if (state !=1 )
+	{
+		l = x;
+		t = y - 15;;
+		r = l + 32;
+		b = t + 32;
+	}
+}
+
+bool Monkey::CheckCam()
+{
+	CGame *game = CGame::GetInstance();
+	return (x >= game->GetCamPosX() && x < game->GetCamPosX() + (SCREEN_WIDTH) && y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT));
+}
+
+void Monkey::loseHp(int x)
+{
+	Enemy::loseHp(x);
+}
+
+
+Monkey::~Monkey()
+{
+}

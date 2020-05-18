@@ -101,6 +101,7 @@
     <ClCompile Include="Knife.cpp" />
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Monkey.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="PlayScence.cpp" />
     <ClCompile Include="Scence.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Knife.h" />
     <ClInclude Include="Knight.h" />
+    <ClInclude Include="Monkey.h" />
     <ClInclude Include="Number.h" />
     <ClInclude Include="PlayScence.h" />
     <ClInclude Include="Scence.h" />

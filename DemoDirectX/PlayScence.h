@@ -18,6 +18,7 @@
 #include "Knight.h"
 #include "Bat.h"
 #include "Timer.h"
+#include "Monkey.h"
 
 class CPlayScene : public CScene
 {
