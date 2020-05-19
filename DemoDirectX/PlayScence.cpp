@@ -37,6 +37,7 @@
 #define OBJECT_TYPE_KNIGHT 6
 #define OBJECT_TYPE_BAT 7
 #define OBJECT_TYPE_MONKEY 8
+#define OBJECT_TYPE_SKELETON 9
 
 
 #define OBJECT_TYPE_PORTAL	50
@@ -435,6 +436,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		objects.push_back(obj);
 		break;
 	}
+	case OBJECT_TYPE_SKELETON:
+	{
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new Skeleton(simon);
+		obj->SetAnimationSet(ani_set);
+		obj->SetPosition(x, y);
+		objects.push_back(obj);
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -614,6 +624,11 @@ void CPlayScene::UseCross()
 			{
 				Bat* bat = dynamic_cast<Bat*>(objects[i]);
 				bat->SetState(bat_ani_die);
+			}
+			else if (dynamic_cast<Monkey*>(objects[i]))
+			{
+				Monkey* monkey = dynamic_cast<Monkey*>(objects[i]);
+				monkey->SetState(monkey_ani_die);
 			}
 		}
 	}

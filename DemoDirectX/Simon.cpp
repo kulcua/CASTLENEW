@@ -96,8 +96,8 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		
 		if (!isWalkStair)
 		{
-			x += min_tx * dx + nx * 0.4f;
-			y += min_ty * dy + ny * 0.00009f;
+			x += min_tx * dx + nx * 0.000089f;
+			y += min_ty * dy + ny * 0.000089f;
 		}
 
 		/*if (nx != 0) vx = 0;
@@ -113,7 +113,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->ny != 0)
 				{
-					if (e->ny == -1&&(state!=simon_ani_hurt||(state==simon_ani_hurt&&vy>0)))
+					if (e->ny == -1&&(state!=simon_ani_hurt||(state==simon_ani_hurt&&vy>=0)))
 					{
 						checkgroundmove = false;
 						isGrounded = true;

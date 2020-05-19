@@ -44,23 +44,27 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		if (ny!=0)
+		
+		//if (ny!=0)
 		{
 			if (ny == -1)
+			{
 				vy = 0;
+				//jump = true;
+			}
 		}
 		
 	}
 
 	
 	//else
-	if(CheckCam())
+	if(CheckCam() && state != monkey_ani_die)
 	{
 		if (x < simon->GetPositionX())
 		{
 			if (abs(simon->GetPositionX() - x) > 100)
 			{
-				vx = 0.2;
+				vx = 0.16;
 				nx = 1;
 			}
 		}
@@ -68,13 +72,16 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		{
 			if ((abs(simon->GetPositionX() - x) > 100))
 			{
-				vx = -0.2;
+				vx = -0.16;
 				nx = -1;
 			}
 		}
 		
-		if ((/*simon->GetState()==4*//*simon->animation_set->at(4)->GetcurrentFrame() == 0*/rand()%10000<500)&&y>330)
-			vy = -0.35;
+		if (((rand() % 10000 < 300)/*|| simon->GetState() == 4*/) && y > 350/*330*/)
+		{
+			vy = -0.4;
+			//jump = false;
+		}
 	}
 
 	// clean up collision events
@@ -88,7 +95,7 @@ void Monkey::Render()
 	if (!isDone)
 		animation_set->at(state)->Render(nx, x, y);
 	else return;
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Monkey::SetState(int State)
@@ -118,7 +125,7 @@ void Monkey::GetBoundingBox(float &l, float &t, float &r, float &b)
 	if (state !=1 )
 	{
 		l = x;
-		t = y - 15;;
+		t = y;
 		r = l + 32;
 		b = t + 32;
 	}
@@ -127,7 +134,7 @@ void Monkey::GetBoundingBox(float &l, float &t, float &r, float &b)
 bool Monkey::CheckCam()
 {
 	CGame *game = CGame::GetInstance();
-	return (x >= game->GetCamPosX() && x < game->GetCamPosX() + (SCREEN_WIDTH) && y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT));
+	return (x >= game->GetCamPosX()+50 && x < game->GetCamPosX() + (SCREEN_WIDTH) && y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT));
 }
 
 void Monkey::loseHp(int x)

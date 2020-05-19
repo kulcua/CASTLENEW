@@ -56,7 +56,7 @@ class Simon :public CGameObject
 	
 public:
 
-	Timer* untouchtime = new Timer(1200);
+	Timer* untouchtime = new Timer(500);
 	Timer* watertime = new Timer(4000);
 	bool checkgroundmove=false;
 	bool isCross;
