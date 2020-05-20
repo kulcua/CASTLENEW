@@ -1,25 +1,28 @@
 #pragma once
 #include"Enemy.h"
 #include"Game.h"
-#include"Bone.h"
-class Skeleton :public Enemy
+#include"Timer.h"
+#define frog_ani_die 1
+class Frog :public Enemy
 {
 	LPGAMEOBJECT simon;
-	Bone* bone;
 	bool check;
-	bool jump;
-
+	
+	/*Timer* wait = new Timer(2800);
+	Timer* wait1 = new Timer(2500);
+	Timer* dow = new Timer(2500);
+	Timer* dow1 = new Timer(2500);
+	Timer* asd = new Timer(4000);
+	bool checkstar,qwe;*/
 public:
-	Skeleton(LPGAMEOBJECT simon);
+	Frog(LPGAMEOBJECT simon);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
 	void Render();
 	void SetState(int State);
 	void GetBoundingBox(float &l, float &t, float &r, float &b);
 	void loseHp(int x);
 	int getHp();
-	
-
 	bool CheckCam();
-	~Skeleton();
+	~Frog();
 };
 

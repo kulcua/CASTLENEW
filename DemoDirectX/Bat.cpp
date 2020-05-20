@@ -26,7 +26,7 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 	if (state!= bat_ani_die)
 	{
-		if (simon->GetState() != simon_ani_stair_down&& simon->GetState() != simon_ani_stair_up)
+		if (simon->GetState() != simon_ani_stair_down&& simon->GetState() != simon_ani_stair_up&&simon->GetState()!=2)
 		{
 			if (sqrt(pow(x - simon->GetPositionX(), 2) + pow(y - simon->GetPositionY(), 2)) <= bat_distance_max)
 			{
@@ -35,18 +35,7 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 					vy += bat_gravity;
 				else
 					vy = 0;
-				/*if (abs(y - simon->GetPositionY()) < bat_distance)
-				{
-					vy = 0;
-					checkpos = true;
-				}
-				else if (y < simon->GetPositionY() && simon->GetState() == simon_ani_stair_down)
-				{
-					vy += 0.;
-					checkpos = true;
-				}
-				else if (!checkpos&& simon->GetState() != simon_ani_stair_down)
-					vy += bat_gravity;*/
+				
 			}
 		}
 		else

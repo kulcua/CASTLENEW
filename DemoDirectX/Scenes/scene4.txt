@@ -2,7 +2,7 @@
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Simon , 1 = Ground 
 # Simon
-0	1400	336	-1	0	128	50	1	8
+0	1470	336	-1	0	128	50	1	8
 # Brick
 1	1504	272	24
 1	1504	400	24
@@ -83,6 +83,8 @@
 4	160	112	10	-1
 4	128	80	10	-1
 #Monkey
-#8	864	100	25
+8	864	100	25
 #Skeleton
 9	85	217	26
+#Frog
+10	1450	290	28

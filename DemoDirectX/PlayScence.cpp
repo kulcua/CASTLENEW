@@ -38,6 +38,7 @@
 #define OBJECT_TYPE_BAT 7
 #define OBJECT_TYPE_MONKEY 8
 #define OBJECT_TYPE_SKELETON 9
+#define OBJECT_TYPE_FROG 10
 
 
 #define OBJECT_TYPE_PORTAL	50
@@ -443,6 +444,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		objects.push_back(obj);
+		break;
+	}
+	case OBJECT_TYPE_FROG:
+	{
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new Frog(simon);
+		obj->SetAnimationSet(ani_set);
+		obj->SetPosition(x, y);
+		objects.push_back(obj);
+		break;
 		break;
 	}
 	default:

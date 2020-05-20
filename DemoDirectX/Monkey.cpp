@@ -77,9 +77,9 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 			}
 		}
 		
-		if (((rand() % 10000 < 300)/*|| simon->GetState() == 4*/) && y > 350/*330*/)
+		if (((rand() % 10000 < 350)&& (abs(simon->GetPositionX() - x) < 120)) && y > 350/*330*/)
 		{
-			vy = -0.4;
+			vy = -0.35;
 			//jump = false;
 		}
 	}

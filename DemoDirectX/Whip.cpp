@@ -103,6 +103,36 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					}
 				}
 			}
+			else if (dynamic_cast<Frog*>(obj))
+			{
+				Frog * e = dynamic_cast<Frog*>(obj);
+
+				float left, top, right, bottom;
+				e->GetBoundingBox(left, top, right, bottom);
+
+				if (WhipCheckColli(left, top, right, bottom))
+				{
+					if (!delaydamage)
+					{
+						if (state == whip_lv1)
+							e->loseHp(1);
+						else
+							e->loseHp(2);
+						delaydamage = true;
+					}
+
+					if (e->GetState() != frog_ani_die)
+						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
+
+					if (e->getHp() <= 0)
+					{
+						score += e->getScore();
+						e->SetState(frog_ani_die);
+					}
+
+				}
+			}
+
 		}
 
 }

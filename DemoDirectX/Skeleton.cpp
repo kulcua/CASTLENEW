@@ -38,6 +38,8 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		{
 			if (ny == -1)
 				vy = 0;
+			else
+				jump = true;
 		}
 
 	}
@@ -86,9 +88,10 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		//	}*/
 		//}
 
-		if ((rand() % 10000 < 150) && y > 300)
+		if (/*(rand() % 10000 < 150)*/ jump/*&& y > 300*/)
 		{
-			vy = -0.03*dt;
+			vy = -0.4;
+			jump = false;
 		}
 	}
 	else 

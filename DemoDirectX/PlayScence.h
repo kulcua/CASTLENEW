@@ -20,6 +20,7 @@
 #include "Timer.h"
 #include "Monkey.h"
 #include "Skeleton.h"
+#include "Frog.h"
 
 class CPlayScene : public CScene
 {

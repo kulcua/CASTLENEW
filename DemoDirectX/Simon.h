@@ -11,6 +11,7 @@
 #include "Knight.h"
 #include "Bat.h"
 #include "Monkey.h"
+#include "Frog.h"
 #include "Timer.h"
 
 #define simon_jump -0.5f
