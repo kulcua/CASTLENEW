@@ -5,8 +5,14 @@
 #define items_big_heart 1
 #define items_knife 2
 #define items_watch 3
+#define items_axe 4
+#define items_boom 5
+#define items_holywater 6
 #define items_watterbottle 7
 #define items_corss 8
+#define items_double 9
+#define items_triple 10
+
 #define items_ani_set 5
 
 

@@ -30,6 +30,7 @@ class Board
 
 	string FillNumber(string s, UINT MaxNumber);
 	vector<LPSPRITE> subweapon;
+	vector<LPSPRITE> doubletriple;
 
 	int time, timeremain;
 	int timemax;

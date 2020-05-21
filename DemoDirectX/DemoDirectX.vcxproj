@@ -86,9 +86,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Axe.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Bone.cpp" />
+    <ClCompile Include="Boomerang.cpp" />
     <ClCompile Include="Candle.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Frog.cpp" />
@@ -99,6 +101,7 @@
     <ClCompile Include="GroundMoving.cpp" />
     <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="Hit.cpp" />
+    <ClCompile Include="Holywater.cpp" />
     <ClCompile Include="Items.cpp" />
     <ClCompile Include="Knife.cpp" />
     <ClCompile Include="Knight.cpp" />
@@ -120,9 +123,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Axe.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Bone.h" />
+    <ClInclude Include="Boomerang.h" />
     <ClInclude Include="Candle.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Frog.h" />
@@ -133,6 +138,7 @@
     <ClInclude Include="GroundMoving.h" />
     <ClInclude Include="HealthBar.h" />
     <ClInclude Include="Hit.h" />
+    <ClInclude Include="Holywater.h" />
     <ClInclude Include="Items.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Knife.h" />

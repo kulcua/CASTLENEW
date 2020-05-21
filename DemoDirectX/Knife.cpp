@@ -4,6 +4,7 @@
 Knife::Knife()
 {
 	isDone = true;
+	isFire = false;
 	SetAnimationSet(CAnimationSets::GetInstance()->Get(knife_ani_set));
 }
 
@@ -16,8 +17,11 @@ void Knife::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	SubWeapon::Update(dt);
 
+
+
 	if (CheckPosKnife(POSX))
 	{
+		isFire = false;
 		isDone = true;
 		return;
 	}
@@ -34,15 +38,15 @@ void Knife::Render()
 
 	SubWeapon::renderlisthit();
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 
 }
 
 
 
-void Knife::SetState(int State)
+void Knife::SetV()
 {
-	CGameObject::SetState(State);
+	//CGameObject::SetState(State);
 
 	if (nx > 0)
 		vx = 0.5;

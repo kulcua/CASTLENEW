@@ -6,6 +6,9 @@
 #include "SubWeapon.h"
 #include "GroundMoving.h"
 #include "Knife.h"
+#include "Axe.h"
+#include "Boomerang.h"
+#include "Holywater.h"
 #include "Gate.h"
 #include "Stair.h"
 #include "Knight.h"
@@ -47,7 +50,12 @@ class Simon :public CGameObject
 {
 	Whip *whip;
 
-	SubWeapon *knife;
+	vector<SubWeapon*> listsub;
+
+	SubWeapon *knife[3];
+	SubWeapon *axe[3];
+	SubWeapon *boom[3];
+	SubWeapon *holywater[3];
 
 	int health;
 	int score;
@@ -57,12 +65,14 @@ class Simon :public CGameObject
 	
 public:
 
-	Timer* untouchtime = new Timer(500);
+	Timer* untouchtime = new Timer(1000);
 	Timer* watertime = new Timer(4000);
 	bool checkgroundmove=false;
 	bool isCross;
 	bool isDead;
 
+
+	int hitDoubleTriple = -1;
 	int currentscene;
 	int beforescene;
 
@@ -94,17 +104,21 @@ public:
 	{
 		return whip;
 	}
-	SubWeapon *GetKnife()
-	{
-		return knife;
-	}
+	vector<SubWeapon*> GetListSubWeapon() { return listsub; }
 	int getcurrentweapon() { return currentWeapon; }
 	int getscore() { return score; }
 	int getmana() { return mana; }
 	int getlife() { return life; }
+
+	void InstallKnife();
+	void InstallAxe();
+	void InstallBoom();
+	void InstallHoly();
+	
 	void usemana(int a) { mana -= a; }
 	void SimonColliWithItems(vector<LPGAMEOBJECT> *listitems);
 	bool SimonColliWithStair(vector<LPGAMEOBJECT> *liststair);
+	void SimonColliWithMob(vector<LPGAMEOBJECT> *listmob);
 	void StandOnStair();
 	void AutoWalkStair(float newPosX, int stateAfterAutoWalk, int nxAfterAutoWalk);
 	void DoAutoWalkStair();

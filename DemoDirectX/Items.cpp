@@ -91,6 +91,24 @@ void Items::GetBoundingBox(float &l, float &t, float &r, float &b)
 			r = l + items_watch_box_width;
 			b = t + items_watch_box_height;
 			break;
+		case items_axe:
+			l = x;
+			t = y;
+			r = l + 30;
+			b = t + 28;
+			break;
+		case items_boom:
+			l = x;
+			t = y;
+			r = l + 30;
+			b = t + 28;
+			break;
+		case items_holywater:
+			l = x;
+			t = y;
+			r = l + 32;
+			b = t + 28;
+			break;
 		case items_watterbottle:
 			l = x;
 			t = y;
@@ -102,6 +120,18 @@ void Items::GetBoundingBox(float &l, float &t, float &r, float &b)
 			t = y;
 			r = l + 32;
 			b = t + 32;
+			break;
+		case items_double:
+			l = x;
+			t = y;
+			r = l + 28;
+			b = t + 28;
+			break;
+		case items_triple:
+			l = x;
+			t = y;
+			r = l + 28;
+			b = t + 28;
 			break;
 		}
 	}
@@ -128,11 +158,31 @@ void Items::SetState(int State)
 		vx = 0;
 		vy = 0.15;
 		break;
+	case items_axe:
+		vx = 0;
+		vy = 0.15;
+		break;
+	case items_boom:
+		vx = 0;
+		vy = 0.15;
+		break;
+	case items_holywater:
+		vx = 0;
+		vy = 0.15;
+		break;
 	case items_watterbottle:
 		vx = 0;
 		vy = 0.15;
 		break;
 	case items_corss:
+		vx = 0;
+		vy = 0.15;
+		break;
+	case items_double:
+		vx = 0;
+		vy = 0.15;
+		break;
+	case items_triple:
 		vx = 0;
 		vy = 0.15;
 		break;

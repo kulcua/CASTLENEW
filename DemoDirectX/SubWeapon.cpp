@@ -77,7 +77,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 	else
 	{
-		
+		// kiểm tra va chạm với object
 		float min_tx, min_ty, nx = 0, ny;
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
@@ -96,11 +96,12 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				Candle *candle = dynamic_cast<Candle *>(e->obj);
 
-				if (e->nx != 0)
+				if (e->nx != 0 || e->ny != 0)
 				{
 					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + 10));
 					candle->SetState(break_candle);
 					isDone = true;
+					isFire = false;
 				}
 
 			}

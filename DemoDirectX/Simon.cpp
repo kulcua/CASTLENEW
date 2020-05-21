@@ -5,14 +5,27 @@
 Simon::Simon() 
 {
 	whip = new Whip();
-	knife = new Knife();
+	for (int i = 0; i < 3; i++)
+	{
+		knife[i] = new Knife();
+		knife[i]->isFire = false;
+
+		axe[i] = new Axe();
+		axe[i]->isFire = false;
+
+		boom[i] = new Boomerang(this);
+		boom[i]->isFire = false;
+
+		holywater[i] = new Holywater();
+		holywater[i]->isFire = false;
+	}
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(simon_ani_set));
 	currentWeapon = -1;
 	isGrounded = false;
 	health = simon_max_health;
 	//state = simon_ani_idle;
 	score = 0;
-	mana = 5;
+	mana = 99;
 	life = 3;
 	this->nextscene = 99;
 }
@@ -79,6 +92,8 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 	
+	SimonColliWithMob(coObjects);
+
 	CalcPotentialCollisions(&COOBJECTS/*coObjects*/, coEvents);
 
 
@@ -374,6 +389,30 @@ void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	bottom = top +simon_box_height;
 }
 
+void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
+{
+	float l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon;
+	GetBoundingBox(l_simon, t_simon, r_simon, b_simon);
+
+	for (UINT i = 0; i < listmob->size(); i++)
+	{
+		LPGAMEOBJECT e = listmob->at(i);
+		if (dynamic_cast<Knight*>(e))
+		{
+			Knight* knight = dynamic_cast<Knight*>(e);
+			knight->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
+			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp()&& state != simon_ani_led)
+			{
+				untouchtime->Start();
+				loseHp(knight->getDamage());
+				if (isStandOnStair == false || health == 0)
+					SetState(simon_ani_hurt);
+			}
+
+		}
+	}
+}
+
 void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này để tránh việc ko xét va chạm dc khi 2 simon trùng với items
 {
 	float l_items, t_items, r_items, b_items, l_simon, t_simon, r_simon, b_simon;
@@ -403,16 +442,43 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 				//health = health - 1;
 				mana += 5;
 			}
-			else if (e->GetState() == items_knife)
+			else if (e->idItems == items_knife)
 			{
+				listsub.clear();
 				e->isDone = true;
 				currentWeapon = weapon_knfie;
-				//e->SetState(knife_ani);				
+				for (int i = 0; i < 3; i++)
+					listsub.push_back(knife[i]);
+							
 			}
 			else if (e->GetState() == items_watch)
 			{
 				e->isDone = true;
 				currentWeapon = weapon_watch;
+			}
+			else if (e->idItems == items_axe)
+			{
+				listsub.clear();
+				e->isDone = true;
+				currentWeapon = 2;
+				for (int i = 0; i < 3; i++)
+					listsub.push_back(axe[i]);
+			}
+			else if (e->idItems == items_boom)
+			{
+				listsub.clear();
+				e->isDone = true;
+				currentWeapon = 3;
+				for (int i = 0; i < 3; i++)
+					listsub.push_back(boom[i]);
+			}
+			else if (e->idItems == items_holywater)
+			{
+				listsub.clear();
+				e->isDone = true;
+				currentWeapon = 4;
+				for (int i = 0; i < 3; i++)
+					listsub.push_back(holywater[i]);
 			}
 			else if (e->idItems == items_watterbottle)
 			{
@@ -422,6 +488,16 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 			else if (e->idItems == items_corss)
 			{
 				isCross = true;
+				e->isDone = true;
+			}
+			else if (e->idItems == items_double)
+			{
+				hitDoubleTriple = 0;
+				e->isDone = true;
+			}
+			else if (e->idItems == items_triple)
+			{
+				hitDoubleTriple = 1;
 				e->isDone = true;
 			}
 		}
@@ -506,6 +582,38 @@ void Simon::DoAutoWalkStair()
 
 		}
 	}
+}
+
+void Simon::InstallKnife()
+{
+	listsub.clear();
+	currentWeapon = weapon_knfie;
+	for (int i = 0; i < 3; i++)
+		listsub.push_back(knife[i]);
+}
+
+void Simon::InstallAxe()
+{
+	listsub.clear();
+	currentWeapon = 2;
+	for (int i = 0; i < 3; i++)
+		listsub.push_back(axe[i]);
+}
+
+void Simon::InstallBoom()
+{
+	listsub.clear();
+	currentWeapon = 3;
+	for (int i = 0; i < 3; i++)
+		listsub.push_back(boom[i]);
+}
+
+void Simon::InstallHoly()
+{
+	listsub.clear();
+	currentWeapon = 4;
+	for (int i = 0; i < 3; i++)
+		listsub.push_back(holywater[i]);
 }
 
 void Simon::StandOnStair()

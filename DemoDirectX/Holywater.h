@@ -1,21 +1,12 @@
 #pragma once
 #include"SubWeapon.h"
-#include "Hit.h"
-#include"Gate.h"
-#include"Ground.h"
-#define knife_ani 0
-#define knife_ani_set 6
-
-#define SCREEN_WIDTH 530
-#define SCREEN_HEIGHT 500
-#define knife_box_width 34
-#define knife_box_height 18
-class Knife :public SubWeapon
+class Holywater :public SubWeapon
 {
-	
+	bool isHolyWaterShattered = false;
+	int holyWaterShatteredCounter = 0;
 public:
-	Knife();
-	~Knife();
+	Holywater();
+	~Holywater();
 	void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	void Render();
 	void collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
@@ -23,5 +14,8 @@ public:
 	void SetPosSubWeapon(D3DXVECTOR3 pos, bool isstanding);
 	bool CheckPosKnife(float a);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
+	void StartHolyWater() { isHolyWaterShattered = true; holyWaterShatteredCounter = GetTickCount(); }
+	void SetState(int State);
+
 };
 

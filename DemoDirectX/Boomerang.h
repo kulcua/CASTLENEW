@@ -1,21 +1,12 @@
 #pragma once
 #include"SubWeapon.h"
-#include "Hit.h"
-#include"Gate.h"
-#include"Ground.h"
-#define knife_ani 0
-#define knife_ani_set 6
-
-#define SCREEN_WIDTH 530
-#define SCREEN_HEIGHT 500
-#define knife_box_width 34
-#define knife_box_height 18
-class Knife :public SubWeapon
+#include"Simon.h"
+class Boomerang :public SubWeapon
 {
 	
 public:
-	Knife();
-	~Knife();
+	Boomerang(LPGAMEOBJECT simon);
+	~Boomerang();
 	void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	void Render();
 	void collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);

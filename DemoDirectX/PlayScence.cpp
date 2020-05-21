@@ -787,23 +787,22 @@ void CPlayScene::Update(DWORD dt)
 		{
 			if (simon->isHitSubWeapon)
 			{				
-				simon->GetKnife()->isDone = false;
-
-				//simon->GetKnife()->SetNx(simon->Getnx());
-
-				if (simon->GetState() == simon_ani_sit) //ko để dc trong update simon //để đây để có thể nhảy bắn
-					simon->GetKnife()->SetPosSubWeapon(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), false);
-				else
-					simon->GetKnife()->SetPosSubWeapon(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), true);
+		
 			}
 			else
 				simon->GetWhip()->Update(dt, &objects/*&objectsstatic*/);
 			
 		}
 	}
+	for (int i = 0; i < 3; i++)
+	{
+		if (simon->currentWeapon != -1 && !simon->GetListSubWeapon()[i]->isDone)
+			simon->GetListSubWeapon()[i]->Update(dt, &objects);
 
-	if(simon->currentWeapon!=-1&&!simon->GetKnife()->isDone) // khác -1 để ko bay ra phi tiêu // ko thể thêm đk đang đánh vũ khí phụ dc
-		simon->GetKnife()->Update(dt,&objects/*&objectsstatic*/);
+
+		/*if (simon->currentWeapon == 2 && !simon->GetListAxe()[i]->isDone)
+			simon->GetListAxe()[i]->Update(dt, &objects);*/
+	}
 		
 
 	
@@ -918,9 +917,15 @@ void CPlayScene::Render()
 	else
 		simon->GetWhip()->Render(-1);
 
-	if (simon->currentWeapon != -1)
+	for (int i = 0; i < 3; i++)
 	{
-		simon->GetKnife()->Render();
+		if (simon->currentWeapon != -1)
+		{
+			simon->GetListSubWeapon()[i]->Render();
+		}
+
+		//if (simon->currentWeapon == 2)
+		//	simon->GetListAxe()[i]->Render();
 	}
 
 	/*for (int i = 0; i < listHit.size(); i++)
@@ -1019,6 +1024,24 @@ void CPlayScenceKeyHandler::Sit()
 void CPlayScenceKeyHandler::Hit_SubWeapon()
 {
 	Simon *simon = ((CPlayScene*)scence)->simon;
+	vector<SubWeapon*> weaponlist = simon->GetListSubWeapon();
+	SubWeapon * subweaponlist = NULL;
+
+	if (simon->currentWeapon != -1)
+	{
+		if (weaponlist[0]->isFire == false)
+			subweaponlist = weaponlist[0];
+		else if (weaponlist[1]->isFire == false && (simon->hitDoubleTriple == 0 || simon->hitDoubleTriple == 1))
+			subweaponlist = weaponlist[1];
+		else if (weaponlist[2]->isFire == false && simon->hitDoubleTriple == 1)
+			subweaponlist = weaponlist[2];
+		else return;
+	}
+
+
+
+
+
 
 	if (simon->currentWeapon == -1||simon->getmana()==0)
 	{
@@ -1026,15 +1049,27 @@ void CPlayScenceKeyHandler::Hit_SubWeapon()
 		return;  //return để không bị đánh khi không có vũ khí phụ
 	}
 
-	if (simon->GetKnife()->isDone == false) //để cho vũ khí phụ ko thể đánh quá nhiều
+	if (subweaponlist->isDone == false) //để cho vũ khí phụ ko thể đánh quá nhiều
 		return;
 	simon->isHitSubWeapon = true;
-	simon->GetKnife()->SetNx(simon->Getnx());//để hướng ở đây để ko bị thay đổi khi simon quay lưng ngay lập tức
-	if (simon->getcurrentweapon() == 0)
+
+	if (simon->getcurrentweapon() != -1) //(simon->getcurrentweapon() == 0)
 	{
-		simon->GetKnife()->SetState(knife_ani);
+		subweaponlist->SetNx(simon->Getnx());
+
+		{
+			if (simon->GetState() == simon_ani_sit) //ko để dc trong update simon //để đây để có thể nhảy bắn
+				subweaponlist->SetPosSubWeapon(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), false);
+			else
+				subweaponlist->SetPosSubWeapon(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), true);
+		}
+		subweaponlist->SetV();
+		subweaponlist->isDone = false;
+		subweaponlist->isFire = true;
 		simon->usemana(1);
 	}
+
+	
 	Hit();
 }
 
@@ -1246,6 +1281,48 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_9:
 		if (simon->GetState() != simon_ani_dead)
 			simon->watertime->Start();
+		break;
+	case DIK_1:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->InstallKnife();
+		}	
+		break;
+	case DIK_2:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->InstallAxe();
+		}
+		break;
+	case DIK_3:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->InstallBoom();
+		}
+		break;
+	case DIK_4:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->InstallHoly();
+		}
+		break;
+	case DIK_5:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->hitDoubleTriple = 0;
+		}
+		break;
+	case DIK_6:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->hitDoubleTriple = 1;
+		}
+		break;
+	case DIK_7:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->hitDoubleTriple = -1;
+		}
 		break;
 	}
 }

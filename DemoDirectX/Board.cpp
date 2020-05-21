@@ -13,6 +13,13 @@ Board::Board(int HealSimon,int HealBoss)
 
 	subweapon.push_back(CSprites::GetInstance()->Get(82));
 	subweapon.push_back(CSprites::GetInstance()->Get(83));
+	subweapon.push_back(CSprites::GetInstance()->Get(84));
+	subweapon.push_back(CSprites::GetInstance()->Get(85));
+	subweapon.push_back(CSprites::GetInstance()->Get(86));
+
+
+	doubletriple.push_back(CSprites::GetInstance()->Get(202));
+	doubletriple.push_back(CSprites::GetInstance()->Get(203));
 
 	timemax = 300;
 	time = 0;
@@ -58,11 +65,23 @@ void Board::Render(int idmap,int camx,int camy,Simon* simon)
 	//board->Draw(-1, posx, posy);
 	healsimon->Render(simon_heal, camx, camy);
 	healboss->Render(boss_heal, camx, camy);
+
+
+	if (simon->hitDoubleTriple != -1)
+	{
+		doubletriple[simon->hitDoubleTriple]->Draw(-1, camx + 440, camy + 31);
+	}
+
 	
 
 	if (simon->getcurrentweapon() !=-1)
 	{
-		subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 310, camy + 38);
+		if (simon->getcurrentweapon() == 3)
+			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 312, camy + 36);
+		else if (simon->getcurrentweapon() == 4 || simon->getcurrentweapon() == 2)
+			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 312, camy + 33);
+		else
+			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 310, camy + 38);
 	}
 
 	numb.Render(camx + 295, camy + 15, FillNumber(to_string(timeremain), max_num_time));
