@@ -23,11 +23,22 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	if(state!=1)
 		vy += 0.002 * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-
 	coEvents.clear();
+	vector<LPCOLLISIONEVENT> coEventsResult;
+	vector<LPGAMEOBJECT> COOBJECTS;
+	COOBJECTS.clear();
 
-	CalcPotentialCollisions(coObject, coEvents);
+	for (int i = 0; i < coObject->size(); i++)
+	{
+		if (coObject->at(i) != dynamic_cast<Frog*>(coObject->at(i)))
+		{
+			COOBJECTS.push_back(coObject->at(i));
+		}
+	}
+
+	
+
+	CalcPotentialCollisions(&COOBJECTS, coEvents);
 
 	if (coEvents.size() == 0)
 	{

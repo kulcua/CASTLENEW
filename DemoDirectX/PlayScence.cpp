@@ -71,6 +71,7 @@ void CPlayScene::LoadBaseObject()
 	}
 	board = new Board(simon->GetHealth(), 16);
 	tilemap = new TileMap();
+	grid = new Grid();
 }
 
 
@@ -86,6 +87,7 @@ void CPlayScene::SwitchScene(int idmap)
 	Load(a);
 	LoadMap(a);
 	LoadObject();
+	grid->PushGrid(listpush);
 	CGame::GetInstance()->SetCamPos(CGame::GetInstance()->GetCamPosX(), 0.0f);
 	simon->currentscene=simon->beforescene = idmap;
 }
@@ -200,6 +202,8 @@ void CPlayScene::_ParseSection_INFOMAP(string line)
 		CGame::GetInstance()->SetCamPosX(atof(tokens[10].c_str()));
 	else
 		CGame::GetInstance()->SetCamPosX(atof(tokens[11].c_str()));
+
+	grid->Resize(atoi(tokens[12].c_str()), atoi(tokens[13].c_str()));
 }
 
 void CPlayScene::_ParseSection_LINKMAP(string line)
@@ -361,7 +365,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Ground();
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		objects.push_back(obj);
+		//objects.push_back(obj);
+		listpush.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_CANDLE: 
@@ -370,10 +375,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Candle();
 
 		obj->idItems = id;
-		//allobject.push_back(obj);
-		//objectsstatic.push_back(obj);
+		
 		obj->SetPosition(x, y);
-		objects.push_back(obj);
+		//objects.push_back(obj);
+		listpush.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_GATE:
@@ -382,7 +387,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->nextscene = atof(tokens[3].c_str());
 		/*current_scene = NEXTMAP;*/
 		obj->SetPosition(x, y);
-		objects.push_back(obj);
+		//objects.push_back(obj);
+		listpush.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_STAIR:
@@ -393,10 +399,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		obj->stairdir = stairnx;
-		if(stairnx==-1)
+		/*if(stairnx==-1)
 			liststairright.push_back(obj);
 		else
-			liststairleft.push_back(obj);
+			liststairleft.push_back(obj);*/
+		listpush.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_GROUNDMOVING:
@@ -405,7 +412,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new GroundMoving();
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		objects.push_back(obj);
+		//objects.push_back(obj);
+		listpush.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_KNIGHT:
@@ -416,7 +424,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Knight(maxX1, maxX2);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		objects.push_back(obj);
+		//objects.push_back(obj);
+		listpush.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_BAT:
@@ -425,7 +434,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Bat(simon);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		objects.push_back(obj);
+		//objects.push_back(obj);
+		listpush.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_MONKEY:
@@ -434,7 +444,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Monkey(simon);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		objects.push_back(obj);
+		//objects.push_back(obj);
+		listpush.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_SKELETON:
@@ -443,7 +454,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Skeleton(simon);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		objects.push_back(obj);
+		//objects.push_back(obj);
+		listpush.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_FROG:
@@ -452,8 +464,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Frog(simon);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		objects.push_back(obj);
-		break;
+		//objects.push_back(obj);
+		listpush.push_back(obj);
 		break;
 	}
 	default:
@@ -465,6 +477,31 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	// General object setup
 	
 	/*obj->SetPosition(x, y);*/
+}
+
+
+void CPlayScene::GetObjectGrid()
+{
+	objects.clear();
+	liststairleft.clear();
+	liststairright.clear();
+	listget.clear();
+
+	grid->GetGrid(listget);
+	//DebugOut(L" SO PHAN TU TRONG LIST %d \n", listget.size());
+	for (UINT i = 0; i < listget.size(); i++)
+	{
+		LPGAMEOBJECT obj = listget[i];
+		if (dynamic_cast<Stair*>(obj))
+		{
+			if(obj->stairdir==-1)
+				liststairright.push_back(obj);
+			else
+				liststairleft.push_back(obj);
+		}
+		else
+			objects.push_back(obj);
+	}
 }
 
 void CPlayScene::LoadMap(LPCWSTR map)
@@ -612,7 +649,7 @@ void CPlayScene::Load(LPCWSTR sceneFilePath)
 bool CPlayScene::CheckInCam(LPGAMEOBJECT a)
 {
 	CGame* game = CGame::GetInstance();
-	return (a->GetPositionX() >= game->GetCamPosX()) && (a->GetPositionX() < game->GetCamPosX() + SCREEN_WIDTH) && (a->GetPositionY() >= game->GetCamPosY()) && (a->GetPositionY() < game->GetCamPosY() + SCREEN_HEIGHT);
+	return (a->GetPositionX() >= game->GetCamPosX()) && (a->GetPositionX() < (game->GetCamPosX() + SCREEN_WIDTH)) && (a->GetPositionY() >= game->GetCamPosY()) && (a->GetPositionY() < game->GetCamPosY() + SCREEN_HEIGHT);
 }
 
 void CPlayScene::UseCross()
@@ -626,7 +663,7 @@ void CPlayScene::UseCross()
 			if (!CheckInCam(objects[i]))
 				continue;
 
-			if (dynamic_cast<Knight*>(objects[i])/*&&(objects[i]->isDone)*/)
+			if (dynamic_cast<Knight*>(objects[i]))
 			{
 				Knight* knight = dynamic_cast<Knight*>(objects[i]);
 				knight->SetState(knight_ani_die);
@@ -641,9 +678,16 @@ void CPlayScene::UseCross()
 				Monkey* monkey = dynamic_cast<Monkey*>(objects[i]);
 				monkey->SetState(monkey_ani_die);
 			}
+			else if (dynamic_cast<Frog*>(objects[i]))
+			{
+				Frog *frog = dynamic_cast<Frog*>(objects[i]);
+				frog->SetState(frog_ani_die);
+			}
 		}
 	}
 }
+
+
 
 void CPlayScene::Revival()
 {
@@ -691,17 +735,8 @@ void CPlayScene::Revival()
 
 void CPlayScene::Update(DWORD dt)
 {
-	/*if ((simon->currentscene == 2 && simon->GetState() == 8))
-	{
-		simon->isGrounded = true;
-		simon->isWalkStair = false;
-	}*/
-
-	/*if (simon->GetState() == 7)
-	{
-		simon->isGrounded = true;
-	}*/
 	
+	GetObjectGrid();
 
 	
 	
@@ -749,15 +784,34 @@ void CPlayScene::Update(DWORD dt)
 			if (obj->animation_set->at(bat_ani_die)->RenderOver(bat_time))
 			{
 				obj->isFire = true;
+				if(!simon->batdie)
+					listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 8));
+			}
+		}
+		
+		if(dynamic_cast<Frog*>(obj) && obj->GetState() == frog_ani_die && !(obj->isDone) && !(obj->isFire))
+		{
+			if (obj->animation_set->at(frog_ani_die)->RenderOver(frog_time))
+			{
+				obj->isFire = true;
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 1));
+			}
+		}
+
+		if (dynamic_cast<Monkey*>(obj) && obj->GetState() == monkey_ani_die && !(obj->isDone) && !(obj->isFire))
+		{
+			if (obj->animation_set->at(monkey_ani_die)->RenderOver(monkey_time))
+			{
+				obj->isFire = true;
 				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 1));
 			}
 		}
 	}
 
+	
+
 	simon->SimonColliWithItems(&listitems);
 
-	//for (int i = 0; i < objectsstatic.size(); i++) //update cây nến ở đây để cho khi render xong lửa thì mới rớt đồ
-		//objectsstatic[i]->Update(dt);
 
 
 	for (int i = 0; i < listitems.size(); i++)
@@ -787,7 +841,7 @@ void CPlayScene::Update(DWORD dt)
 		{
 			if (simon->isHitSubWeapon)
 			{				
-		
+				
 			}
 			else
 				simon->GetWhip()->Update(dt, &objects/*&objectsstatic*/);
@@ -798,12 +852,11 @@ void CPlayScene::Update(DWORD dt)
 	{
 		if (simon->currentWeapon != -1 && !simon->GetListSubWeapon()[i]->isDone)
 			simon->GetListSubWeapon()[i]->Update(dt, &objects);
-
-
-		/*if (simon->currentWeapon == 2 && !simon->GetListAxe()[i]->isDone)
-			simon->GetListAxe()[i]->Update(dt, &objects);*/
 	}
 		
+	/*if (simon->currentWeapon != -1 && !simon->GetListSubWeapon()[0]->isDone)
+		simon->GetListSubWeapon()[0]->Update(dt, &objects);*/
+
 
 	
 	float cx, cy;
@@ -828,51 +881,13 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 	
+	
+	
+	grid->ResetGrid(listpush);
+
 	board->Update(dt, simon->GetHealth(), 16);
-	
-	
-	/*if (board->getCheckTime())
-	{
-		simon->SetState(simon_ani_dead);
-		board->setCheckTime(false);
-	}*/
 	Revival();
-	//if ((simon->isDead && timedeadsimon->IsTimeUp())||board->getCheckTime()==true)
-	//{
-	//	timedeadsimon->Stop();
-
-	//	if (simon->getlife() > 0)
-	//	{
-	//		board->settimeremain(300);
-	//		simon->setLife(simon->getlife() - 1);
-	//		simon->isDead = false;
-	//		simon->GetWhip()->SetState(whip_lv1);
-	//		simon->setHealth(max_heal);
-	//		simon->setMana(5);
-	//		SwitchScene(simon->currentscene);
-	//	}
-	//	else //if (simon->getlife() == 0)
-	//	{
-	//		board->settimeremain(300);
-	//		simon->isDead = false;
-	//		simon->GetWhip()->SetState(whip_lv1);
-	//		simon->setHealth(max_heal);
-	//		simon->setMana(5);
-	//		simon->setLife(3);
-	//		SwitchScene(1);
-	//		simon->setScore(0);
-	//	}
-	//}
-
 	
-	/*if (simon->GetState() == simon_ani_dead)
-	{
-		if (!simon->isDead)
-		{
-			simon->isDead = true;
-			timedeadsimon->Start();
-		}
-	}	*/
 	
 }
 
@@ -924,12 +939,7 @@ void CPlayScene::Render()
 			simon->GetListSubWeapon()[i]->Render();
 		}
 
-		//if (simon->currentWeapon == 2)
-		//	simon->GetListAxe()[i]->Render();
 	}
-
-	/*for (int i = 0; i < listHit.size(); i++)
-		listHit[i]->Render();*/
 	
 	//if(simon->isHitSubWeapon&&simon->currentWeapon!=-1)
 		//simon->GetKnife()->Render();
@@ -957,6 +967,7 @@ void CPlayScene::Unload()
 		delete liststairright[i];
 	liststairright.clear();
 
+	listpush.clear();
 	//simon = NULL;
 }
 
@@ -1024,23 +1035,19 @@ void CPlayScenceKeyHandler::Sit()
 void CPlayScenceKeyHandler::Hit_SubWeapon()
 {
 	Simon *simon = ((CPlayScene*)scence)->simon;
-	vector<SubWeapon*> weaponlist = simon->GetListSubWeapon();
 	SubWeapon * subweaponlist = NULL;
 
 	if (simon->currentWeapon != -1)
 	{
-		if (weaponlist[0]->isFire == false)
-			subweaponlist = weaponlist[0];
-		else if (weaponlist[1]->isFire == false && (simon->hitDoubleTriple == 0 || simon->hitDoubleTriple == 1))
-			subweaponlist = weaponlist[1];
-		else if (weaponlist[2]->isFire == false && simon->hitDoubleTriple == 1)
-			subweaponlist = weaponlist[2];
-		else return;
+		if (!simon->GetListSubWeapon()[0]->isFire)
+			subweaponlist = simon->GetListSubWeapon()[0];
+		else if (!simon->GetListSubWeapon()[1]->isFire  && (simon->hitDoubleTriple == 0 || simon->hitDoubleTriple == 1))
+			subweaponlist = simon->GetListSubWeapon()[1];
+		else if (!simon->GetListSubWeapon()[2]->isFire && simon->hitDoubleTriple == 1)
+			subweaponlist = simon->GetListSubWeapon()[2];
+		else 
+			return;
 	}
-
-
-
-
 
 
 	if (simon->currentWeapon == -1||simon->getmana()==0)
@@ -1049,27 +1056,23 @@ void CPlayScenceKeyHandler::Hit_SubWeapon()
 		return;  //return để không bị đánh khi không có vũ khí phụ
 	}
 
-	if (subweaponlist->isDone == false) //để cho vũ khí phụ ko thể đánh quá nhiều
+	
+	if (!subweaponlist->isDone) //để cho vũ khí phụ ko thể đánh quá nhiều
 		return;
 	simon->isHitSubWeapon = true;
 
-	if (simon->getcurrentweapon() != -1) //(simon->getcurrentweapon() == 0)
+	if (simon->getcurrentweapon() != -1)
 	{
 		subweaponlist->SetNx(simon->Getnx());
-
-		{
-			if (simon->GetState() == simon_ani_sit) //ko để dc trong update simon //để đây để có thể nhảy bắn
-				subweaponlist->SetPosSubWeapon(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), false);
-			else
-				subweaponlist->SetPosSubWeapon(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), true);
-		}
+		if (simon->GetState() == simon_ani_sit)       //ko để dc trong update simon //để đây để có thể nhảy bắn
+			subweaponlist->SetPosSubWeapon(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), false);
+		else
+			subweaponlist->SetPosSubWeapon(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), true);
 		subweaponlist->SetV();
 		subweaponlist->isDone = false;
 		subweaponlist->isFire = true;
 		simon->usemana(1);
 	}
-
-	
 	Hit();
 }
 

@@ -63,7 +63,7 @@ public:
 	int stairdir;
 
 	int nextscene;
-	int hp;
+	int hp ;
 
 	DWORD dt;
 

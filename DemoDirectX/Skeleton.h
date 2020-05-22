@@ -2,12 +2,19 @@
 #include"Enemy.h"
 #include"Game.h"
 #include"Bone.h"
+#include"Ground.h"
+#include"Utils.h"
 class Skeleton :public Enemy
 {
 	LPGAMEOBJECT simon;
 	Bone* bone;
 	bool check;
 	bool jump;
+
+	bool nhay1lan;
+
+
+	
 
 public:
 	Skeleton(LPGAMEOBJECT simon);
@@ -18,7 +25,7 @@ public:
 	void loseHp(int x);
 	int getHp();
 	
-
+	Bone* GetBone() { return bone; }
 	bool CheckCam();
 	~Skeleton();
 };

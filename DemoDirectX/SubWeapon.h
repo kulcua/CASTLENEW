@@ -2,6 +2,9 @@
 #include"GameObject.h"
 #include"Candle.h"
 #include"Gate.h"
+#include"Knight.h"
+#include"Monkey.h"
+#include"Frog.h"
 #include"Hit.h"
 #include"Ground.h"
 

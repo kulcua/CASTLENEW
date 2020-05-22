@@ -3,6 +3,7 @@
 #include"Game.h"
 #include"Timer.h"
 #define frog_ani_die 1
+#define frog_time 300
 class Frog :public Enemy
 {
 	LPGAMEOBJECT simon;

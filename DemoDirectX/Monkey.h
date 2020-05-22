@@ -1,9 +1,11 @@
 #pragma once
 #include"Enemy.h"
 #include"Game.h"
+#include"Frog.h"
 #include"Ground.h"
 #define monkey_ani_run 0
 #define monkey_ani_die 1
+#define monkey_time 300
 class Monkey :public Enemy
 {
 	LPGAMEOBJECT simon;

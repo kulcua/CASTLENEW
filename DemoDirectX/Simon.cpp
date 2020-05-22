@@ -8,16 +8,12 @@ Simon::Simon()
 	for (int i = 0; i < 3; i++)
 	{
 		knife[i] = new Knife();
-		knife[i]->isFire = false;
-
+		
 		axe[i] = new Axe();
-		axe[i]->isFire = false;
 
 		boom[i] = new Boomerang(this);
-		boom[i]->isFire = false;
 
 		holywater[i] = new Holywater();
-		holywater[i]->isFire = false;
 	}
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(simon_ani_set));
 	currentWeapon = -1;
@@ -92,6 +88,8 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 	
+	
+
 	SimonColliWithMob(coObjects);
 
 	CalcPotentialCollisions(&COOBJECTS/*coObjects*/, coEvents);
@@ -202,6 +200,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					untouchtime->Start();
 					Bat* bat = dynamic_cast<Bat*>(e->obj);
+					batdie = true;
 					bat->SetState(bat_ani_die);
 					loseHp(bat->getDamage());
 					//health -= bat->getDamage();
@@ -410,6 +409,42 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 			}
 
 		}
+		else if (dynamic_cast<Bat*>(e))
+		{
+			Bat* bat = dynamic_cast<Bat*>(e);
+			bat->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
+			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led)
+			{
+				untouchtime->Start();
+				loseHp(bat->getDamage());
+				if (isStandOnStair == false || health == 0)
+					SetState(simon_ani_hurt);
+			}
+		}
+		else if (dynamic_cast<Frog*>(e))
+		{
+			Frog* frog = dynamic_cast<Frog*>(e);
+			frog->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
+			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led)
+			{
+				untouchtime->Start();
+				loseHp(frog->getDamage());
+				if (isStandOnStair == false || health == 0)
+					SetState(simon_ani_hurt);
+			}
+		}
+		else if (dynamic_cast<Monkey*>(e))
+		{
+			Monkey* monkey = dynamic_cast<Monkey*>(e);
+			monkey->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
+			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led)
+			{
+				untouchtime->Start();
+				loseHp(monkey->getDamage());
+				if (isStandOnStair == false || health == 0)
+					SetState(simon_ani_hurt);
+			}
+		}
 	}
 }
 
@@ -444,12 +479,8 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 			}
 			else if (e->idItems == items_knife)
 			{
-				listsub.clear();
+				InstallKnife();
 				e->isDone = true;
-				currentWeapon = weapon_knfie;
-				for (int i = 0; i < 3; i++)
-					listsub.push_back(knife[i]);
-							
 			}
 			else if (e->GetState() == items_watch)
 			{
@@ -458,27 +489,18 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 			}
 			else if (e->idItems == items_axe)
 			{
-				listsub.clear();
+				InstallAxe();			
 				e->isDone = true;
-				currentWeapon = 2;
-				for (int i = 0; i < 3; i++)
-					listsub.push_back(axe[i]);
 			}
 			else if (e->idItems == items_boom)
 			{
-				listsub.clear();
+				InstallBoom();
 				e->isDone = true;
-				currentWeapon = 3;
-				for (int i = 0; i < 3; i++)
-					listsub.push_back(boom[i]);
 			}
 			else if (e->idItems == items_holywater)
 			{
-				listsub.clear();
+				InstallHoly();
 				e->isDone = true;
-				currentWeapon = 4;
-				for (int i = 0; i < 3; i++)
-					listsub.push_back(holywater[i]);
 			}
 			else if (e->idItems == items_watterbottle)
 			{

@@ -1,4 +1,4 @@
-#include "Skeleton.h"
+﻿#include "Skeleton.h"
 
 
 
@@ -10,39 +10,76 @@ Skeleton::Skeleton(LPGAMEOBJECT simon)
 
 void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 {
-	Enemy::Update(dt);
-	vy += 0.002 * dt;
+	
+	
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
-
+	vector<LPGAMEOBJECT> COOBJECTS;
 	coEvents.clear();
 
-	CalcPotentialCollisions(coObject, coEvents);
+
+
+
+	COOBJECTS.clear();
+
+	for (int i = 0; i < coObject->size(); i++)
+	{
+		if (coObject->at(i) == dynamic_cast<Ground*>(coObject->at(i)))
+			COOBJECTS.push_back(coObject ->at(i));
+	}
+
+	CalcPotentialCollisions(&COOBJECTS/*coObject*/, coEvents);
 
 	if (coEvents.size() == 0)
 	{
 		x += dx;
 		y += dy;
-		/*vy += 0.002 * dt;*/
+		
+		if(nhay1lan) //cham đất thì mới nhảy
+			jump = true;
 	}
 	else
 	{
-		float min_tx, min_ty, nx = 0, ny = 0;
+		
+		float min_tx, min_ty, nx = 0, ny=0;
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-		x += min_tx * dx + nx * 0.6f;
-		y += min_ty * dy + ny * 0.6f;
+		x += min_tx * dx + nx * 0.1f;
+		y += min_ty * dy + ny * 0.1f;
+		
 
-		if (ny!=0)
+
+
+		
+
+		if (ny != 0)
 		{
-			if (ny == -1)
-				vy = 0;
-			else
-				jump = true;
-		}
 
+			if (ny == -1)
+			{
+				vy = 0;
+				nhay1lan = true;
+			}
+			else
+				y += dy;
+
+			/*if (ny == 1)
+			{
+				vy = 0.0015*dt;
+			}*/
+		}
+		
+
+		/*if ((ny==0))
+			jump = true;*/
+		//DebugOut(L"NY SKELETON %f\n",ny);
+		//DebugOut(L"NX  SKELETON %f\n", nx);
 	}
+
+	Enemy::Update(dt);
+	vy += 0.001 * dt;
+
 	
 
 	if (simon->GetPositionX() < 200 && !check)
@@ -57,48 +94,32 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 			if (abs(simon->GetPositionX() - x) >= 15 && abs(simon->GetPositionX() - x) <= 65)
 			{
 				nx = -1;
-				vx = 0.25;
+				vx = 0.1;
 			}
 			else if (abs(simon->GetPositionX() - x) >= 2 && abs(simon->GetPositionX() - x) < 15)
 			{
 				nx = 1;
-				vx = -0.25;
+				vx = -0.1;
 			}
-
+			
 		}
-		else if (simon->GetPositionX() > x)
-		{
-			/*nx = 1;
-			vx = 0.2;*/
-		}
-		/*else
-			vx = -0.1;*/
+		
 
 		
 
-		//	/*else if (abs(simon->GetPositionX() - x) > 100)
-		//	{
-		//		nx = -1;
-		//		vx = -0.4;
-		//	}*/
-		//	/*if ((abs(simon->GetPositionX() - x) > 120))
-		//	{
-		//		vx = -0.2;
-		//		nx = -1;
-		//	}*/
-		//}
 
 		if (/*(rand() % 10000 < 150)*/ jump/*&& y > 300*/)
 		{
 			vy = -0.4;
-			jump = false;
+			nhay1lan=jump = false;
 		}
+
 	}
 	else 
-	{ /*vx = -0.08;*/
-	
+	{ 
+
 		if (simon->GetPositionX() > x&&check)
-			vx = 0.12;
+			vx = 0.1;
 		else if (check&&simon->GetPositionX() < x)
 			vx = -0.08;
 	}
@@ -130,7 +151,7 @@ void Skeleton::Render()
 	if (!isDone)
 		animation_set->at(state)->Render(nx, x, y);
 	else return;
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void Skeleton::SetState(int State)

@@ -51,17 +51,80 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + 10));
 					candle->SetState(break_candle);
-					isDone = true;
-					isFire = false;
+					//isDone = true;
+					//isFire = false;
 				}
 			}
 			else if (dynamic_cast<Ground*>(e->obj))
 			{
-				if (state == 0 && e->ny == -1)
+				if (state == 0 /*&& e->ny == -1*/)
 				{
 					/*isDone = true;
 					isFire = false;*/
 					this->SetState(1);
+				}
+			}
+			else if (dynamic_cast<Knight*>(e->obj))
+			{
+				Knight *knight = dynamic_cast<Knight*>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					knight->loseHp(2);
+					if (knight->GetState() != knight_ani_die)
+						listHit.push_back(CreateHit(knight->GetPositionX(), knight->GetPositionY() + 10));
+
+
+					if (knight->getHp() <= 0)
+						knight->SetState(knight_ani_die);
+				}
+			}
+			else if (dynamic_cast<Bat*>(e->obj))
+			{
+				Bat  *bat = dynamic_cast<Bat*>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					bat->loseHp(1);
+					if (bat->GetState() != bat_ani_die)
+						listHit.push_back(CreateHit(bat->GetPositionX(), bat->GetPositionY() + 10));
+
+
+					if (bat->getHp() <= 0)
+						bat->SetState(bat_ani_die);
+					
+				}
+			}
+			else if (dynamic_cast<Monkey*>(e->obj))
+			{
+				Monkey *monkey = dynamic_cast<Monkey*>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					monkey->loseHp(1);
+					if (monkey->GetState() != monkey_ani_die)
+						listHit.push_back(CreateHit(monkey->GetPositionX(), monkey->GetPositionY() + 10));
+
+
+					if (monkey->getHp() <= 0)
+						monkey->SetState(monkey_ani_die);
+					
+				}
+			}
+			else if (dynamic_cast<Frog*>(e->obj))
+			{
+				Frog *frog = dynamic_cast<Frog*>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					frog->loseHp(2);
+					if (frog->GetState() != frog_ani_die)
+						listHit.push_back(CreateHit(frog->GetPositionX(), frog->GetPositionY() + 10));
+
+
+					if (frog->getHp() <= 0)
+						frog->SetState(frog_ani_die);
+					
 				}
 			}
 		}

@@ -99,7 +99,7 @@ void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		{
 			if (abs(simon->GetPositionX() - x) > 40)
 			{
-				vx = 0.06;
+				vx = 0.08;
 				nx = 1;
 				//state = 1;
 			}
@@ -108,7 +108,7 @@ void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		{
 			if ((abs(simon->GetPositionX() - x) > 40))
 			{
-				vx = -0.06;
+				vx = -0.08;
 				nx = -1;
 				//state = 1;
 			}
@@ -116,17 +116,10 @@ void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		
 
 		if (simon->GetPositionY()-20>y)
-		{
-			{
 				vy = 0.05;
-			}
-		}
-		else if (simon->GetPositionY()+30 < y)
-		{
-			{
+		else if (simon->GetPositionY()+20 < y)
 				vy = -0.05;
-			}
-		}
+
 
 	}
 

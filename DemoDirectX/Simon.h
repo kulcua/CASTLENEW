@@ -14,6 +14,7 @@
 #include "Knight.h"
 #include "Bat.h"
 #include "Monkey.h"
+#include "Skeleton.h"
 #include "Frog.h"
 #include "Timer.h"
 
@@ -70,6 +71,8 @@ public:
 	bool checkgroundmove=false;
 	bool isCross;
 	bool isDead;
+
+	bool batdie;
 
 
 	int hitDoubleTriple = -1;

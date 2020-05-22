@@ -21,6 +21,7 @@
 #include "Monkey.h"
 #include "Skeleton.h"
 #include "Frog.h"
+#include "Grid.h"
 
 class CPlayScene : public CScene
 {
@@ -32,6 +33,7 @@ protected:
 	
 	TileMap *tilemap;
 	Board *board;
+	Grid* grid;
 	
 	vector<LPGAMEOBJECT> objects;
 	
@@ -39,6 +41,9 @@ protected:
 	
 	vector<LPGAMEOBJECT> liststairleft;
 	vector<LPGAMEOBJECT> liststairright;
+
+	vector<LPGAMEOBJECT> listpush;
+	vector<LPGAMEOBJECT> listget;
 	
 	void _ParseSection_CLEARTEXTURES(string line);
 	void _ParseSection_CLEARSPRITES(string line);
@@ -78,12 +83,16 @@ public:
 	bool CheckInCam(LPGAMEOBJECT a);
 	void UseCross();
 	void Revival();
+	/*void SetDie();*/
 
 	Timer* timecross = new Timer(500);
 	Timer* timedeadsimon = new Timer(2000);
 
 	vector<LPGAMEOBJECT> * GetListStairsLeft() { return &(liststairleft); }
 	vector<LPGAMEOBJECT> * GetListStairsRight() { return &(liststairright); }
+
+	void GetObjectGrid();
+	
 	
 	friend class CPlayScenceKeyHandler;
 };

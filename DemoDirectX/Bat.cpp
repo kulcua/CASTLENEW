@@ -50,10 +50,9 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 			}
 
 		}
-		if (!CheckCam()&&state==bat_ani_fly)/*x > 1200)*///SCREEN_WIDTH)//tạm
+
+		if (!CheckCam()&&state==bat_ani_fly)
 		{
-			/*vx += 1000;
-			if(x>3000)*/
 			SetState(bat_ani_die);
 		}
 		
@@ -96,7 +95,7 @@ void Bat::SetState(int State)
 bool Bat::CheckCam()
 {
 	CGame *game = CGame::GetInstance();
-	return (x >= game->GetCamPosX() && x < game->GetCamPosX() + (SCREEN_WIDTH)&& y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT));
+	return (x >= game->GetCamPosX() && x < game->GetCamPosX() + (SCREEN_WIDTH-10)&& y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT));
 }
 
 int Bat::getHp()
