@@ -75,7 +75,7 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		{
 			if (abs(simon->GetPositionX() - x) > 100)
 			{
-				vx = 0.16;
+				vx =0.16;
 				nx = 1;
 			}
 		}

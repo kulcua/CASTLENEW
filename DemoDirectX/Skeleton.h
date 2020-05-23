@@ -4,17 +4,15 @@
 #include"Bone.h"
 #include"Ground.h"
 #include"Utils.h"
+#define skeleton_ani_die 1
+#define skeleton_time 300
+
 class Skeleton :public Enemy
 {
 	LPGAMEOBJECT simon;
 	Bone* bone;
-	bool check;
-	bool jump;
+	bool jump,nhay1lan;
 
-	bool nhay1lan;
-
-
-	
 
 public:
 	Skeleton(LPGAMEOBJECT simon);

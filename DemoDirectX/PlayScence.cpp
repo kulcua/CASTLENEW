@@ -419,9 +419,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_KNIGHT:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-		float maxX1 = atof(tokens[4].c_str());
-		float maxX2 = atof(tokens[5].c_str());
-		obj = new Knight(maxX1, maxX2);
+		//float maxX1 = atof(tokens[4].c_str());
+		//float maxX2 = atof(tokens[5].c_str());
+		obj = new Knight(/*maxX1, maxX2*/);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		//objects.push_back(obj);
@@ -488,7 +488,7 @@ void CPlayScene::GetObjectGrid()
 	listget.clear();
 
 	grid->GetGrid(listget);
-	//DebugOut(L" SO PHAN TU TRONG LIST %d \n", listget.size());
+	DebugOut(L" SO PHAN TU TRONG LIST %d \n", listget.size());
 	for (UINT i = 0; i < listget.size(); i++)
 	{
 		LPGAMEOBJECT obj = listget[i];
@@ -683,6 +683,11 @@ void CPlayScene::UseCross()
 				Frog *frog = dynamic_cast<Frog*>(objects[i]);
 				frog->SetState(frog_ani_die);
 			}
+			else if (dynamic_cast<Skeleton*>(objects[i]))
+			{
+				Skeleton *skele = dynamic_cast<Skeleton*>(objects[i]);
+				skele->SetState(skeleton_ani_die);
+			}
 		}
 	}
 }
@@ -785,7 +790,8 @@ void CPlayScene::Update(DWORD dt)
 			{
 				obj->isFire = true;
 				if(!simon->batdie)
-					listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 8));
+					listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 0));
+				simon->batdie = false;
 			}
 		}
 		
@@ -804,6 +810,15 @@ void CPlayScene::Update(DWORD dt)
 			{
 				obj->isFire = true;
 				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 1));
+			}
+		}
+
+		if (dynamic_cast<Skeleton*>(obj) && obj->GetState() == skeleton_ani_die && !(obj->isDone) && !(obj->isFire))
+		{
+			if (obj->animation_set->at(skeleton_ani_die)->RenderOver(skeleton_time))
+			{
+				obj->isFire = true;
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 0));
 			}
 		}
 	}

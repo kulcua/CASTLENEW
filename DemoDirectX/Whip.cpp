@@ -132,7 +132,26 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				}
 			}
+			else if (dynamic_cast<Skeleton*>(obj))
+			{
+				Skeleton * e = dynamic_cast<Skeleton*>(obj);
 
+				float left, top, right, bottom;
+				e->GetBoundingBox(left, top, right, bottom);
+
+				if (WhipCheckColli(left, top, right, bottom))
+				{
+					e->loseHp(1);
+					if (e->GetState() != skeleton_ani_die)
+						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
+
+					if (e->getHp() <= 0)
+					{
+						score += e->getScore();
+						e->SetState(skeleton_ani_die);
+					}
+				}
+			}
 		}
 
 }

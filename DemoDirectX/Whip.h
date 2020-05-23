@@ -3,6 +3,7 @@
 #include"Hit.h"
 #include"Knight.h"
 #include"Bat.h"
+#include"Skeleton.h"
 #include"Monkey.h"
 #include"Frog.h"
 #define whip_lv1 0

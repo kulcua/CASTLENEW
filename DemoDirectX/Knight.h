@@ -1,5 +1,6 @@
 #pragma once
 #include"Enemy.h"
+#include"Ground.h"
 #include"Bat.h"
 #define knight_box_height 80
 #define knight_box_width 40
@@ -9,9 +10,10 @@
 #define knight_ani_die_time 300
 class Knight :public Enemy
 {
-	float maxX1, maxX2;
+	//float maxX1, maxX2;
+	bool back;
 public:
-	Knight(float maxX1, float maxX2);
+	Knight(/*float maxX1, float maxX2*/);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
 	void Render();
 	void SetState(int State);

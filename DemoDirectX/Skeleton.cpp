@@ -5,12 +5,40 @@
 Skeleton::Skeleton(LPGAMEOBJECT simon)
 {
 	this->simon = simon;
+	score = 300;
+	hp = 1;
+	damage = 3;
 	bone = new Bone();
 }
 
 void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 {
-	
+	if (!bone->isDone)
+	{
+
+		if (!bone->getcheck())
+		{
+			bone->SetNx(nx);
+			bone->setpos(D3DXVECTOR2(x, y));
+			bone->SetState(0);
+			bone->setcheck(true);
+		}
+
+		bone->Update(dt, coObject);
+	}
+
+
+	if (bone->isDone)
+		bone->isDone = false;
+
+	if (!CheckCam() && state == 0)
+		state = skeleton_ani_die;
+
+	if (state == skeleton_ani_die && animation_set->at(skeleton_ani_die)->RenderOver(skeleton_time))
+	{
+		isDone = true;
+		return;
+	}
 	
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -45,11 +73,8 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-		x += min_tx * dx + nx * 0.1f;
+		x += min_tx * dx + nx * 0.8f;
 		y += min_ty * dy + ny * 0.1f;
-		
-
-
 
 		
 
@@ -64,92 +89,55 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 			else
 				y += dy;
 
-			/*if (ny == 1)
-			{
-				vy = 0.0015*dt;
-			}*/
 		}
-		
-
-		/*if ((ny==0))
-			jump = true;*/
-		//DebugOut(L"NY SKELETON %f\n",ny);
-		//DebugOut(L"NX  SKELETON %f\n", nx);
+	
 	}
+
 
 	Enemy::Update(dt);
-	vy += 0.001 * dt;
+	if(state!=skeleton_ani_die)
+		vy += 0.001 * dt;
 
 	
 
-	if (simon->GetPositionX() < 200 && !check)
-		check = true;
+	//if (simon->GetPositionX() < 200 && !check)
+		//check = true;
 
+	if (x >= simon->GetPositionX())
+		nx = -1;
+	else
+		nx = 1;
 
-
-	if (CheckCam()&&x<1300)
+	if (abs(x - simon->GetPositionX()) < 200)
 	{
-		if (simon->GetPositionX() < x)
+		if (abs(simon->GetPositionX() - x) > 180)
 		{
-			if (abs(simon->GetPositionX() - x) >= 15 && abs(simon->GetPositionX() - x) <= 65)
-			{
-				nx = -1;
-				vx = 0.1;
-			}
-			else if (abs(simon->GetPositionX() - x) >= 2 && abs(simon->GetPositionX() - x) < 15)
-			{
-				nx = 1;
-				vx = -0.1;
-			}
-			
-		}
-		
-
-		
-
-
-		if (/*(rand() % 10000 < 150)*/ jump/*&& y > 300*/)
-		{
-			vy = -0.4;
-			nhay1lan=jump = false;
+			if (coEvents.size() != 0 && state != skeleton_ani_die)
+				vx = 0.13 * nx;
 		}
 
-	}
-	else 
-	{ 
-
-		if (simon->GetPositionX() > x&&check)
-			vx = 0.1;
-		else if (check&&simon->GetPositionX() < x)
-			vx = -0.08;
-	}
-
-	
-
-	if (!bone->isDone)
-	{	
-		
-		if (!bone->getcheck())
+		if (abs(simon->GetPositionX() - x) < 50)
 		{
-			bone->SetNx(nx);
-			bone->setpos(D3DXVECTOR2(x, y));
-			bone->SetState(0);
-			bone->setcheck(true);
+			if (coEvents.size() != 0 && state != skeleton_ani_die)
+				vx = -0.15 * nx;
 		}
-		
-		bone->Update(dt, coObject);
+
+		if (jump&&y > 250 && state != skeleton_ani_die)
+		{
+			vy = -0.38;
+			nhay1lan = jump = false;
+		}
 	}
 
-	
-	if(bone->isDone)
-		bone->isDone = false;
 }
 
 void Skeleton::Render()
 {
 	bone->Render();
 	if (!isDone)
+	{	
 		animation_set->at(state)->Render(nx, x, y);
+	}
 	else return;
 	RenderBoundingBox();
 }
@@ -162,6 +150,9 @@ void Skeleton::SetState(int State)
 	case 0:
 		vx = vy = 0;
 		break;
+	case skeleton_ani_die:
+		vx = vy = 0;
+		animation_set->at(State)->StartAni();
 	default:
 		break;
 	}
@@ -174,7 +165,7 @@ int Skeleton::getHp()
 
 void Skeleton::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
-	//if (state != 1)
+	if (state != skeleton_ani_die)
 	{
 		l = x;
 		t = y;
@@ -186,7 +177,7 @@ void Skeleton::GetBoundingBox(float &l, float &t, float &r, float &b)
 bool Skeleton::CheckCam()
 {
 	CGame *game = CGame::GetInstance();
-	return (x >= game->GetCamPosX() + 20 && x < game->GetCamPosX() + (SCREEN_WIDTH)-50 && y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT));
+	return (y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT)-10);
 }
 
 void Skeleton::loseHp(int x)

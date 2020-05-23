@@ -2,10 +2,10 @@
 
 
 
-Knight::Knight(float maxX1, float maxX2)
+Knight::Knight(/*float maxX1, float maxX2*/)
 {
-	this->maxX1 = maxX1;
-	this->maxX2 = maxX2;
+	/*this->maxX1 = maxX1;
+	this->maxX2 = maxX2;*/
 	hp = 3;
 	damage = 2;
 	SetState(knight_ani_run);
@@ -36,7 +36,7 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 	for (int i = 0; i < coObject->size(); i++)
 	{
-		if (coObject->at(i) != dynamic_cast<Bat*>(coObject->at(i)))
+		if (coObject->at(i) == dynamic_cast<Ground*>(coObject->at(i)))
 		{
 			COOBJECTS.push_back(coObject->at(i));
 		}
@@ -68,23 +68,42 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		else*/ if (ny == -1.0f)
 		{
 			vy = 0;
-		}
+		}	
+
+		if (nx == 1 ||nx==-1)
+		{		
+			
+			this->nx *= -1;
+			this->vx *= -1;
+		}		
 	}
-
-	for (int i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-
-	/*if ((rand() % 10000 )< 100)
-	{
-		nx *= -1;
-		vx *= -1;
-	}*/
-
-	if (x <= maxX1 || x >= maxX2|| ((rand() % 10000) < 100))
+	
+	if (coEvents.size() >= 2 && ((rand() % 10000) < 100))
 	{
 		this->nx *= -1;
 		this->vx *= -1;
 	}
+
+	if (coEvents.size()==1)
+	{
+		if (!back)
+		{
+			this->nx *= -1;
+			this->vx *= -1;
+			back = true;
+		}
+	}
+	if (coEvents.size() > 1)
+		back = false;
+	for (int i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+
+	
+	//if (/*x <= maxX1 || x >= maxX2|| *//*nx==-1*//*||((rand() % 10000) < 100)*/)
+	//{
+	//	this->nx *= -1;
+	//	this->vx *= -1;
+	//}
 }
 
 void Knight::Render()

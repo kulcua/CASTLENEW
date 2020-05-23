@@ -1,21 +1,22 @@
 #####
 [CLEARTEXT]
-11	14	12
+11	14	12	13
 #
 [CLEARSP]
-139	140	141	145	146	147	148
+139	140	141	145	146	147	148	142	143	144
 #
 [CLEARANI]
-96	97	98	100	101
+96	97	98	100	101	99
 #
 [CLEARANISET]
-10	24	26
+10	24	26	25
 ##
 
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 11	textures\Stair.png	1	1	1
 12	textures\GroundMove.png	255	0	255
+13	textures\Knight.png	116	116	116
 14	textures\VampireBat.png	255	0	255	
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -24,6 +25,10 @@
 140	32	0	64	32	11
 #MOVINGGOURND
 141	0	0	64	16	12
+#KNIGHT
+142	0	0	40	80	13
+143	40	0	80	80	13
+144	80	0	120	82	13
 #BAT
 145	0	0	32	32	14
 146	32	0	64	32	14
@@ -36,6 +41,8 @@
 97	140	100
 #====moveground=====
 98	141	100
+#====KNIGHT=====
+99	142	100	143	100	144	100
 #====BAT=======
 100	145	100
 101	146	100	147	100	148	100
@@ -47,6 +54,8 @@
 10	96
 #movegournd
 24	98
+#KNIGHT
+25	99	90
 #BAT
 26	100	101	90
 [SCENEOBJECT]

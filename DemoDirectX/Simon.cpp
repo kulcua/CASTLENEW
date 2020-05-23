@@ -258,7 +258,26 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					}
 				}
 			}
-			
+			else if (dynamic_cast<Skeleton*>(e->obj))
+			{
+				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
+				{
+					untouchtime->Start();
+					Skeleton* skele = dynamic_cast<Skeleton*>(e->obj);
+					loseHp(skele->getDamage());
+					if (isStandOnStair == false || health == 0)
+					{
+						if (e->nx != 0)
+						{
+							if (e->nx == 1)
+								SetNx(-1);
+							else
+								SetNx(1);
+						}
+						SetState(simon_ani_hurt);
+					}
+				}
+			}
 		}
 	}
 	
@@ -413,7 +432,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 		{
 			Bat* bat = dynamic_cast<Bat*>(e);
 			bat->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
-			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led)
+			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led&&bat->GetState()!=bat_ani_die)
 			{
 				untouchtime->Start();
 				loseHp(bat->getDamage());
@@ -445,6 +464,18 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 					SetState(simon_ani_hurt);
 			}
 		}
+		else if (dynamic_cast<Skeleton*>(e))
+		{
+			Skeleton* skele = dynamic_cast<Skeleton*>(e);
+			skele->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
+			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led&&skele->GetState()!=skeleton_ani_die)
+			{
+				untouchtime->Start();
+				loseHp(skele->getDamage());
+				if (isStandOnStair == false || health == 0)
+					SetState(simon_ani_hurt);
+			}
+		}
 	}
 }
 
@@ -459,7 +490,7 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 		e->GetBoundingBox(l_items, t_items, r_items, b_items);
 		if (CGameObject::AABBCheck(l_simon, t_simon, r_simon, b_simon, l_items, t_items, r_items, b_items))
 		{
-			if (e->GetState() == items_for_whip)
+			if (e->idItems == items_for_whip)
 			{
 				SetState(simon_ani_led);
 				e->isDone = true;
@@ -470,7 +501,7 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 				
 
 			}
-			else if (e->GetState() == items_big_heart)
+			else if (e->idItems == items_big_heart)
 			{
 				
 				e->isDone = true;
@@ -482,7 +513,7 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 				InstallKnife();
 				e->isDone = true;
 			}
-			else if (e->GetState() == items_watch)
+			else if (e->idItems == items_watch)
 			{
 				e->isDone = true;
 				currentWeapon = weapon_watch;
