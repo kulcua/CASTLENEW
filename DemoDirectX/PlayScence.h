@@ -21,6 +21,8 @@
 #include "Monkey.h"
 #include "Skeleton.h"
 #include "Frog.h"
+#include "Raven.h"
+#include "BreakWall.h"
 #include "Grid.h"
 
 class CPlayScene : public CScene

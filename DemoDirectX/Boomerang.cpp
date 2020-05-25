@@ -135,6 +135,8 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 			}
 		}
+
+		
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
@@ -143,6 +145,8 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	
+
 	SubWeapon::Update(dt);
 
 	if (nx > 0) vx -= 0.01;
@@ -154,6 +158,9 @@ void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isDone = true;
 		return;
 	}
+
+
+
 	collisionwith(dt, coObjects);
 }
 

@@ -111,7 +111,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			x += min_tx * dx + nx * 0.1f;
 			if(untouchtime->IsTimeUp())
-				y += min_ty * dy + ny * 0.001f;
+				y += min_ty * dy + ny * 0.0001f;
 		}
 
 		/*if (nx != 0) vx = 0;
@@ -268,6 +268,28 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (isStandOnStair == false || health == 0)
 					{
 						if (e->nx != 0)
+						{
+							if (e->nx == 1)
+								SetNx(-1);
+							else
+								SetNx(1);
+						}
+						SetState(simon_ani_hurt);
+					}
+				}
+			}
+			else if (dynamic_cast<Raven*>(e->obj))
+			{
+				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
+				{
+					untouchtime->Start();
+					Raven* raven = dynamic_cast<Raven*>(e->obj);
+					ravendie = true;
+					raven->SetState(raven_ani_die);
+					loseHp(raven->getDamage());
+					if (isStandOnStair == false || health == 0)
+					{
+						if (e->nx != 0 || e->ny != 0)
 						{
 							if (e->nx == 1)
 								SetNx(-1);

@@ -152,6 +152,40 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					}
 				}
 			}
+			else if (dynamic_cast<Raven*>(obj))
+			{
+				Raven * e = dynamic_cast<Raven*>(obj);
+
+				float left, top, right, bottom;
+				e->GetBoundingBox(left, top, right, bottom);
+
+				if (WhipCheckColli(left, top, right, bottom))
+				{
+					e->loseHp(1);
+
+					if (e->GetState() != raven_ani_die )
+						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
+
+					if (e->getHp() <= 0)
+					{
+						score += e->getScore();
+						e->SetState(raven_ani_die);
+					}
+
+				}
+			}
+			else if (dynamic_cast<BreakWall*>(obj))
+			{
+				BreakWall*e = dynamic_cast<BreakWall*>(obj);
+				float left, top, right, bottom;
+				e->GetBoundingBox(left, top, right, bottom);
+				if (WhipCheckColli(left, top, right, bottom))
+				{
+					e->isDone = true;
+				}
+
+			}
+			
 		}
 
 }

@@ -5,7 +5,6 @@ Candle::Candle()
 {
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(candle_ani_set));
 	isDone = false;
-	
 }
 void Candle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {

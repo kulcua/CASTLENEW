@@ -4,7 +4,9 @@
 #include"Knight.h"
 #include"Bat.h"
 #include"Skeleton.h"
+#include"Raven.h"
 #include"Monkey.h"
+#include"BreakWall.h"
 #include"Frog.h"
 #define whip_lv1 0
 #define whip_lv2 1

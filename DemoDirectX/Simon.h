@@ -16,6 +16,7 @@
 #include "Monkey.h"
 #include "Skeleton.h"
 #include "Frog.h"
+#include "Raven.h"
 #include "Timer.h"
 
 #define simon_jump -0.5f
@@ -72,7 +73,7 @@ public:
 	bool isCross;
 	bool isDead;
 
-	bool batdie;
+	
 
 
 	int hitDoubleTriple = -1;
@@ -97,6 +98,8 @@ public:
 	bool isHitSubWeapon;
 	bool isChangeScene;
 	int currentWeapon;
+	bool batdie;
+	bool ravendie;
 	Simon();
 	~Simon();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);

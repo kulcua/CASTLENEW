@@ -17,6 +17,7 @@
 11	textures\Stair.png	1	1	1
 13	textures\Skeleton.png	116	116	116
 14	textures\Bone.png	116	116	116
+15	textures\Raven.png	255	0	255
 #
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -34,6 +35,11 @@
 151	64	0	96	32	14
 #GROUND
 141	64	0	96	32	1
+#Raven
+152	0	0	32	32	15
+153	32	0	64	32	15
+154	64	0	96	32	15
+155	96	0	128	32	15
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 #====STAIR======
@@ -47,6 +53,9 @@
 103	149	100	150	100	151	100
 #====GROUND=====
 98	141	100
+#====RAVEN=======
+104	152	100
+105	153	100	154	100	155	100
 #
 # id	ani1	ani2	ani3
 #
@@ -62,6 +71,8 @@
 27	103
 #GROUND
 24	98
+#RAVEN
+29	104	105	90
 
 [SCENEOBJECT]
 Scenes\scene5.txt

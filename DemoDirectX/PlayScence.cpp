@@ -39,6 +39,8 @@
 #define OBJECT_TYPE_MONKEY 8
 #define OBJECT_TYPE_SKELETON 9
 #define OBJECT_TYPE_FROG 10
+#define OBJECT_TYPE_DRAVEN 11
+#define OBJECT_TYPE_BREAKWALL 12
 
 
 #define OBJECT_TYPE_PORTAL	50
@@ -373,7 +375,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int id = atof(tokens[4].c_str());
 		obj = new Candle();
-
 		obj->idItems = id;
 		
 		obj->SetPosition(x, y);
@@ -464,7 +465,26 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Frog(simon);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		//objects.push_back(obj);
+		listpush.push_back(obj);
+		break;
+	}
+	case OBJECT_TYPE_DRAVEN:
+	{
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new Raven(simon);
+		obj->SetAnimationSet(ani_set);
+		obj->SetPosition(x, y);
+		listpush.push_back(obj);
+		break;
+	}
+	case OBJECT_TYPE_BREAKWALL:
+	{
+		int id = atoi(tokens[4].c_str());
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new BreakWall();
+		obj->SetAnimationSet(ani_set);
+		obj->SetPosition(x, y);
+		obj->idItems = id;
 		listpush.push_back(obj);
 		break;
 	}
@@ -488,7 +508,7 @@ void CPlayScene::GetObjectGrid()
 	listget.clear();
 
 	grid->GetGrid(listget);
-	DebugOut(L" SO PHAN TU TRONG LIST %d \n", listget.size());
+	//DebugOut(L" SO PHAN TU TRONG LIST %d \n", listget.size());
 	for (UINT i = 0; i < listget.size(); i++)
 	{
 		LPGAMEOBJECT obj = listget[i];
@@ -757,13 +777,30 @@ void CPlayScene::Update(DWORD dt)
 		coObjects.push_back(objects[i]);
 	}
 
+	if (simon->animation_set->at(simon_ani_stand_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stand_hit || (simon->animation_set->at(simon_ani_sit_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_sit_hit) || (simon->animation_set->at(simon_ani_stair_up_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stair_up_hit))
+	{
+		if (simon->isHitSubWeapon)
+		{
+
+		}
+		else
+			simon->GetWhip()->Update(dt, &objects/*&objectsstatic*/);
+
+	}
 	
 
 
-	for (UINT i = 0; i < objects.size()/*allobject.size()*/; i++)
+	for (UINT i = 0; i < objects.size(); i++)
 	{
 		LPGAMEOBJECT obj = objects[i]/*allobject[i]*/;
 		
+		if (dynamic_cast<BreakWall*>(obj) && (obj->isDone) && !(obj->isFire))
+		{
+			obj->isFire = true;
+			listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 0));
+		}
+
+
 		if (dynamic_cast<Candle*>(obj) && obj->GetState() == break_candle && !(obj->isDone)&&!(obj->isFire))
 		{
 			
@@ -818,9 +855,22 @@ void CPlayScene::Update(DWORD dt)
 			if (obj->animation_set->at(skeleton_ani_die)->RenderOver(skeleton_time))
 			{
 				obj->isFire = true;
-				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 0));
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 1));
 			}
 		}
+
+		if (dynamic_cast<Raven*>(obj) && obj->GetState() == raven_ani_die && !(obj->isDone) && !(obj->isFire))
+		{
+			if (obj->animation_set->at(raven_ani_die)->RenderOver(raven_time))
+			{
+				obj->isFire = true;
+				if (!simon->ravendie)
+					listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 0));
+				simon->ravendie = false;
+			}
+		}
+		
+
 	}
 
 	
@@ -850,19 +900,17 @@ void CPlayScene::Update(DWORD dt)
 	else
 		simon->GetWhip()->SetPosWhip(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), true);//true là đứng
 
-	//for (int i = 0; i < coObjects.size(); i++)
-	{
-		if (simon->animation_set->at(simon_ani_stand_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stand_hit||(simon->animation_set->at(simon_ani_sit_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_sit_hit)||(simon->animation_set->at(simon_ani_stair_up_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stair_up_hit))
-		{
-			if (simon->isHitSubWeapon)
-			{				
-				
-			}
-			else
-				simon->GetWhip()->Update(dt, &objects/*&objectsstatic*/);
-			
-		}
-	}
+	
+	//if (simon->animation_set->at(simon_ani_stand_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stand_hit||(simon->animation_set->at(simon_ani_sit_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_sit_hit)||(simon->animation_set->at(simon_ani_stair_up_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stair_up_hit))
+	//{
+	//	if (simon->isHitSubWeapon)
+	//	{				
+	//			
+	//	}
+	//	else
+	//		simon->GetWhip()->Update(dt, &objects/*&objectsstatic*/);
+	//		
+	//}
 	for (int i = 0; i < 3; i++)
 	{
 		if (simon->currentWeapon != -1 && !simon->GetListSubWeapon()[i]->isDone)

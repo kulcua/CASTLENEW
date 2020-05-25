@@ -91,6 +91,7 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Boomerang.cpp" />
+    <ClCompile Include="BreakWall.cpp" />
     <ClCompile Include="Candle.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Frog.cpp" />
@@ -110,6 +111,7 @@
     <ClCompile Include="Monkey.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="PlayScence.cpp" />
+    <ClCompile Include="Raven.cpp" />
     <ClCompile Include="Scence.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Skeleton.cpp" />
@@ -129,6 +131,7 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Boomerang.h" />
+    <ClInclude Include="BreakWall.h" />
     <ClInclude Include="Candle.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Frog.h" />
@@ -148,6 +151,7 @@
     <ClInclude Include="Monkey.h" />
     <ClInclude Include="Number.h" />
     <ClInclude Include="PlayScence.h" />
+    <ClInclude Include="Raven.h" />
     <ClInclude Include="Scence.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Skeleton.h" />

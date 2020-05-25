@@ -101,7 +101,6 @@ void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 			{
 				vx = 0.08;
 				nx = 1;
-				//state = 1;
 			}
 		}
 		else if (x > simon->GetPositionX())
@@ -110,7 +109,6 @@ void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 			{
 				vx = -0.08;
 				nx = -1;
-				//state = 1;
 			}
 		}
 		

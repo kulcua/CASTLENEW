@@ -73,7 +73,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-		x += min_tx * dx + nx * 0.8f;
+		x += min_tx * dx + nx * 1.0f;
 		y += min_ty * dy + ny * 0.1f;
 
 		
@@ -108,7 +108,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	else
 		nx = 1;
 
-	if (abs(x - simon->GetPositionX()) < 200)
+	if (abs(x - simon->GetPositionX()) < 270)
 	{
 		if (abs(simon->GetPositionX() - x) > 180)
 		{
@@ -116,7 +116,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 				vx = 0.13 * nx;
 		}
 
-		if (abs(simon->GetPositionX() - x) < 50)
+		if (abs(simon->GetPositionX() - x) < 60)
 		{
 			if (coEvents.size() != 0 && state != skeleton_ani_die)
 				vx = -0.15 * nx;
@@ -124,7 +124,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 		if (jump&&y > 250 && state != skeleton_ani_die)
 		{
-			vy = -0.38;
+			vy = -0.4;
 			nhay1lan = jump = false;
 		}
 	}
