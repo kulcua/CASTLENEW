@@ -11,7 +11,7 @@ class Skeleton :public Enemy
 {
 	LPGAMEOBJECT simon;
 	Bone* bone;
-	bool jump,nhay1lan;
+	bool jump,nhay1lan,active;
 
 
 public:

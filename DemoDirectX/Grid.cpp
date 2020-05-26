@@ -40,7 +40,6 @@ void Grid::PushGrid(vector<LPGAMEOBJECT> list)
 		int row = (int)(list[i]->GetPositionY() / cell_height);
 		int col = (int)(list[i]->GetPositionX() / cell_width);
 
-		//if (list[i]->getHp() > 0)
 		if (!list[i]->isDone)
 			allcells[row][col].push_back(list[i]);
 	}

@@ -15,8 +15,11 @@ void Raven::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 {
 	Enemy::Update(dt);
 
-	if (!CheckCam()&&state==raven_ani_fly)
+	if (!CheckCam() && state == raven_ani_fly)
+	{
+		collisimon = true;
 		state = raven_ani_die;
+	}
 
 	if (state == raven_ani_die && animation_set->at(raven_ani_die)->RenderOver(raven_time))
 	{

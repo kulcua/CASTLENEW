@@ -18,7 +18,7 @@
 class Bat:public Enemy
 {
 	LPGAMEOBJECT simon;
-	bool checkpos;//kt xem vị trí dơi đã thấp chưa
+	bool checkpos,collisimon;//kt xem vị trí dơi đã thấp chưa
 public:
 	Bat(LPGAMEOBJECT simon);
 	~Bat();
@@ -29,5 +29,7 @@ public:
 	void loseHp(int x);
 	int getHp();
 	bool CheckCam();
+	void Setcollisimon(bool a) { collisimon = a; }
+	bool Getcollisimon() { return collisimon; }
 };
 

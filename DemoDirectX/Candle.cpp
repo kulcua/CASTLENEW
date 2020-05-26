@@ -3,7 +3,7 @@
 
 Candle::Candle()
 {
-	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(candle_ani_set));
+	//this->SetAnimationSet(CAnimationSets::GetInstance()->Get(candle_ani_set));
 	isDone = false;
 }
 void Candle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -15,7 +15,7 @@ void Candle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void Candle::Render()
 {
 	if (!isDone)
-		animation_set->at(state)->Render(nx, x, y);
+		animation_set->at(state)->Render(-1, x, y);
 	else
 		return;
 

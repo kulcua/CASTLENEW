@@ -67,7 +67,7 @@ class Simon :public CGameObject
 	
 public:
 
-	Timer* untouchtime = new Timer(1500);
+	Timer* untouchtime = new Timer(1200);
 	Timer* watertime = new Timer(4000);
 	bool checkgroundmove=false;
 	bool isCross;
@@ -98,8 +98,8 @@ public:
 	bool isHitSubWeapon;
 	bool isChangeScene;
 	int currentWeapon;
-	bool batdie;
-	bool ravendie;
+	//bool batdie;
+	//bool ravendie;
 	Simon();
 	~Simon();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);

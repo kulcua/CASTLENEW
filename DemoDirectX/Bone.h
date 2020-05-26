@@ -1,12 +1,14 @@
 #pragma once
 #include"Enemy.h"
 #include"Game.h"
+
 class Bone :public Enemy
 {
+	LPGAMEOBJECT s;
 	bool checkset;
 	float POSX;
 public:
-	Bone();
+	Bone(LPGAMEOBJECT s);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
 	void Render();
 	void SetState(int State);

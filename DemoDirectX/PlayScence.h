@@ -23,6 +23,7 @@
 #include "Frog.h"
 #include "Raven.h"
 #include "BreakWall.h"
+#include "SmallCandle.h"
 #include "Grid.h"
 
 class CPlayScene : public CScene
@@ -86,6 +87,7 @@ public:
 	void UseCross();
 	void Revival();
 	/*void SetDie();*/
+	int RandomItems();
 
 	Timer* timecross = new Timer(500);
 	Timer* timedeadsimon = new Timer(2000);

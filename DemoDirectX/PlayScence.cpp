@@ -41,6 +41,7 @@
 #define OBJECT_TYPE_FROG 10
 #define OBJECT_TYPE_DRAVEN 11
 #define OBJECT_TYPE_BREAKWALL 12
+#define OBJECT_TYPE_SMALLCANDLE 13
 
 
 #define OBJECT_TYPE_PORTAL	50
@@ -373,10 +374,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_CANDLE: 
 	{
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		int id = atof(tokens[4].c_str());
 		obj = new Candle();
 		obj->idItems = id;
-		
+		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		//objects.push_back(obj);
 		listpush.push_back(obj);
@@ -482,6 +484,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int id = atoi(tokens[4].c_str());
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new BreakWall();
+		obj->SetAnimationSet(ani_set);
+		obj->SetPosition(x, y);
+		obj->idItems = id;
+		listpush.push_back(obj);
+		break;
+	}
+	case OBJECT_TYPE_SMALLCANDLE:
+	{
+		int id = atoi(tokens[4].c_str());
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new SmallCandle();
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		obj->idItems = id;
@@ -666,6 +679,41 @@ void CPlayScene::Load(LPCWSTR sceneFilePath)
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
+int CPlayScene::RandomItems()
+{
+	int a = rand() % 191;
+	if (0 < a &&a <= 30)
+		return items_small_heart;
+	else if (30 < a && a <= 50)
+		return items_big_heart;
+	else if (50 < a&&a <= 60)
+		return items_for_whip;
+	else if (60 < a &&a <= 70)
+		return items_knife;
+	else if (70 < a&&a <= 80)
+		return items_axe;
+	else if (80 < a&&a <= 90)
+		return items_boom;
+	else if (90 < a &&a <= 100)
+		return items_holywater;
+	else if (100 < a &&a <= 110)
+		return items_watterbottle;
+	else if (110 < a&&a <= 120)
+		return items_corss;
+	else if (125 < a &&a <= 130)
+		return items_double;
+	else if (130 < a&&a <= 135)
+		return items_triple;
+	else if (135 < a&&a <= 145)
+		return items_meat;
+	else if (145 < a&&a <= 165)
+		return items_bluemoney;
+	else if (165 < a&&a <= 180)
+		return items_redmoney;
+	else
+		return items_whitemoney;
+}
+
 bool CPlayScene::CheckInCam(LPGAMEOBJECT a)
 {
 	CGame* game = CGame::GetInstance();
@@ -707,6 +755,11 @@ void CPlayScene::UseCross()
 			{
 				Skeleton *skele = dynamic_cast<Skeleton*>(objects[i]);
 				skele->SetState(skeleton_ani_die);
+			}
+			else if (dynamic_cast<Raven*>(objects[i]))
+			{
+				Raven *raven = dynamic_cast<Raven*>(objects[i]);
+				raven->SetState(raven_ani_die);
 			}
 		}
 	}
@@ -772,18 +825,22 @@ void CPlayScene::Update(DWORD dt)
 	vector<LPGAMEOBJECT> coObjects;
 	
 
+	
 	for (int i = 0; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
 
+
+
 	if (simon->animation_set->at(simon_ani_stand_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stand_hit || (simon->animation_set->at(simon_ani_sit_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_sit_hit) || (simon->animation_set->at(simon_ani_stair_up_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stair_up_hit))
 	{
-		if (simon->isHitSubWeapon)
+		/*if (simon->isHitSubWeapon)
 		{
 
 		}
-		else
+		else*/
+		if(!simon->isHitSubWeapon)
 			simon->GetWhip()->Update(dt, &objects/*&objectsstatic*/);
 
 	}
@@ -794,11 +851,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		LPGAMEOBJECT obj = objects[i]/*allobject[i]*/;
 		
-		if (dynamic_cast<BreakWall*>(obj) && (obj->isDone) && !(obj->isFire))
-		{
-			obj->isFire = true;
-			listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 0));
-		}
+		
 
 
 		if (dynamic_cast<Candle*>(obj) && obj->GetState() == break_candle && !(obj->isDone)&&!(obj->isFire))
@@ -816,8 +869,10 @@ void CPlayScene::Update(DWORD dt)
 		{
 			if (obj->animation_set->at(knight_ani_die)->RenderOver(knight_ani_die_time))
 			{
+				Knight* e = dynamic_cast<Knight*>(obj);
+				simon->addScore(e->getScore());
 				obj->isFire = true;
-				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 1));
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), RandomItems()));
 			}
 		}
 
@@ -825,10 +880,16 @@ void CPlayScene::Update(DWORD dt)
 		{
 			if (obj->animation_set->at(bat_ani_die)->RenderOver(bat_time))
 			{
-				obj->isFire = true;
-				if(!simon->batdie)
-					listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 0));
-				simon->batdie = false;
+				Bat* e = dynamic_cast<Bat*>(obj);
+
+				e->isFire = true;
+				if (!e->Getcollisimon())
+				{
+					simon->addScore(e->getScore());
+					listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), RandomItems()));
+				}
+				/*simon->batdie = false;*/
+				e->Setcollisimon(false);
 			}
 		}
 		
@@ -836,8 +897,10 @@ void CPlayScene::Update(DWORD dt)
 		{
 			if (obj->animation_set->at(frog_ani_die)->RenderOver(frog_time))
 			{
+				Frog* e = dynamic_cast<Frog *>(obj);
+				simon->addScore(e->getScore());
 				obj->isFire = true;
-				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 1));
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), RandomItems()));
 			}
 		}
 
@@ -845,8 +908,10 @@ void CPlayScene::Update(DWORD dt)
 		{
 			if (obj->animation_set->at(monkey_ani_die)->RenderOver(monkey_time))
 			{
+				Monkey* e = dynamic_cast<Monkey *>(obj);
+				simon->addScore(e->getScore());
 				obj->isFire = true;
-				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 1));
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), RandomItems()));
 			}
 		}
 
@@ -854,8 +919,10 @@ void CPlayScene::Update(DWORD dt)
 		{
 			if (obj->animation_set->at(skeleton_ani_die)->RenderOver(skeleton_time))
 			{
+				Skeleton* e = dynamic_cast<Skeleton *>(obj);
+				simon->addScore(e->getScore());
 				obj->isFire = true;
-				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 1));
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), RandomItems()));
 			}
 		}
 
@@ -863,13 +930,36 @@ void CPlayScene::Update(DWORD dt)
 		{
 			if (obj->animation_set->at(raven_ani_die)->RenderOver(raven_time))
 			{
-				obj->isFire = true;
-				if (!simon->ravendie)
-					listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), 0));
-				simon->ravendie = false;
+				Raven* e = dynamic_cast<Raven*>(obj);
+				
+				e->isFire = true;
+				/*obj->isFire = true;*/
+				if (/*!simon->ravendie*/!e->Getcollisimon())
+				{
+					simon->addScore(e->getScore());
+					listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), RandomItems()));
+				}
+				//simon->ravendie = false;
+				e->Setcollisimon(false);
 			}
 		}
 		
+		if (dynamic_cast<BreakWall*>(obj) && (obj->isDone) && !(obj->isFire))
+		{
+			obj->isFire = true;
+			listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY() - 10, obj->idItems));
+		}
+
+		if (dynamic_cast<SmallCandle*>(obj) && obj->GetState() == break_candle && !(obj->isDone) && !(obj->isFire))
+		{
+
+			if (obj->animation_set->at(break_candle)->RenderOver(smallcandle_time))//để khi render xong lửa thì mới rới đồ
+			{
+				obj->isFire = true;
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), obj->idItems));
+			}
+
+		}
 
 	}
 
@@ -888,12 +978,14 @@ void CPlayScene::Update(DWORD dt)
 		objects[i]->Update(dt, &coObjects);
 	}
 
+
+
 	simon->Update(dt, &coObjects);
-	if (simon->GetWhip()->getScore() != 0)
+	/*if (simon->GetWhip()->getScore() != 0)
 	{
 		simon->addScore(simon->GetWhip()->getScore());
 		simon->GetWhip()->setScore(0);
-	}
+	}*/
 
 	if (simon->GetState() == simon_ani_sit_hit)
 		simon->GetWhip()->SetPosWhip(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), false);//false là ngồi
@@ -1400,6 +1492,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 {
 	CGame *game = CGame::GetInstance();
 	Simon *simon = ((CPlayScene*)scence)->simon;
+
 
 
 	if (simon->GetState() == simon_ani_dead||simon->isWalkStair == true)

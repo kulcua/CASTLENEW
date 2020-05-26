@@ -6,6 +6,10 @@
 #include"Monkey.h"
 #include"Frog.h"
 #include"Hit.h"
+#include"BreakWall.h"
+#include"SmallCandle.h"
+#include"Skeleton.h"
+#include"Raven.h"
 #include"Ground.h"
 
 #define weapon_knfie 0

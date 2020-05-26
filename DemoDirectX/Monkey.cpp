@@ -30,7 +30,7 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 	for (int i = 0; i < coObject->size(); i++)
 	{
-		if (coObject->at(i) != dynamic_cast<Frog*>(coObject->at(i)))
+		if (coObject->at(i) == dynamic_cast<Ground*>(coObject->at(i)))
 		{
 			COOBJECTS.push_back(coObject->at(i));
 		}

@@ -19,7 +19,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	COOBJECTS.clear();
 	for (int i = 0; i < coObjects->size(); i++)
 	{
-		if (coObjects->at(i) != dynamic_cast<Gate*>(coObjects->at(i)) && coObjects->at(i) != dynamic_cast<Ground*>(coObjects->at(i)))
+		if (coObjects->at(i) != dynamic_cast<Gate*>(coObjects->at(i)) && coObjects->at(i) != dynamic_cast<Ground*>(coObjects->at(i)) && coObjects->at(i) != dynamic_cast<BreakWall*>(coObjects->at(i)))
 		{
 			COOBJECTS.push_back(coObjects->at(i));
 		}
@@ -72,11 +72,16 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				
 
 					if (knight->GetState() != knight_ani_die)
+					{
 						listHit.push_back(CreateHit(knight->GetPositionX(), knight->GetPositionY() + 10));
+						
+					}
 
 
 					if (knight->getHp() <= 0)
+					{
 						knight->SetState(knight_ani_die);
+					}
 
 					
 				}
@@ -132,6 +137,45 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					if (bat->getHp() <= 0)
 						bat->SetState(bat_ani_die);
+				}
+			}
+			else if (dynamic_cast<SmallCandle *>(e->obj))
+			{
+				SmallCandle *candle = dynamic_cast<SmallCandle *>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + 10));
+					candle->SetState(break_candle);
+				}
+			}
+			else if (dynamic_cast<Skeleton*>(e->obj))
+			{
+				Skeleton *skele = dynamic_cast<Skeleton*>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					skele->loseHp(1);
+					if (skele->GetState() != skeleton_ani_die)
+						listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + 10));
+
+					if (skele->getHp() <= 0)
+						skele->SetState(skeleton_ani_die);
+				}
+			}
+			else if (dynamic_cast<Raven*>(e->obj))
+			{
+				Raven *raven = dynamic_cast<Raven*>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					raven->loseHp(1);
+					if (raven->GetState() != raven_ani_die)
+						listHit.push_back(CreateHit(raven->GetPositionX(), raven->GetPositionY() + 10));
+
+
+					if (raven->getHp() <= 0)
+						raven->SetState(raven_ani_die);
 				}
 			}
 		}

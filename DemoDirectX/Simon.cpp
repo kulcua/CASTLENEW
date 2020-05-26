@@ -82,7 +82,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	for (int i = 0; i < coObjects->size(); i++)
 	{	
-		if (coObjects->at(i)!= dynamic_cast<Candle*>(coObjects->at(i)))
+		if (coObjects->at(i)!= dynamic_cast<Candle*>(coObjects->at(i))&&(coObjects->at(i) != dynamic_cast<SmallCandle*>(coObjects->at(i))))
 		{
 			COOBJECTS.push_back(coObjects->at(i));
 		}
@@ -111,7 +111,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			x += min_tx * dx + nx * 0.1f;
 			if(untouchtime->IsTimeUp())
-				y += min_ty * dy + ny * 0.0001f;
+				y += min_ty * dy + ny * 0.001f;
 		}
 
 		/*if (nx != 0) vx = 0;
@@ -121,7 +121,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<Ground *>(e->obj))
+			if (dynamic_cast<Ground *>(e->obj)||dynamic_cast<BreakWall*>(e->obj))
 			{
 				//Ground *ground = dynamic_cast<Ground *>(e->obj);
 
@@ -177,8 +177,8 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					untouchtime->Start();
 					Knight* knight = dynamic_cast<Knight*>(e->obj);
-					loseHp(knight->getDamage());
-					//health -= 12;//knight->getDamage();
+					loseHp(/*knight->getDamage()*/0);
+	
 					{
 						if (isStandOnStair == false || health == 0)
 						{
@@ -189,9 +189,19 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 								else
 									SetNx(1);
 							}
+
+							/*if (e->ny != 0)
+								y += dy;*/
 							SetState(simon_ani_hurt);
 						}
 					}
+				}
+				else
+				{
+					if (e->ny != 0)
+						y += dy;
+					if (e->nx != 0)
+						x += dx;
 				}
 			}
 			else if (dynamic_cast<Bat*>(e->obj))
@@ -200,7 +210,8 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					untouchtime->Start();
 					Bat* bat = dynamic_cast<Bat*>(e->obj);
-					batdie = true;
+					//batdie = true;
+					bat->Setcollisimon(true);
 					bat->SetState(bat_ani_die);
 					loseHp(bat->getDamage());
 					//health -= bat->getDamage();
@@ -216,6 +227,13 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						}
 						SetState(simon_ani_hurt);
 					}
+				}
+				else
+				{
+					if (e->ny != 0)
+						y += dy;
+					if (e->nx != 0)
+						x += dx;
 				}
 			}
 			else if (dynamic_cast<Monkey*>(e->obj))
@@ -237,6 +255,13 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						SetState(simon_ani_hurt);
 					}
 				}
+				else
+				{
+					if (e->ny != 0)
+						y += dy;
+					if (e->nx != 0)
+						x += dx;
+				}
 			}
 			else if (dynamic_cast<Frog*>(e->obj))
 			{
@@ -256,6 +281,13 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						}
 						SetState(simon_ani_hurt);
 					}
+				}
+				else
+				{
+					if (e->ny != 0)
+						y += dy;
+					if (e->nx != 0)
+						x += dx;
 				}
 			}
 			else if (dynamic_cast<Skeleton*>(e->obj))
@@ -277,6 +309,13 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						SetState(simon_ani_hurt);
 					}
 				}
+				else
+				{
+					if (e->ny != 0)
+						y += dy;
+					if (e->nx != 0)
+						x += dx;
+				}
 			}
 			else if (dynamic_cast<Raven*>(e->obj))
 			{
@@ -284,7 +323,8 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					untouchtime->Start();
 					Raven* raven = dynamic_cast<Raven*>(e->obj);
-					ravendie = true;
+					//ravendie = true;
+					raven->Setcollisimon(true);
 					raven->SetState(raven_ani_die);
 					loseHp(raven->getDamage());
 					if (isStandOnStair == false || health == 0)
@@ -298,6 +338,13 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						}
 						SetState(simon_ani_hurt);
 					}
+				}
+				else
+				{
+					if (e->ny != 0)
+						y += dy;
+					if (e->nx != 0)
+						x += dx;
 				}
 			}
 		}
@@ -574,6 +621,33 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 			{
 				hitDoubleTriple = 1;
 				e->isDone = true;
+			}
+			else if (e->idItems == items_meat)
+			{
+				e->isDone = true;
+				health += 4;
+				if (health >= simon_max_health)
+					health = 16;
+			}
+			else if (e->idItems == items_small_heart)
+			{
+				e->isDone = true;
+				mana += 1;
+			}
+			else if (e->idItems == items_bluemoney)
+			{
+				e->isDone = true;
+				score += 500;
+			}
+			else if (e->idItems == items_redmoney)
+			{
+				e->isDone = true;
+				score += 1000;
+			}
+			else if (e->idItems == items_whitemoney)
+			{
+				e->isDone = true;
+				score += 1500;
 			}
 		}
 		

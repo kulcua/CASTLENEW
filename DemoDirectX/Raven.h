@@ -15,7 +15,7 @@ class Raven :public Enemy
 	Timer* dow = new Timer(1500);
 	Timer* dow1 = new Timer(1500);
 	Timer* timerstopdown = new Timer(2000);
-	bool checkstar,timeflydown;
+	bool checkstar,timeflydown,collisimon;
 public:
 	Raven(LPGAMEOBJECT simon);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
@@ -25,6 +25,8 @@ public:
 	void loseHp(int x);
 	int getHp();
 	bool CheckCam();
+	void Setcollisimon(bool a) { collisimon = a; }
+	bool Getcollisimon() { return collisimon; }
 	~Raven();
 };
 

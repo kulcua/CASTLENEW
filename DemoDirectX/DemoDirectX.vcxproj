@@ -115,6 +115,7 @@
     <ClCompile Include="Scence.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Skeleton.cpp" />
+    <ClCompile Include="SmallCandle.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Stair.cpp" />
     <ClCompile Include="SubWeapon.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Scence.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Skeleton.h" />
+    <ClInclude Include="SmallCandle.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Stair.h" />
     <ClInclude Include="SubWeapon.h" />

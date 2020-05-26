@@ -133,6 +133,9 @@
     <ClCompile Include="BreakWall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SmallCandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -247,6 +250,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BreakWall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SmallCandle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

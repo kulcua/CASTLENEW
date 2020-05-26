@@ -7,6 +7,7 @@
 #include"Raven.h"
 #include"Monkey.h"
 #include"BreakWall.h"
+#include"SmallCandle.h"
 #include"Frog.h"
 #define whip_lv1 0
 #define whip_lv2 1
@@ -22,7 +23,7 @@ class Whip :public CGameObject
 {
 	vector<LPHIT> listHit;
 	bool delaydamage;
-	int score;
+	//int score;
 public:
 	Whip();
 	~Whip();
@@ -38,10 +39,10 @@ public:
 	{
 		this->state = state;
 	}
-	int getScore() {
+	/*int getScore() {
 		return score;
-	}
-	void setScore(int a) { score = a; }
+	}*/
+	//void setScore(int a) { score = a; }
 
 };
 

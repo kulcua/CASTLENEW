@@ -3,7 +3,7 @@
 #include"Simon.h"
 class Boomerang :public SubWeapon
 {
-	
+	bool checkdamage1, checkdamage2;
 public:
 	Boomerang(LPGAMEOBJECT simon);
 	~Boomerang();

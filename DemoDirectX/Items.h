@@ -12,6 +12,11 @@
 #define items_corss 8
 #define items_double 9
 #define items_triple 10
+#define items_meat 11
+#define items_small_heart 12
+#define items_bluemoney 13
+#define items_redmoney 14
+#define items_whitemoney 15
 
 #define items_ani_set 5
 
@@ -30,8 +35,7 @@ class Items :public CGameObject
 	
 
 public:
-	//bool isDone;
-	//int idItems;
+	
 	Items();
 	~Items();
 	void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);

@@ -26,9 +26,9 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 	if (state!= bat_ani_die)
 	{
-		if (simon->GetState() != simon_ani_stair_down&& simon->GetState() != simon_ani_stair_up&&simon->GetState()!=2)
+		if (simon->GetState() != simon_ani_stair_down && simon->GetState() != simon_ani_stair_up && simon->GetState() != 2 && simon->GetState() != 4)
 		{
-			if (sqrt(pow(x - simon->GetPositionX(), 2) + pow(y - simon->GetPositionY(), 2)) <= bat_distance_max)
+			if (sqrt(pow(x - simon->GetPositionX(), 2) + pow(y - simon->GetPositionY(), 2))<= bat_distance_max)
 			{
 				SetState(bat_ani_fly);
 				if (y < bat_distance)
@@ -53,6 +53,7 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 		if (!CheckCam()&&state==bat_ani_fly)
 		{
+			collisimon = true;
 			SetState(bat_ani_die);
 		}
 		

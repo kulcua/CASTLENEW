@@ -1,11 +1,14 @@
 #include "Bone.h"
+#include"Simon.h"
 
 
-
-Bone::Bone()
+Bone::Bone(LPGAMEOBJECT simon)
 {
+	this->s = simon;
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(27));
 	//isDone = true;
+	damage = 3;
+	hp = 1;
 }
 
 void Bone::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
@@ -21,11 +24,60 @@ void Bone::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	}
 
 	Enemy::Update(dt);
-	//vy += 0.9*dt;
 	vy += 0.001*dt;
-	x += dx;
-	y += dy;
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
+	coEvents.clear();
 
+	vector<LPGAMEOBJECT> COOBJECTS;
+	COOBJECTS.clear();
+
+	COOBJECTS.push_back(s);
+
+	CalcPotentialCollisions(&COOBJECTS, coEvents);
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+	}
+	else
+	{
+		float min_tx, min_ty, nx = 0, ny;
+
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (dynamic_cast<Simon*>(e->obj))
+			{
+				Simon* simon = dynamic_cast<Simon*>(e->obj);
+				if (simon->untouchtime->IsTimeUp() && simon->GetState() != simon_ani_led && simon->watertime->IsTimeUp())
+				{
+					simon->untouchtime->Start();
+					simon->loseHp(this->damage);
+					if (!simon->isStandOnStair || simon->GetHealth() == 0)
+					{
+						if (nx != 0)
+						{
+							if (nx == 1)
+								simon->SetNx(-1);
+							else
+								simon->SetNx(1);
+						}
+						simon->SetState(simon_ani_hurt);
+					}
+				}
+				else
+				{
+					if (nx != 0)
+						x += dx;
+					if (ny != 0)
+						y += dy;
+				}
+			}
+		}
+	}
+	
 }
 
 void Bone::Render()

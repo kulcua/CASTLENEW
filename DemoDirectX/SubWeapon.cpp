@@ -59,7 +59,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	COOBJECTS.clear();
 	for (int i = 0; i < coObjects->size(); i++)
 	{
-		if (coObjects->at(i) != dynamic_cast<Gate*>(coObjects->at(i)) && coObjects->at(i) != dynamic_cast<Ground*>(coObjects->at(i)))
+		if (coObjects->at(i) != dynamic_cast<Gate*>(coObjects->at(i)) && coObjects->at(i) != dynamic_cast<Ground*>(coObjects->at(i))&&(coObjects->at(i) != dynamic_cast<BreakWall*>(coObjects->at(i))))
 		{
 			COOBJECTS.push_back(coObjects->at(i));
 		}
@@ -169,6 +169,53 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					if (frog->getHp() <= 0)
 						frog->SetState(frog_ani_die);
+					isDone = true;
+					isFire = false;
+				}
+			}
+			else if (dynamic_cast<SmallCandle *>(e->obj))
+			{
+				SmallCandle *candle = dynamic_cast<SmallCandle *>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + 10));
+					candle->SetState(break_candle);
+					isDone = true;
+					isFire = false;
+				}
+
+			}
+			else if (dynamic_cast<Skeleton*>(e->obj))
+			{
+				Skeleton *skele = dynamic_cast<Skeleton*>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					skele->loseHp(1);
+					if (skele->GetState() != skeleton_ani_die)
+						listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + 10));
+
+
+					if (skele->getHp() <= 0)
+						skele->SetState(skeleton_ani_die);
+					isDone = true;
+					isFire = false;
+				}
+			}
+			else if (dynamic_cast<Raven*>(e->obj))
+			{
+				Raven *raven = dynamic_cast<Raven*>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					raven->loseHp(1);
+					if (raven->GetState() != raven_ani_die)
+						listHit.push_back(CreateHit(raven->GetPositionX(), raven->GetPositionY() + 10));
+
+
+					if (raven->getHp() <= 0)
+						raven->SetState(raven_ani_die);
 					isDone = true;
 					isFire = false;
 				}

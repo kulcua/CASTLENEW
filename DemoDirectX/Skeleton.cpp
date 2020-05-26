@@ -8,7 +8,7 @@ Skeleton::Skeleton(LPGAMEOBJECT simon)
 	score = 300;
 	hp = 1;
 	damage = 3;
-	bone = new Bone();
+	bone = new Bone(simon);
 }
 
 void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
@@ -31,7 +31,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	if (bone->isDone)
 		bone->isDone = false;
 
-	if (!CheckCam() && state == 0)
+	if (!CheckCam()&& state == 0&&active)
 		state = skeleton_ani_die;
 
 	if (state == skeleton_ani_die && animation_set->at(skeleton_ani_die)->RenderOver(skeleton_time))
@@ -108,18 +108,19 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	else
 		nx = 1;
 
-	if (abs(x - simon->GetPositionX()) < 270)
+	if (abs(x - simon->GetPositionX())  < 270&&CheckCam())
 	{
-		if (abs(simon->GetPositionX() - x) > 180)
+		active = true;
+		if (abs(simon->GetPositionX() - x) > 200)
 		{
 			if (coEvents.size() != 0 && state != skeleton_ani_die)
 				vx = 0.13 * nx;
 		}
 
-		if (abs(simon->GetPositionX() - x) < 60)
+		if (abs(simon->GetPositionX() - x) < 70)
 		{
 			if (coEvents.size() != 0 && state != skeleton_ani_die)
-				vx = -0.15 * nx;
+				vx = -0.1 * nx;
 		}
 
 		if (jump&&y > 250 && state != skeleton_ani_die)
@@ -177,7 +178,7 @@ void Skeleton::GetBoundingBox(float &l, float &t, float &r, float &b)
 bool Skeleton::CheckCam()
 {
 	CGame *game = CGame::GetInstance();
-	return (y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT)-10);
+	return (x >= game->GetCamPosX() + 5 && x < game->GetCamPosX() + (SCREEN_WIDTH)-20 &&y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT)-20);
 }
 
 void Skeleton::loseHp(int x)

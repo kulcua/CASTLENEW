@@ -55,7 +55,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					
 					if (e->getHp() <= 0)
 					{
-						score += e->getScore();
+						//score += e->getScore();
 						e->SetState(knight_ani_die);
 					}
 
@@ -77,7 +77,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					if (e->getHp() <= 0)
 					{
-						score += e->getScore();
+						//score += e->getScore();
 						e->SetState(bat_ani_die);
 					}
 
@@ -98,7 +98,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					if (e->getHp() <= 0)
 					{
-						score += e->getScore();
+						//score += e->getScore();
 						e->SetState(1);
 					}
 				}
@@ -126,7 +126,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					if (e->getHp() <= 0)
 					{
-						score += e->getScore();
+						//score += e->getScore();
 						e->SetState(frog_ani_die);
 					}
 
@@ -147,7 +147,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					if (e->getHp() <= 0)
 					{
-						score += e->getScore();
+						//score += e->getScore();
 						e->SetState(skeleton_ani_die);
 					}
 				}
@@ -168,7 +168,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					if (e->getHp() <= 0)
 					{
-						score += e->getScore();
+						//score += e->getScore();
 						e->SetState(raven_ani_die);
 					}
 
@@ -182,6 +182,22 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (WhipCheckColli(left, top, right, bottom))
 				{
 					e->isDone = true;
+				}
+
+			}
+			else if (dynamic_cast<SmallCandle*>(obj))
+			{
+				SmallCandle * e = dynamic_cast<SmallCandle*>(obj);
+
+				float left, top, right, bottom;
+				e->GetBoundingBox(left, top, right, bottom);
+
+				if (WhipCheckColli(left, top, right, bottom))
+				{
+					if (e->GetState() != break_candle)
+						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
+					e->SetState(break_candle);
+
 				}
 
 			}
