@@ -82,7 +82,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	for (int i = 0; i < coObjects->size(); i++)
 	{	
-		if (coObjects->at(i)!= dynamic_cast<Candle*>(coObjects->at(i))&&(coObjects->at(i) != dynamic_cast<SmallCandle*>(coObjects->at(i))))
+		if (coObjects->at(i)!= dynamic_cast<Candle*>(coObjects->at(i))&&coObjects->at(i) != dynamic_cast<SmallCandle*>(coObjects->at(i)) && (coObjects->at(i) != dynamic_cast<Monkey*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Frog*>(coObjects->at(i))))
 		{
 			COOBJECTS.push_back(coObjects->at(i));
 		}
@@ -109,9 +109,8 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		
 		if (!isWalkStair)
 		{
-			x += min_tx * dx + nx * 0.1f;
-			if(untouchtime->IsTimeUp())
-				y += min_ty * dy + ny * 0.001f;
+			x += min_tx * dx + nx * 0.4f;			
+			y += min_ty * dy + ny * 0.4f;
 		}
 
 		/*if (nx != 0) vx = 0;
@@ -123,16 +122,16 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			if (dynamic_cast<Ground *>(e->obj)||dynamic_cast<BreakWall*>(e->obj))
 			{
+				//DebugOut(L"size: %d\n", coEvents.size());
 				//Ground *ground = dynamic_cast<Ground *>(e->obj);
 
 				if (e->ny != 0)
 				{
-					if (e->ny == -1&&(state!=simon_ani_hurt||(state==simon_ani_hurt&&vy>=0)))
+					if (e->ny == -1&&(state!=simon_ani_hurt||(state==simon_ani_hurt&&vy>0)))
 					{
 						checkgroundmove = false;
 						isGrounded = true;
-						vy = 0;
-						
+						vy = 0;	
 					}
 					else
 						y += dy;
@@ -151,25 +150,26 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				this->nextscene = p->nextscene;
 				isChangeScene = true;
 				isWalkStair = false;
+				//isGrounded = true;//thử
 				
 			}
 			else if(dynamic_cast<GroundMoving*>(e->obj))
-			{
+			{					
 				if (e->ny != 0)
 				{
+					DebugOut(L"size: %d\n", e->ny);
 					if (e->ny == -1)
 					{
-						checkgroundmove = true;
-						isGrounded = true;
 						vx = e->obj->vx;
+						checkgroundmove = true;
+						isGrounded = true;				
 						vy = 0;
 					}
 					else
 						y += dy;
 				}
-				//if (e->nx != 0)
-					//x += dx;
-			
+				/*else
+					vx = 0;*/
 			}
 			else if (dynamic_cast<Knight*>(e->obj))
 			{
@@ -236,34 +236,34 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						x += dx;
 				}
 			}
-			else if (dynamic_cast<Monkey*>(e->obj))
-			{
-				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
-				{
-					untouchtime->Start();
-					Monkey* monkey = dynamic_cast<Monkey*>(e->obj);
-					loseHp(monkey->getDamage());
-					if (isStandOnStair == false || health == 0)
-					{
-						if (e->nx != 0 || e->ny != 0)
-						{
-							if (e->nx == 1)
-								SetNx(-1);
-							else
-								SetNx(1);
-						}
-						SetState(simon_ani_hurt);
-					}
-				}
-				else
-				{
-					if (e->ny != 0)
-						y += dy;
-					if (e->nx != 0)
-						x += dx;
-				}
-			}
-			else if (dynamic_cast<Frog*>(e->obj))
+			//else if (dynamic_cast<Monkey*>(e->obj))
+			//{
+			//	if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
+			//	{
+			//		untouchtime->Start();
+			//		Monkey* monkey = dynamic_cast<Monkey*>(e->obj);
+			//		loseHp(/*monkey->getDamage()*/0);
+			//		if (isStandOnStair == false || health == 0)
+			//		{
+			//			if (e->nx != 0 || e->ny != 0)
+			//			{
+			//				if (e->nx == 1)
+			//					SetNx(-1);
+			//				else
+			//					SetNx(1);
+			//			}
+			//			SetState(simon_ani_hurt);
+			//		}
+			//	}
+			//	else
+			//	{
+			//		if (e->ny != 0)
+			//			y += dy;
+			//		if (e->nx != 0)
+			//			x += dx;
+			//	}
+			//}
+			/*else if (dynamic_cast<Frog*>(e->obj))
 			{
 				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
 				{
@@ -289,7 +289,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (e->nx != 0)
 						x += dx;
 				}
-			}
+			}*/
 			else if (dynamic_cast<Skeleton*>(e->obj))
 			{
 				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
@@ -398,6 +398,9 @@ void Simon::SetState(int State)
 	case simon_ani_jump:
 		if (isGrounded)
 		{
+			if (vx != simon_run && vx != -simon_run)
+				vx = 0;
+			checkgroundmove = false;
 			isGrounded = false;
 			vy = simon_jump;
 		}
@@ -516,7 +519,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led)
 			{
 				untouchtime->Start();
-				loseHp(frog->getDamage());
+				loseHp(/*frog->getDamage()*/0);
 				if (isStandOnStair == false || health == 0)
 					SetState(simon_ani_hurt);
 			}
@@ -528,7 +531,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led)
 			{
 				untouchtime->Start();
-				loseHp(monkey->getDamage());
+				loseHp(/*monkey->getDamage()*/0);
 				if (isStandOnStair == false || health == 0)
 					SetState(simon_ani_hurt);
 			}
@@ -728,6 +731,7 @@ void Simon::DoAutoWalkStair()
 			if (state == simon_ani_stair_down) 
 				y += 1.0f; // để đảm bảo simon sẽ va chạm với bậc thang 
 			isWalkStair = false;
+
 
 		}
 	}

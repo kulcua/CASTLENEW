@@ -1286,7 +1286,7 @@ void CPlayScenceKeyHandler::Stair_Up()
 			if (NxStair == 1)
 				stairx += 5.0f;
 			else 
-				stairx -= 30.0f;
+				stairx -= 31.0f;
 			simon->nx = simon->stairNx;
 			simon->SetState(simon_ani_stair_up);
 			simon->AutoWalkStair(stairx, simon_ani_idle, simon->nx);//tránh trường hợp ra khỏi cầu thang mà ko dụng vào mặt đất

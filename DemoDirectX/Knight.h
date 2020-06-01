@@ -2,8 +2,8 @@
 #include"Enemy.h"
 #include"Ground.h"
 #include"Bat.h"
-#define knight_box_height 80
-#define knight_box_width 40
+#define knight_box_height 64
+#define knight_box_width 32
 #define knight_speed 0.08
 #define knight_ani_run 0
 #define knight_ani_die 1
