@@ -15,6 +15,7 @@ Simon::Simon()
 
 		holywater[i] = new Holywater();
 	}
+	clk = new Clock();
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(simon_ani_set));
 	currentWeapon = -1;
 	isGrounded = false;
@@ -26,7 +27,7 @@ Simon::Simon()
 	this->nextscene = 99;
 }
 
-void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 {
 	CGameObject::Update(dt);
 	
@@ -37,19 +38,14 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchtime->Stop();
 	if (watertime->IsTimeUp())
 		watertime->Stop();
-	/*if (state == simon_ani_dead)
-		return;*/
-
-	/*if (health == 0)
-	{
-		SetState(simon_ani_dead);
-		return;
-	}*/
+	
 
 	if (x < max_screen_left) //để cài không cho simon đi ngược màn hình
 		x = max_screen_left;
+	if (x > 1460)
+		x = 1460;
 
-	//score += whip->getScore();
+	
 
 
 	if (isStandOnStair == false && isWalkStair == false)
@@ -58,10 +54,6 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	
 	if (health == 0)
 	{
-		/*if (state == simon_ani_stair_up || state == simon_ani_stair_down)
-		{
-			vy += 1000 * dt;
-		}*/
 		SetState(simon_ani_dead);
 		return;
 	}
@@ -82,7 +74,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	for (int i = 0; i < coObjects->size(); i++)
 	{	
-		if (coObjects->at(i)!= dynamic_cast<Candle*>(coObjects->at(i))&&coObjects->at(i) != dynamic_cast<SmallCandle*>(coObjects->at(i)) && (coObjects->at(i) != dynamic_cast<Monkey*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Frog*>(coObjects->at(i))))
+		if (coObjects->at(i)!= dynamic_cast<Candle*>(coObjects->at(i))&&coObjects->at(i) != dynamic_cast<SmallCandle*>(coObjects->at(i)) && (coObjects->at(i) != dynamic_cast<Monkey*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Frog*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Knight*>(coObjects->at(i))))
 		{
 			COOBJECTS.push_back(coObjects->at(i));
 		}
@@ -171,39 +163,39 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				/*else
 					vx = 0;*/
 			}
-			else if (dynamic_cast<Knight*>(e->obj))
-			{
-				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
-				{
-					untouchtime->Start();
-					Knight* knight = dynamic_cast<Knight*>(e->obj);
-					loseHp(/*knight->getDamage()*/0);
+			//else if (dynamic_cast<Knight*>(e->obj))
+			//{
+			//	if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
+			//	{
+			//		untouchtime->Start();
+			//		Knight* knight = dynamic_cast<Knight*>(e->obj);
+			//		loseHp(knight->getDamage());
 	
-					{
-						if (isStandOnStair == false || health == 0)
-						{
-							if (e->nx != 0)
-							{
-								if (e->nx == 1)
-									SetNx(-1);
-								else
-									SetNx(1);
-							}
+			//		{
+			//			if (isStandOnStair == false || health == 0)
+			//			{
+			//				if (e->nx != 0)
+			//				{
+			//					if (e->nx == 1)
+			//						SetNx(-1);
+			//					else
+			//						SetNx(1);
+			//				}
 
-							/*if (e->ny != 0)
-								y += dy;*/
-							SetState(simon_ani_hurt);
-						}
-					}
-				}
-				else
-				{
-					if (e->ny != 0)
-						y += dy;
-					if (e->nx != 0)
-						x += dx;
-				}
-			}
+			//				/*if (e->ny != 0)
+			//					y += dy;*/
+			//				SetState(simon_ani_hurt);
+			//			}
+			//		}
+			//	}
+			//	else
+			//	{
+			//		if (e->ny != 0)
+			//			y += dy;
+			//		if (e->nx != 0)
+			//			x += dx;
+			//	}
+			//}
 			else if (dynamic_cast<Bat*>(e->obj))
 			{
 				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
@@ -496,7 +488,18 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 				untouchtime->Start();
 				loseHp(knight->getDamage());
 				if (isStandOnStair == false || health == 0)
+				{
+					if (e->nx != 0)
+					{
+						if (e->nx == 1)
+							SetNx(-1);
+						else
+							SetNx(1);
+					}
+
 					SetState(simon_ani_hurt);
+				}
+
 			}
 
 		}
@@ -533,7 +536,17 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 				untouchtime->Start();
 				loseHp(/*monkey->getDamage()*/0);
 				if (isStandOnStair == false || health == 0)
+				{
+					if (e->nx != 0)
+					{
+						if (e->nx == 1)
+							SetNx(-1);
+						else
+							SetNx(1);
+					}
+
 					SetState(simon_ani_hurt);
+				}
 			}
 		}
 		else if (dynamic_cast<Skeleton*>(e))
@@ -587,8 +600,9 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 			}
 			else if (e->idItems == items_watch)
 			{
+				InstallClk();
 				e->isDone = true;
-				currentWeapon = weapon_watch;
+				//currentWeapon = weapon_watch;
 			}
 			else if (e->idItems == items_axe)
 			{
@@ -731,8 +745,6 @@ void Simon::DoAutoWalkStair()
 			if (state == simon_ani_stair_down) 
 				y += 1.0f; // để đảm bảo simon sẽ va chạm với bậc thang 
 			isWalkStair = false;
-
-
 		}
 	}
 }
@@ -769,6 +781,12 @@ void Simon::InstallHoly()
 		listsub.push_back(holywater[i]);
 }
 
+void Simon::InstallClk()
+{
+	listsub.clear();
+	currentWeapon = weapon_watch;
+	listsub.push_back(clk);
+}
 void Simon::StandOnStair()
 {
 	vx = vy = 0;

@@ -12,7 +12,7 @@ Bat::Bat(LPGAMEOBJECT simon)
 	score = 200;
 }
 
-void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
+void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 {
 	
 	Enemy::Update(dt);	
@@ -23,6 +23,8 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		isDone = true;
 		return;
 	}
+	if (clk)
+		return;
 
 	if (state!= bat_ani_die)
 	{

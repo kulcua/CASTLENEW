@@ -6,7 +6,7 @@ SmallCandle::SmallCandle()
 {
 }
 
-void SmallCandle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void SmallCandle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 {
 	if (state == 1 && animation_set->at(1)->RenderOver(300))
 		isDone = true;

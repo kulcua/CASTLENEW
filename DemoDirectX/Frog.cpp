@@ -9,7 +9,7 @@ Frog::Frog(LPGAMEOBJECT simon)
 	damage = 3;
 	score = 300;
 }
-void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
+void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 {
 
 	Enemy::Update(dt);
@@ -19,6 +19,9 @@ void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		isDone = true;
 		return;
 	}
+
+	if (clk)
+		return;
 
 	if (x - simon->GetPositionX() > 200&&!check)
 		check = true;

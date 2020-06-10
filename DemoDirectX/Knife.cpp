@@ -49,9 +49,9 @@ void Knife::SetV()
 	//CGameObject::SetState(State);
 
 	if (nx > 0)
-		vx = 0.5;
+		vx = 0.35;
 	else
-		vx = -0.5;
+		vx = -0.35;
 	vy = 0;
 }
 

@@ -199,8 +199,11 @@ void CPlayScene::_ParseSection_INFOMAP(string line)
 	int tile_width = atoi(tokens[7].c_str());
 	int tile_height = atoi(tokens[8].c_str());
 	idstage = atoi(tokens[9].c_str());
+	int r = atoi(tokens[14].c_str());
+	int g = atoi(tokens[15].c_str());
+	int b = atoi(tokens[16].c_str());
 
-	tilemap->LoadMap(IDmap, pathpic.c_str(), pathtxt.c_str(), num_row, num_col, num_row_read, num_col_read, tile_width, tile_height);
+	tilemap->LoadMap(IDmap, pathpic.c_str(), pathtxt.c_str(), num_row, num_col, num_row_read, num_col_read, tile_width, tile_height, r, g, b);
 	if(simon->currentscene<=simon->nextscene)
 		CGame::GetInstance()->SetCamPosX(atof(tokens[10].c_str()));
 	else
@@ -816,8 +819,8 @@ void CPlayScene::Update(DWORD dt)
 	
 	GetObjectGrid();
 
-	
-	
+	if (timerclk->IsTimeUp())
+		timerclk->Stop();
 
 	if (timecross->IsTimeUp())
 		timecross->Stop();
@@ -911,7 +914,7 @@ void CPlayScene::Update(DWORD dt)
 				Monkey* e = dynamic_cast<Monkey *>(obj);
 				simon->addScore(e->getScore());
 				obj->isFire = true;
-				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), RandomItems()));
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY()-5, RandomItems()));
 			}
 		}
 
@@ -922,7 +925,7 @@ void CPlayScene::Update(DWORD dt)
 				Skeleton* e = dynamic_cast<Skeleton *>(obj);
 				simon->addScore(e->getScore());
 				obj->isFire = true;
-				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), RandomItems()));
+				listitems.push_back(DropItem(obj->GetPositionX()+10, obj->GetPositionY(), RandomItems()));
 			}
 		}
 
@@ -975,7 +978,7 @@ void CPlayScene::Update(DWORD dt)
 
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		objects[i]->Update(dt, &coObjects,!timerclk->IsTimeUp());
 	}
 
 
@@ -1003,11 +1006,16 @@ void CPlayScene::Update(DWORD dt)
 	//		simon->GetWhip()->Update(dt, &objects/*&objectsstatic*/);
 	//		
 	//}
-	for (int i = 0; i < 3; i++)
+	
+	if (simon->currentWeapon != 1)
 	{
-		if (simon->currentWeapon != -1 && !simon->GetListSubWeapon()[i]->isDone)
-			simon->GetListSubWeapon()[i]->Update(dt, &objects);
+		for (int i = 0; i < 3; i++)
+		{
+			if (simon->currentWeapon != -1 && !simon->GetListSubWeapon()[i]->isDone)
+				simon->GetListSubWeapon()[i]->Update(dt, &objects);
+		}
 	}
+
 		
 	/*if (simon->currentWeapon != -1 && !simon->GetListSubWeapon()[0]->isDone)
 		simon->GetListSubWeapon()[0]->Update(dt, &objects);*/
@@ -1087,13 +1095,17 @@ void CPlayScene::Render()
 	else
 		simon->GetWhip()->Render(-1);
 
-	for (int i = 0; i < 3; i++)
-	{
-		if (simon->currentWeapon != -1)
-		{
-			simon->GetListSubWeapon()[i]->Render();
-		}
 
+	if (simon->currentWeapon != 1)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			if (simon->currentWeapon != -1)
+			{
+				simon->GetListSubWeapon()[i]->Render();
+			}
+
+		}
 	}
 	
 	//if(simon->isHitSubWeapon&&simon->currentWeapon!=-1)
@@ -1161,6 +1173,9 @@ void CPlayScenceKeyHandler::Idle()
 void CPlayScenceKeyHandler::Hit()
 {
 	Simon *simon = ((CPlayScene*)scence)->simon;
+	if (simon->isWalkStair)
+		return;
+
 	if ((simon->GetState() == simon_ani_idle || simon->GetState() == simon_ani_jump || simon->GetState() == simon_ani_run))
 	{
 		if (simon->isGrounded)
@@ -1190,9 +1205,20 @@ void CPlayScenceKeyHandler::Sit()
 void CPlayScenceKeyHandler::Hit_SubWeapon()
 {
 	Simon *simon = ((CPlayScene*)scence)->simon;
+	CPlayScene *playscene = ((CPlayScene*)scence);
 	SubWeapon * subweaponlist = NULL;
 
-	if (simon->currentWeapon != -1)
+	if (simon->currentWeapon == 1)
+	{
+		subweaponlist = simon->GetListSubWeapon()[0];
+		if (simon->getmana() < 5)
+			return;
+		if (!playscene->timerclk->IsTimeUp())
+			return;
+	}
+
+
+	if (simon->currentWeapon != -1 && simon->currentWeapon != 1)
 	{
 		if (!simon->GetListSubWeapon()[0]->isFire)
 			subweaponlist = simon->GetListSubWeapon()[0];
@@ -1211,12 +1237,17 @@ void CPlayScenceKeyHandler::Hit_SubWeapon()
 		return;  //return để không bị đánh khi không có vũ khí phụ
 	}
 
+	if (simon->currentWeapon == 1)
+	{
+		simon->usemana(5);
+		playscene->timerclk->Start();
+	}
 	
 	if (!subweaponlist->isDone) //để cho vũ khí phụ ko thể đánh quá nhiều
 		return;
 	simon->isHitSubWeapon = true;
 
-	if (simon->getcurrentweapon() != -1)
+	if (simon->getcurrentweapon() != -1 && simon->currentWeapon != 1)
 	{
 		subweaponlist->SetNx(simon->Getnx());
 		if (simon->GetState() == simon_ani_sit)       //ko để dc trong update simon //để đây để có thể nhảy bắn
@@ -1245,6 +1276,8 @@ void CPlayScenceKeyHandler::Stair_Down()
 		return;
 	}
 	
+
+
 	if (!simon->isStandOnStair)// đi đúng đến vị trí cần đi
 	{
 		float stairx, simonx;
@@ -1286,7 +1319,7 @@ void CPlayScenceKeyHandler::Stair_Up()
 			if (NxStair == 1)
 				stairx += 5.0f;
 			else 
-				stairx -= 31.0f;
+				stairx -= 32.0f;
 			simon->nx = simon->stairNx;
 			simon->SetState(simon_ani_stair_up);
 			simon->AutoWalkStair(stairx, simon_ani_idle, simon->nx);//tránh trường hợp ra khỏi cầu thang mà ko dụng vào mặt đất
@@ -1482,6 +1515,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			simon->hitDoubleTriple = -1;
 		}
 		break;
+	case DIK_8:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->InstallClk();
+		}
+		break;
 	}
 }
 
@@ -1494,8 +1533,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Simon *simon = ((CPlayScene*)scence)->simon;
 
 
-
-	if (simon->GetState() == simon_ani_dead||simon->isWalkStair == true)
+	if (simon->GetState() == simon_ani_dead||(simon->isWalkStair == true))
 		return;
 
 	if (simon->GetState() == simon_ani_stand_hit && simon->animation_set->at(simon_ani_stand_hit)->RenderOver(simon_delay_hit))//để cho ko bị đánh 2 lần
@@ -1537,9 +1575,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->isHitSubWeapon = false;
 	}
 
-
-
-
+	
 
 	if (game->IsKeyDown(DIK_DOWN))
 	{
@@ -1581,10 +1617,22 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	}
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
+		if (StairCollisionsDetectionRight() || StairCollisionsDetectionLeft())
+		{
+			if (Simon_Stair_Stand())
+				return;
+		}
 		RunLeft();
 	}
 	else if (game->IsKeyDown(DIK_RIGHT))
 	{
+
+		if (StairCollisionsDetectionRight() || StairCollisionsDetectionLeft())
+		{
+			if (Simon_Stair_Stand())
+				return;
+		}
+
 		RunRight();
 	}
 	else
@@ -1594,7 +1642,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 			if (Simon_Stair_Stand())
 			{
 				return;
-
 			}
 		}
 		Idle();

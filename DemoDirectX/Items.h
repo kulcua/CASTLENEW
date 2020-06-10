@@ -38,7 +38,7 @@ public:
 	
 	Items();
 	~Items();
-	void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
+	void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL, bool clk = false);
 	void Render();
 	void SetState(int SetState);
 	void GetBoundingBox(float &left, float &top, float &right, float &bottom);

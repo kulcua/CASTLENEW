@@ -35,20 +35,22 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			else if (dynamic_cast<Knight*>(obj))
 			{
 				Knight * e = dynamic_cast<Knight*>(obj);
-
 				float left, top, right, bottom;
 				e->GetBoundingBox(left, top, right, bottom);
 
 				if (WhipCheckColli(left, top, right, bottom))
-				{
+				{						
 					if (!delaydamage)
-					{
+					{			
+						e->timestop = GetTickCount();
+						e->vx = 0;
 						if (state == whip_lv1)
 							e->loseHp(1);
 						else
 							e->loseHp(2);
 						delaydamage = true;
 					}
+					
 
 					if (e->GetState() != knight_ani_die)
 						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));

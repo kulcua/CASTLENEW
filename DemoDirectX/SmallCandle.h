@@ -7,7 +7,7 @@ class SmallCandle :public CGameObject
 public:
 	SmallCandle();
 	~SmallCandle();
-	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
+	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL, bool clk = false);
 	void Render();
 	void SetState(int state);
 

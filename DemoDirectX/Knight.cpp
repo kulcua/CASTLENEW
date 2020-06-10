@@ -12,7 +12,7 @@ Knight::Knight(/*float maxX1, float maxX2*/)
 	score = 400;
 }
 
-void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
+void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 {
 	
 	if (state == knight_ani_die && animation_set->at(knight_ani_die)->RenderOver(knight_ani_die_time))
@@ -20,6 +20,12 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		isDone = true;
 		return;
 	}
+
+	if (clk)
+		return;
+
+	
+
 	Enemy::Update(dt);
 
 	if(state!= knight_ani_die)
@@ -77,14 +83,21 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 			this->vx *= -1;
 		}		
 	}
-	
+
+	if (GetTickCount() - timestop >= 100&&state!=knight_ani_die)
+	{
+		if (nx > 0) vx = knight_speed;
+		else vx = -knight_speed;
+	}
+
+
 	if (coEvents.size() >= 2 && ((rand() % 10000) < 100))
 	{
 		this->nx *= -1;
 		this->vx *= -1;
 	}
 
-	if (coEvents.size()==1)
+	if (coEvents.size() == 1)
 	{
 		if (!back)
 		{
@@ -95,15 +108,9 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	}
 	if (coEvents.size() > 1)
 		back = false;
+
 	for (int i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-
 	
-	//if (/*x <= maxX1 || x >= maxX2|| *//*nx==-1*//*||((rand() % 10000) < 100)*/)
-	//{
-	//	this->nx *= -1;
-	//	this->vx *= -1;
-	//}
 }
 
 void Knight::Render()

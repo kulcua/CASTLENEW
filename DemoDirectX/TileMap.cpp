@@ -52,7 +52,7 @@ void TileMap::Load()
 	DebugOut(L"[INFO] Done loading map resources %s\n", mapFilePath);
 }
 
-void TileMap::LoadMap(int id, LPCWSTR file_pic, LPCWSTR filePath_data,int num_row,int num_col,int num_row_read,int num_col_read,int tile_width,int tile_height)
+void TileMap::LoadMap(int id, LPCWSTR file_pic, LPCWSTR filePath_data, int num_row, int num_col, int num_row_read, int num_col_read, int tile_width, int tile_height, int r, int g, int b)
 {
 	CTextures * texture = CTextures::GetInstance();
 	//
@@ -65,7 +65,7 @@ void TileMap::LoadMap(int id, LPCWSTR file_pic, LPCWSTR filePath_data,int num_ro
 	this->tile_width = tile_width;
 	this->tile_height = tile_height;
 
-	texture->Add(id, file_pic, D3DCOLOR_XRGB(255, 0, 255));
+	texture->Add(id, file_pic, D3DCOLOR_XRGB(r, g, b));
 
 	LPDIRECT3DTEXTURE9 texTileMap = texture->Get(id);
 	

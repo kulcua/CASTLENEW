@@ -7,7 +7,7 @@ Items::Items()
 	isDone = false;
 }
 
-void Items::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void Items::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 {
 	CGameObject::Update(dt);
 

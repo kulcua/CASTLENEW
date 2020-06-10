@@ -43,7 +43,7 @@ public:
 	int getwidthmap();
 	int getid() { return id; }
 	void Load();
-	void LoadMap(int id, LPCWSTR file_pic, LPCWSTR filePath_data, int num_row, int num_col, int num_row_read, int num_col_read, int tile_width, int tile_height);
+	void LoadMap(int id, LPCWSTR file_pic, LPCWSTR filePath_data, int num_row, int num_col, int num_row_read, int num_col_read, int tile_width, int tile_height,int r,int g,int b);
 	void Draw();
 };
 

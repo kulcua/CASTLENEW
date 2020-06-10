@@ -18,6 +18,7 @@
 #include "Frog.h"
 #include "Raven.h"
 #include "Timer.h"
+#include "Clock.h"
 
 #define simon_jump -0.5f
 #define simon_run 0.15f
@@ -58,6 +59,8 @@ class Simon :public CGameObject
 	SubWeapon *axe[3];
 	SubWeapon *boom[3];
 	SubWeapon *holywater[3];
+
+	SubWeapon *clk;
 
 	int health;
 	int score;
@@ -102,7 +105,7 @@ public:
 	//bool ravendie;
 	Simon();
 	~Simon();
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL, bool clk = false);
 	void Render();
 	void SetState(int SetState);
 	void GetBoundingBox(float &left, float &top, float &right, float &bottom);
@@ -120,6 +123,7 @@ public:
 	void InstallAxe();
 	void InstallBoom();
 	void InstallHoly();
+	void InstallClk();
 	
 	void usemana(int a) { mana -= a; }
 	void SimonColliWithItems(vector<LPGAMEOBJECT> *listitems);

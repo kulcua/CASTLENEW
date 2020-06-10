@@ -11,7 +11,7 @@ Raven::Raven(LPGAMEOBJECT simon)
 }
 
 
-void Raven::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
+void Raven::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 {
 	Enemy::Update(dt);
 
@@ -27,6 +27,8 @@ void Raven::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		return;
 	}
 
+	if (clk)
+		return;
 
 	if (CheckCam()&&state!=raven_ani_die)
 		state = raven_ani_fly;

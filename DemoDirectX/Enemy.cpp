@@ -5,7 +5,7 @@ Enemy::Enemy()
 
 }
 
-void Enemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
+void Enemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 {
 	CGameObject::Update(dt);
 }

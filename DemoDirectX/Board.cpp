@@ -80,6 +80,8 @@ void Board::Render(int idmap,int camx,int camy,Simon* simon)
 			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 312, camy + 36);
 		else if (simon->getcurrentweapon() == 4 || simon->getcurrentweapon() == 2)
 			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 312, camy + 33);
+		else if(simon->currentWeapon==1)
+			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 312, camy + 29);
 		else
 			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 310, camy + 38);
 	}

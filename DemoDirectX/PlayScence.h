@@ -91,6 +91,7 @@ public:
 
 	Timer* timecross = new Timer(500);
 	Timer* timedeadsimon = new Timer(2000);
+	Timer* timerclk = new Timer(4000);
 
 	vector<LPGAMEOBJECT> * GetListStairsLeft() { return &(liststairleft); }
 	vector<LPGAMEOBJECT> * GetListStairsRight() { return &(liststairright); }

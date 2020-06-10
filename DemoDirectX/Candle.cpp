@@ -6,7 +6,7 @@ Candle::Candle()
 	//this->SetAnimationSet(CAnimationSets::GetInstance()->Get(candle_ani_set));
 	isDone = false;
 }
-void Candle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void Candle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 {
 	if (state == break_candle && animation_set->at(break_candle)->RenderOver(time_render_fire))
 		isDone = true;

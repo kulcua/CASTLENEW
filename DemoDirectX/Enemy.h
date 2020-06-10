@@ -7,7 +7,7 @@ protected:
 	int damage;
 	int score;
 public:
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL,bool clk=false);
 	virtual void Render() = 0;
 	virtual void SetState(int State);
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b) = 0;

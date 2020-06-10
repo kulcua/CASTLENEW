@@ -11,7 +11,7 @@ Skeleton::Skeleton(LPGAMEOBJECT simon)
 	bone = new Bone(simon);
 }
 
-void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
+void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 {
 	if (!bone->isDone)
 	{
@@ -39,6 +39,9 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		isDone = true;
 		return;
 	}
+
+	if (clk)
+		return;
 	
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;

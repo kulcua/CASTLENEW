@@ -7,7 +7,7 @@ GroundMoving::GroundMoving()
 	vx = 0.05;
 }
 
-void GroundMoving::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void GroundMoving::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects,bool clk)
 {
 	CGameObject::Update(dt);
 
@@ -32,7 +32,7 @@ void GroundMoving::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
 		// block 
-		x += min_tx * dx + nx * 0.1f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+		x += min_tx * dx + nx * 0.1f;		
 		y += min_ty * dy + ny * 0.1f;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)

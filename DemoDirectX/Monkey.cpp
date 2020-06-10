@@ -10,7 +10,7 @@ Monkey::Monkey(LPGAMEOBJECT simon)
 	damage = 3;
 }
 
-void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
+void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 {
 
 	if (state == 1 && animation_set->at(1)->RenderOver(300))
@@ -18,6 +18,9 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		isDone = true;
 		return;
 	}
+
+	if (clk)
+		return;
 
 	Enemy::Update(dt);
 	if(state!=1)

@@ -18,7 +18,7 @@ class Raven :public Enemy
 	bool checkstar,timeflydown,collisimon;
 public:
 	Raven(LPGAMEOBJECT simon);
-	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
+	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL,bool clk=false);
 	void Render();
 	void SetState(int State);
 	void GetBoundingBox(float &l, float &t, float &r, float &b);
