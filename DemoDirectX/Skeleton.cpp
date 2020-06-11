@@ -93,6 +93,9 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 				y += dy;
 
 		}
+
+		if (nx != 0)
+			vx *= -1;
 	
 	}
 
@@ -114,17 +117,20 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 	if (abs(x - simon->GetPositionX())  < 270&&CheckCam())
 	{
 		active = true;
-		if (abs(simon->GetPositionX() - x) > 200)
+		if (abs(simon->GetPositionX() - x) >  200)
 		{
 			if (coEvents.size() != 0 && state != skeleton_ani_die)
 				vx = 0.13 * nx;
 		}
-
-		if (abs(simon->GetPositionX() - x) < 70)
+		else if (abs(simon->GetPositionX() - x) < 70)
 		{
 			if (coEvents.size() != 0 && state != skeleton_ani_die)
-				vx = -0.1 * nx;
+				vx = -0.13 * nx;
 		}
+
+
+
+
 
 		if (jump&&y > 250 && state != skeleton_ani_die)
 		{

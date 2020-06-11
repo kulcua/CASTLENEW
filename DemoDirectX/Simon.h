@@ -17,6 +17,7 @@
 #include "Skeleton.h"
 #include "Frog.h"
 #include "Raven.h"
+#include "Zombie.h"
 #include "Timer.h"
 #include "Clock.h"
 

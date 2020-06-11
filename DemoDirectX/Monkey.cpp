@@ -5,15 +5,15 @@
 Monkey::Monkey(LPGAMEOBJECT simon)
 {
 	this->simon = simon;
-	hp = 1;
-	score = 500;
-	damage = 3;
+	hp = monkey_hp;
+	score = monkey_score;
+	damage = monkey_damage;
 }
 
 void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 {
 
-	if (state == 1 && animation_set->at(1)->RenderOver(300))
+	if (state == monkey_ani_die && animation_set->at(monkey_ani_die)->RenderOver(monkey_time))
 	{
 		isDone = true;
 		return;
@@ -23,8 +23,14 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 		return;
 
 	Enemy::Update(dt);
-	if(state!=1)
-		vy += 0.002 * dt;
+
+	if (!CheckCam() && active)
+		state = monkey_ani_die;
+
+
+
+	if (state != monkey_ani_die)
+		vy += monekey_gra * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
 	coEvents.clear();
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -47,7 +53,6 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 	{
 		x += dx;
 		y += dy;
-		/*vy += 0.002 * dt;*/
 	}
 	else
 	{
@@ -59,13 +64,14 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 		y += min_ty * dy + ny * 0.4f;
 
 		
-		//if (ny!=0)
+		if (ny!=0)
 		{
 			if (ny == -1)
 			{
 				vy = 0;
-				//jump = true;
+				
 			}
+
 		}
 		
 	}
@@ -74,11 +80,12 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 	//else
 	if(CheckCam() && state != monkey_ani_die)
 	{
+		active = true;
 		if (x < simon->GetPositionX())
 		{
 			if (abs(simon->GetPositionX() - x) > 100)
 			{
-				vx =0.16;
+				//vx =0.16;
 				nx = 1;
 			}
 		}
@@ -86,16 +93,21 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 		{
 			if ((abs(simon->GetPositionX() - x) > 100))
 			{
-				vx = -0.16;
+				//vx = -0.16;
 				nx = -1;
 			}
 		}
 		
-		if (((rand() % 10000 < 350)&& (abs(simon->GetPositionX() - x) < 120)) && y > 350/*330*/)
+		if (((rand() % 10000 < 350)&& (abs(simon->GetPositionX() - x) < 150)) && y > 330)
 		{
-			vy = -0.35;
+			vy = monkey_vy;
 			//jump = false;
 		}
+		
+		if (vy < 0)
+			vx = nx * monkey_vx_jump;
+		else
+			vx = nx * monkey_vx_notjump;
 	}
 
 	// clean up collision events
@@ -109,7 +121,7 @@ void Monkey::Render()
 	if (!isDone)
 		animation_set->at(state)->Render(nx, x, y);
 	else return;
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void Monkey::SetState(int State)
@@ -117,10 +129,10 @@ void Monkey::SetState(int State)
 	Enemy::SetState(State);
 	switch (State)
 	{
-	case 0:
+	/*case 0:
 		vx = vy = 0;
-		break;
-	case 1:
+		break;*/
+	case monkey_ani_die:
 		vx = vy = 0;
 		animation_set->at(State)->StartAni();
 		break;
@@ -136,19 +148,19 @@ int Monkey::getHp()
 
 void Monkey::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
-	if (state !=1 )
+	if (state != monkey_ani_die)
 	{
 		l = x;
 		t = y;
-		r = l + 32;
-		b = t + 32;
+		r = l + monkey_box_width;
+		b = t + monkey_box_height;
 	}
 }
 
 bool Monkey::CheckCam()
 {
 	CGame *game = CGame::GetInstance();
-	return (x >= game->GetCamPosX()+50 && x < game->GetCamPosX() + (SCREEN_WIDTH) && y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT));
+	return (x >= game->GetCamPosX()+50 && x < game->GetCamPosX() + (SCREEN_WIDTH) && y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT-32));
 }
 
 void Monkey::loseHp(int x)

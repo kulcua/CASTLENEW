@@ -203,6 +203,27 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 
 			}
+			else if (dynamic_cast<Zombie*>(obj))
+			{
+				Zombie * e = dynamic_cast<Zombie*>(obj);
+
+				float left, top, right, bottom;
+				e->GetBoundingBox(left, top, right, bottom);
+
+				if (WhipCheckColli(left, top, right, bottom))
+				{
+					e->loseHp(1);
+					e->colliwhip = true;
+					if (e->GetState() != zombie_ani_die )
+						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
+
+					if (e->getHp() <= 0)
+					{
+						e->SetState(zombie_ani_die);
+					}
+
+				}
+			}
 			
 		}
 

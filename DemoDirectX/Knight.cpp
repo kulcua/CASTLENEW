@@ -2,14 +2,12 @@
 
 
 
-Knight::Knight(/*float maxX1, float maxX2*/)
+Knight::Knight()
 {
-	/*this->maxX1 = maxX1;
-	this->maxX2 = maxX2;*/
-	hp = 3;
-	damage = 2;
+	hp = knight_hp;
+	damage = knight_damage;
 	SetState(knight_ani_run);
-	score = 400;
+	score = knight_score;
 }
 
 void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
@@ -29,7 +27,7 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 	Enemy::Update(dt);
 
 	if(state!= knight_ani_die)
-		vy += 0.00015 * dt;
+		vy += knight_gra * dt;
 	
 	
 
@@ -66,12 +64,7 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		/*if (nx != 0 && ny == 0)
-		{
-			this->nx *= -1;
-			this->vx *= -1;
-		}
-		else*/ if (ny == -1.0f)
+		if (ny == -1.0f)
 		{
 			vy = 0;
 		}	

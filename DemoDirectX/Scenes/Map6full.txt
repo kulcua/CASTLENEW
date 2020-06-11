@@ -15,6 +15,7 @@
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 11	textures\Stair.png	1	1	1
+13	textures\Zombie.png	255	0	255
 #
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -24,6 +25,9 @@
 #GROUND
 141	96	0	128	32	1
 145	128	0	160	32	1
+#ZOMBIE
+145	0	0	32	64	13
+146	32	0	64	64	13
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 #====STAIR======
@@ -32,6 +36,8 @@
 #====GROUND=====
 98	141	100
 100	145	100
+#====ZOMBIE======
+104	145	100	146	100
 #
 # id	ani1	ani2	ani3
 #
@@ -42,6 +48,8 @@
 #GROUND
 24	98
 26	100
+#ZOMBIE
+28	104	90
 
 [SCENEOBJECT]
 Scenes\scene6.txt

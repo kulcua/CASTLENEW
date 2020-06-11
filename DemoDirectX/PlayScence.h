@@ -24,6 +24,7 @@
 #include "Raven.h"
 #include "BreakWall.h"
 #include "SmallCandle.h"
+#include "Zombie.h"
 #include "Grid.h"
 
 class CPlayScene : public CScene

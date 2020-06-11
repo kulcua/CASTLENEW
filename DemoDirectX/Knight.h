@@ -8,6 +8,10 @@
 #define knight_ani_run 0
 #define knight_ani_die 1
 #define knight_ani_die_time 300
+#define knight_hp 3
+#define knight_damage 2
+#define knight_score 400
+#define knight_gra 0.00015
 class Knight :public Enemy
 {
 	bool back;

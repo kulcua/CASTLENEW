@@ -74,7 +74,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 
 	for (int i = 0; i < coObjects->size(); i++)
 	{	
-		if (coObjects->at(i)!= dynamic_cast<Candle*>(coObjects->at(i))&&coObjects->at(i) != dynamic_cast<SmallCandle*>(coObjects->at(i)) && (coObjects->at(i) != dynamic_cast<Monkey*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Frog*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Knight*>(coObjects->at(i))))
+		if (coObjects->at(i)!= dynamic_cast<Candle*>(coObjects->at(i))&&coObjects->at(i) != dynamic_cast<SmallCandle*>(coObjects->at(i)) && (coObjects->at(i) != dynamic_cast<Monkey*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Frog*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Knight*>(coObjects->at(i)))&& coObjects->at(i) != dynamic_cast<Zombie*>(coObjects->at(i)))
 		{
 			COOBJECTS.push_back(coObjects->at(i));
 		}
@@ -559,6 +559,27 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 				loseHp(skele->getDamage());
 				if (isStandOnStair == false || health == 0)
 					SetState(simon_ani_hurt);
+			}
+		}
+		else if (dynamic_cast<Zombie*>(e))
+		{
+			Zombie* zombie = dynamic_cast<Zombie*>(e);
+			zombie->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
+			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led && zombie->GetState() != zombie_ani_die)
+			{
+				untouchtime->Start();
+				loseHp(zombie->getDamage());
+				if (isStandOnStair == false || health == 0)
+				{
+					if (e->nx != 0)
+					{
+						if (e->nx == 1)
+							SetNx(-1);
+						else
+							SetNx(1);
+					}
+					SetState(simon_ani_hurt);
+				}
 			}
 		}
 	}

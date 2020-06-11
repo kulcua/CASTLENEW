@@ -42,6 +42,7 @@
 #define OBJECT_TYPE_DRAVEN 11
 #define OBJECT_TYPE_BREAKWALL 12
 #define OBJECT_TYPE_SMALLCANDLE 13
+#define OBJECT_TYPE_ZOMBIE 14
 
 
 #define OBJECT_TYPE_PORTAL	50
@@ -425,12 +426,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_KNIGHT:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-		//float maxX1 = atof(tokens[4].c_str());
-		//float maxX2 = atof(tokens[5].c_str());
-		obj = new Knight(/*maxX1, maxX2*/);
+		
+		obj = new Knight();
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		//objects.push_back(obj);
 		listpush.push_back(obj);
 		break;
 	}
@@ -504,6 +503,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		listpush.push_back(obj);
 		break;
 	}
+	case OBJECT_TYPE_ZOMBIE:
+	{
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		int nx = atoi(tokens[4].c_str());
+		obj = new Zombie();
+		obj->nx = nx;
+		obj->SetAnimationSet(ani_set);
+		obj->SetPosition(x, y);
+		listpush.push_back(obj);
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -524,7 +534,7 @@ void CPlayScene::GetObjectGrid()
 	listget.clear();
 
 	grid->GetGrid(listget);
-	//DebugOut(L" SO PHAN TU TRONG LIST %d \n", listget.size());
+	DebugOut(L" SO PHAN TU TRONG LIST %d \n", listget.size());
 	for (UINT i = 0; i < listget.size(); i++)
 	{
 		LPGAMEOBJECT obj = listget[i];
@@ -764,6 +774,12 @@ void CPlayScene::UseCross()
 				Raven *raven = dynamic_cast<Raven*>(objects[i]);
 				raven->SetState(raven_ani_die);
 			}
+			else if (dynamic_cast<Zombie*>(objects[i]))
+			{
+				Zombie *zombie = dynamic_cast<Zombie*>(objects[i]);
+				zombie->colliwhip = true;
+				zombie->SetState(zombie_ani_die);
+			}
 		}
 	}
 }
@@ -955,13 +971,26 @@ void CPlayScene::Update(DWORD dt)
 
 		if (dynamic_cast<SmallCandle*>(obj) && obj->GetState() == break_candle && !(obj->isDone) && !(obj->isFire))
 		{
-
 			if (obj->animation_set->at(break_candle)->RenderOver(smallcandle_time))//để khi render xong lửa thì mới rới đồ
 			{
 				obj->isFire = true;
 				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY(), obj->idItems));
 			}
+		}
 
+		if (dynamic_cast<Zombie*>(obj) && obj->GetState() == zombie_ani_die && !(obj->isDone) && !(obj->isFire))
+		{
+			if (obj->animation_set->at(zombie_ani_die)->RenderOver(zombie_time))
+			{
+				Zombie* e = dynamic_cast<Zombie *>(obj);
+				obj->isFire = true;
+				if (e->colliwhip)
+				{
+					simon->addScore(e->getScore());
+					listitems.push_back(DropItem(obj->GetPositionX() + 10, obj->GetPositionY(), RandomItems()));
+				}
+				e->colliwhip = false;
+			}
 		}
 
 	}
