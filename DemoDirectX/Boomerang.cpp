@@ -215,7 +215,7 @@ void Boomerang::Render()
 
 	SubWeapon::renderlisthit();
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Boomerang::SetV()

@@ -35,7 +35,7 @@ void Axe::Render()
 
 	SubWeapon::renderlisthit();
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Axe::SetV()

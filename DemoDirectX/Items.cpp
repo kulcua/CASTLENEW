@@ -11,6 +11,10 @@ void Items::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 {
 	CGameObject::Update(dt);
 
+	
+	
+
+
 	if (state == items_small_heart&&vy!=0)
 	{
 		vx += 0.005;
@@ -56,7 +60,11 @@ void Items::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 		
 	}
 
-	// clean up collision events
+	if (state == items_crown && y > 400)
+		vy = -0.03;
+	if (state == items_crown && y <= 400)
+		vy = 0;
+	
 	for (int i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
@@ -65,7 +73,9 @@ void Items::Render()
 	if (isDone)
 		return;
 
-	animation_set->at(state)->Render(-1, x, y);
+	if(state!=-1)
+		animation_set->at(state)->Render(-1, x, y);
+	else return;
 	//RenderBoundingBox();
 }
 
@@ -102,64 +112,73 @@ void Items::GetBoundingBox(float &l, float &t, float &r, float &b)
 		case items_axe:
 			l = x;
 			t = y;
-			r = l + 30;
-			b = t + 28;
+			r = l + items_axe_box_width;
+			b = t + items_axe_box_height;
 			break;
 		case items_boom:
 			l = x;
 			t = y;
-			r = l + 30;
-			b = t + 28;
+			r = l + items_boom_box_width;
+			b = t + items_boom_box_height;
 			break;
 		case items_holywater:
 			l = x;
 			t = y;
-			r = l + 32;
-			b = t + 28;
+			r = l + items_holy_box_width;
+			b = t + items_holy_box_height;
 			break;
 		case items_watterbottle:
 			l = x;
 			t = y;
-			r = l + 29;
-			b = t + 33;
+			r = l + items_water_box_width;
+			b = t + items_water_box_height;
 			break;
 		case items_corss:
 			l = x;
 			t = y;
-			r = l + 32;
-			b = t + 32;
+			r = l + items_cross_box_width;
+			b = t + items_cross_box_height;
 			break;
 		case items_double:
 			l = x;
 			t = y;
-			r = l + 28;
-			b = t + 28;
+			r = l + items_double_box_width;
+			b = t + items_double_box_height;
 			break;
 		case items_triple:
 			l = x;
 			t = y;
-			r = l + 28;
-			b = t + 28;
+			r = l + items_triple_box_width;
+			b = t + items_triple_box_height;
 			break;
 		case items_meat:
 			l = x;
 			t = y;
-			r = l + 32;
-			b = t + 26;
+			r = l + items_meat_box_width;
+			b = t + items_meat_box_height;
 			break;
 		case items_small_heart:
 			l = x;
 			t = y;
-			r = l + 16;
-			b = t + 16;
+			r = l + items_smallheart_box_width;
+			b = t + items_smallheart_box_height;
 			break;
 		case items_redmoney:
 		case items_bluemoney:
 		case items_whitemoney:
 			l = x;
 			t = y;
-			r = l + 30;
-			b = t + 30;
+			r = l + items_money_box_width;
+			b = t + items_money_box_height;
+			break;
+		case items_crown:
+			l = x;
+			t = y;
+			r = l + items_crown_box_width;
+			b = t + items_crown_box_height;
+			break;
+		default:
+			l = t = r = b = 0;
 			break;
 		}
 	}
@@ -171,62 +190,69 @@ void Items::SetState(int State)
 	switch (State)
 	{
 	case items_for_whip:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_big_heart:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_knife:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_watch:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_axe:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_boom:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_holywater:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_watterbottle:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_corss:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_double:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_triple:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_meat:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
 		break;
 	case items_small_heart:
-		vx = 0;
+		vx = items_vx;
 		vy = 0.05;
 		break;
 	case items_redmoney:
 	case items_bluemoney:
 	case items_whitemoney:
-		vx = 0;
-		vy = 0.15;
+		vx = items_vx;
+		vy = items_vy;
+		break;
+	case items_crown:
+		vx = items_vx;
+		vy = items_vy;
+		break;
+	default:
+		vx = vy = 0;
 		break;
 	}
 }

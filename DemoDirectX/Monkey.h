@@ -11,7 +11,7 @@
 #define monkey_score 500
 #define monkey_box_width 32
 #define monkey_box_height 32
-#define monkey_vx_jump 0.08
+#define monkey_vx_jump 0.1
 #define monkey_vx_notjump 0.16
 #define monkey_vy -0.4
 #define monekey_gra 0.002

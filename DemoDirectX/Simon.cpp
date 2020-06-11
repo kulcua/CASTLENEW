@@ -524,7 +524,16 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 				untouchtime->Start();
 				loseHp(/*frog->getDamage()*/0);
 				if (isStandOnStair == false || health == 0)
+				{
+					if (e->nx != 0)
+					{
+						if (e->nx == 1)
+							SetNx(-1);
+						else
+							SetNx(1);
+					}
 					SetState(simon_ani_hurt);
+				}
 			}
 		}
 		else if (dynamic_cast<Monkey*>(e))
@@ -686,6 +695,11 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 			{
 				e->isDone = true;
 				score += 1500;
+			}
+			else if (e->idItems == items_crown)
+			{
+				e->isDone = true;
+				score += 2000;
 			}
 		}
 		

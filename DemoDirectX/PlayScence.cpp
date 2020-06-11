@@ -966,7 +966,12 @@ void CPlayScene::Update(DWORD dt)
 		if (dynamic_cast<BreakWall*>(obj) && (obj->isDone) && !(obj->isFire))
 		{
 			obj->isFire = true;
-			listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY() - 10, obj->idItems));
+			if (obj->idItems == items_crown)
+			{
+				listitems.push_back(DropItem(CGame::GetInstance()->GetCamPosX() + SCREEN_WIDTH / 2, CGame::GetInstance()->GetCamPosY() + SCREEN_HEIGHT - 80, obj->idItems));
+			}
+			else
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY() - 10, obj->idItems));
 		}
 
 		if (dynamic_cast<SmallCandle*>(obj) && obj->GetState() == break_candle && !(obj->isDone) && !(obj->isFire))

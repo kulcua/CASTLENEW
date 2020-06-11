@@ -1,6 +1,6 @@
 #pragma once
 #include"GameObject.h"
-#define time_items_des 3000
+#define time_items_des 4500
 #define items_for_whip 0
 #define items_big_heart 1
 #define items_knife 2
@@ -17,6 +17,7 @@
 #define items_bluemoney 13
 #define items_redmoney 14
 #define items_whitemoney 15
+#define items_crown 16
 
 #define items_ani_set 5
 
@@ -29,6 +30,33 @@
 #define items_knife_box_height 18
 #define items_watch_box_width 30
 #define items_watch_box_height 32
+#define items_crown_box_width 32
+#define items_crown_box_height 32
+#define items_money_box_width 30
+#define items_money_box_height 30
+#define items_smallheart_box_width 16
+#define items_smallheart_box_height 16
+#define items_double_box_width 28
+#define items_double_box_height 28
+#define items_triple_box_width 28
+#define items_triple_box_height 28
+#define items_cross_box_width 32
+#define items_cross_box_height 32
+#define items_meat_box_width 32
+#define items_meat_box_height 26
+#define items_axe_box_width 30
+#define items_axe_box_height 28
+#define items_boom_box_width 30
+#define items_boom_box_height 28
+#define items_holy_box_width 32
+#define items_holy_box_height 28
+#define items_water_box_width 29
+#define items_water_box_height 33
+
+#define items_vx 0
+#define items_vy 0.15
+
+
 class Items :public CGameObject
 {
 	DWORD timeStart;

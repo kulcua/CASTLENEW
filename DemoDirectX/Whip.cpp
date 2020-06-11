@@ -116,6 +116,10 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					if (!delaydamage)
 					{
+						e->timestop = GetTickCount();
+						e->vx = e->vy = 0;
+
+
 						if (state == whip_lv1)
 							e->loseHp(1);
 						else

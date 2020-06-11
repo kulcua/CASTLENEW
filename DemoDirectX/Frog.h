@@ -9,13 +9,9 @@ class Frog :public Enemy
 	LPGAMEOBJECT simon;
 	bool check;
 	
-	/*Timer* wait = new Timer(2800);
-	Timer* wait1 = new Timer(2500);
-	Timer* dow = new Timer(2500);
-	Timer* dow1 = new Timer(2500);
-	Timer* asd = new Timer(4000);
-	bool checkstar,qwe;*/
+	
 public:
+	DWORD timestop;
 	Frog(LPGAMEOBJECT simon);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL,bool clk=false);
 	void Render();
