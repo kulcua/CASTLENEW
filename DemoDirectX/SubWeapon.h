@@ -11,6 +11,7 @@
 #include"Skeleton.h"
 #include"Raven.h"
 #include"Ground.h"
+#include"Zombie.h"
 
 #define weapon_knfie 0
 #define weapon_watch 1
@@ -37,6 +38,10 @@ public:
 	{
 		this->simon = simon;
 	}
+
+	void ClearListHit();
+
+
 	~SubWeapon();
 };
 

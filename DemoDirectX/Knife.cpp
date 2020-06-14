@@ -16,8 +16,7 @@ void Knife::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void Knife::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	SubWeapon::Update(dt);
-
-
+	SubWeapon::ClearListHit();
 
 	if (CheckPosKnife(POSX))
 	{
@@ -27,7 +26,6 @@ void Knife::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	collisionwith(dt, coObjects);
-
 }
 
 

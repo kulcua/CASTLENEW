@@ -729,8 +729,8 @@ bool Simon::SimonColliWithStair(vector<LPGAMEOBJECT> *liststair)
 
 			stairCollided = liststair->at(i);
 
-			if ((b_simon) < b_stair)  canmovedownstair = true; 
-			
+			if ((b_simon) < b_stair - 18)  canmovedownstair = true;
+			if (y >= t_stair - 32) canmoveupstair = true;
 
 			float upstair_x = -999999, upstair_y = -999999; // toạ độ của bậc thang liền kề
 
@@ -777,8 +777,8 @@ void Simon::DoAutoWalkStair()
 			state = stateAfterAutoWalk;
 			nx = nxAfterAutoWalk;
 			SetState(state);
-			if (state == simon_ani_stair_down) 
-				y += 1.0f; // để đảm bảo simon sẽ va chạm với bậc thang 
+			if (state == simon_ani_stair_down)
+				y += 0.5f; // để đảm bảo simon sẽ va chạm với bậc thang 
 			isWalkStair = false;
 		}
 	}

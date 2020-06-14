@@ -13,7 +13,7 @@ void Axe::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void Axe::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	SubWeapon::Update(dt);
-
+	SubWeapon::ClearListHit();
 
 	vy += 0.001*dt;
 

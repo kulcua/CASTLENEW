@@ -22,10 +22,10 @@
 
 class Whip :public CGameObject
 {
-	vector<LPHIT> listHit;
+	
 	bool delaydamage;
-	//int score;
 public:
+	vector<LPHIT> listHit;
 	Whip();
 	~Whip();
 	Hit* CreateHit(float x, float y);
@@ -40,10 +40,6 @@ public:
 	{
 		this->state = state;
 	}
-	/*int getScore() {
-		return score;
-	}*/
-	//void setScore(int a) { score = a; }
-
+	
 };
 

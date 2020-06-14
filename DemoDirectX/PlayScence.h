@@ -71,7 +71,7 @@ protected:
 
 public:
 	
-	CPlayScene(/*int id, LPCWSTR filePath*/);
+	CPlayScene();
 
 	virtual void ClearAll(LPCWSTR a);
 

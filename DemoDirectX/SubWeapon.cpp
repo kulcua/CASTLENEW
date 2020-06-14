@@ -32,6 +32,18 @@ void SubWeapon::renderlisthit()
 		listHit[i]->Render();
 }
 
+void SubWeapon::ClearListHit()
+{
+	//DebugOut(L" SO PHAN TU TRONG LISTHIT %d \n", listHit.size());
+	for (int i = 0; i < listHit.size(); i++)
+	{
+		if (listHit[i]->timedestroy())
+			listHit.erase(listHit.begin() + i);
+	}
+	
+}
+
+
 void SubWeapon::Render()
 {
 
@@ -216,6 +228,23 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					if (raven->getHp() <= 0)
 						raven->SetState(raven_ani_die);
+					isDone = true;
+					isFire = false;
+				}
+			}
+			else if (dynamic_cast<Zombie*>(e->obj))
+			{
+				Zombie *zombie = dynamic_cast<Zombie*>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					zombie->colliwhip = true;
+					zombie->loseHp(1);
+					if (zombie->GetState() != zombie_ani_die)
+						listHit.push_back(CreateHit(zombie->GetPositionX(), zombie->GetPositionY() + 10));
+
+					if (zombie->getHp() <= 0)
+						zombie->SetState(zombie_ani_die);
 					isDone = true;
 					isFire = false;
 				}

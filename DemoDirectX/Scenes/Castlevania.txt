@@ -9,7 +9,7 @@
 6	textures\Effect.png	255	0	255
 7	textures\Spark.png	255	0	255
 8	textures\BlackBoard.png	0	0	0
-9	textures\HP.png	1	1	1
+9	textures\HP.png	0	0	0
 10	textures\Texts.png	255	0	255
 
 # id	left	top	right	bottom	texture_id
@@ -236,9 +236,9 @@
 #Knife
 80	100	100
 #Axe
-81	101	70	102	70	103	70	104	70
+81	101	60	102	60	103	60	104	60
 #Boomerang
-82	105	100	106	100	107	100
+82	105	60	106	60	107	60
 #HolyWater
 83	204	100
 84	205	100	206	100

@@ -534,7 +534,7 @@ void CPlayScene::GetObjectGrid()
 	listget.clear();
 
 	grid->GetGrid(listget);
-	DebugOut(L" SO PHAN TU TRONG LIST %d \n", listget.size());
+	//DebugOut(L" SO PHAN TU TRONG LIST %d \n", listget.size());
 	for (UINT i = 0; i < listget.size(); i++)
 	{
 		LPGAMEOBJECT obj = listget[i];
@@ -854,17 +854,19 @@ void CPlayScene::Update(DWORD dt)
 
 	if (simon->animation_set->at(simon_ani_stand_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stand_hit || (simon->animation_set->at(simon_ani_sit_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_sit_hit) || (simon->animation_set->at(simon_ani_stair_up_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stair_up_hit))
 	{
-		/*if (simon->isHitSubWeapon)
-		{
-
-		}
-		else*/
+		
 		if(!simon->isHitSubWeapon)
-			simon->GetWhip()->Update(dt, &objects/*&objectsstatic*/);
+			simon->GetWhip()->Update(dt, &objects);
 
 	}
 	
 
+	for (int i = 0; i < simon->GetWhip()->listHit.size(); i++)
+	{
+		if (simon->GetWhip()->listHit[i]->timedestroy())
+			simon->GetWhip()->listHit.erase(simon->GetWhip()->listHit.begin() + i);
+	}
+	//DebugOut(L" SO PHAN TU TRONG LISTHIT %d \n", simon->GetWhip()->listHit.size());
 
 	for (UINT i = 0; i < objects.size(); i++)
 	{
@@ -1018,11 +1020,7 @@ void CPlayScene::Update(DWORD dt)
 
 
 	simon->Update(dt, &coObjects);
-	/*if (simon->GetWhip()->getScore() != 0)
-	{
-		simon->addScore(simon->GetWhip()->getScore());
-		simon->GetWhip()->setScore(0);
-	}*/
+	
 
 	if (simon->GetState() == simon_ani_sit_hit)
 		simon->GetWhip()->SetPosWhip(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), false);//false là ngồi
@@ -1030,16 +1028,6 @@ void CPlayScene::Update(DWORD dt)
 		simon->GetWhip()->SetPosWhip(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), true);//true là đứng
 
 	
-	//if (simon->animation_set->at(simon_ani_stand_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stand_hit||(simon->animation_set->at(simon_ani_sit_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_sit_hit)||(simon->animation_set->at(simon_ani_stair_up_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stair_up_hit))
-	//{
-	//	if (simon->isHitSubWeapon)
-	//	{				
-	//			
-	//	}
-	//	else
-	//		simon->GetWhip()->Update(dt, &objects/*&objectsstatic*/);
-	//		
-	//}
 	
 	if (simon->currentWeapon != 1)
 	{
@@ -1051,11 +1039,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 		
-	/*if (simon->currentWeapon != -1 && !simon->GetListSubWeapon()[0]->isDone)
-		simon->GetListSubWeapon()[0]->Update(dt, &objects);*/
 
-
-	
 	float cx, cy;
 	simon->GetPosition(cx, cy);
 
@@ -1096,23 +1080,23 @@ void CPlayScene::Render()
 	
 	
 	
-	for (int i = 0; i < liststairleft.size(); i++)
+	/*for (int i = 0; i < liststairleft.size(); i++)
 		liststairleft[i]->Render();
 
 
 	for (int i = 0; i < liststairright.size(); i++)
-		liststairright[i]->Render();
+		liststairright[i]->Render();*/
 
 
 	
 	for (int i = 0; i < listitems.size(); i++)
 		listitems[i]->Render();
 
-	/*for (int i = 0; i < objectsstatic.size(); i++)
-		objectsstatic[i]->Render();*/
+	
 
 	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+		if(objects[i]!=dynamic_cast<Ground*>(objects[i]))
+			objects[i]->Render();
 
 
 	simon->Render();
@@ -1301,13 +1285,30 @@ void CPlayScenceKeyHandler::Stair_Down()
 	Simon *simon = ((CPlayScene*)scence)->simon;
 	int Stairnx = simon->stairNx; //hướng cầu thang
 
+
 	if (!simon->canmovedownstair)//ra khỏi cầu thang
 	{
 		if (simon->isStandOnStair)
+		{
+			float stairx;
+			stairx = simon->stairCollided->GetPositionX();
+			if (Stairnx == 1)
+				stairx -= 31.0f;
+			else
+				stairx += 5;
+			simon->nx = simon->stairNx;
+			simon->SetState(simon_ani_stair_up);
+			simon->AutoWalkStair(stairx, simon_ani_idle, -simon->nx);//tránh trường hợp ra khỏi cầu thang mà ko dụng vào mặt đất
+		}
+		else { 
+			simon->SetState(simon_ani_sit);
+			return; 
+		}
+		/*if (simon->isStandOnStair)
 			simon->SetState(simon_ani_idle);
 		else
-			simon->SetState(simon_ani_sit);
-		return;
+			simon->SetState(simon_ani_sit);*/
+		//return;
 	}
 	
 
@@ -1352,7 +1353,7 @@ void CPlayScenceKeyHandler::Stair_Up()
 			stairx = simon->stairCollided->GetPositionX();
 			if (NxStair == 1)
 				stairx += 5.0f;
-			else 
+			else
 				stairx -= 32.0f;
 			simon->nx = simon->stairNx;
 			simon->SetState(simon_ani_stair_up);

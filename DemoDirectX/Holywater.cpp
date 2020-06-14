@@ -5,6 +5,7 @@ Holywater::Holywater()
 	SetAnimationSet(CAnimationSets::GetInstance()->Get(22));
 	isDone = true;
 	isFire = false;
+	holyWaterShatteredCounter = 0;
 }
 void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -135,8 +136,6 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + 10));
 					candle->SetState(break_candle);
-					isDone = true;
-					isFire = false;
 				}
 
 			}
@@ -153,8 +152,6 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					if (skele->getHp() <= 0)
 						skele->SetState(skeleton_ani_die);
-					isDone = true;
-					isFire = false;
 				}
 			}
 			else if (dynamic_cast<Raven*>(e->obj))
@@ -170,8 +167,21 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					if (raven->getHp() <= 0)
 						raven->SetState(raven_ani_die);
-					isDone = true;
-					isFire = false;
+				}
+			}
+			else if (dynamic_cast<Zombie*>(e->obj))
+			{
+				Zombie *zombie = dynamic_cast<Zombie*>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					zombie->colliwhip = true;
+					zombie->loseHp(1);
+					if (zombie->GetState() != zombie_ani_die)
+						listHit.push_back(CreateHit(zombie->GetPositionX(), zombie->GetPositionY() + 10));
+
+					if (zombie->getHp() <= 0)
+						zombie->SetState(zombie_ani_die);
 				}
 			}
 		}
@@ -182,13 +192,14 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 }
 void Holywater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	SubWeapon::ClearListHit();
 	if (isHolyWaterShattered == true && GetTickCount() - holyWaterShatteredCounter > 1500)
 	{
-		this->SetState(0);
-		isHolyWaterShattered = false;
-		holyWaterShatteredCounter = 0;
 		this->isDone = true;
 		this->isFire = false;
+		this->SetState(0);
+		isHolyWaterShattered = false;
+		holyWaterShatteredCounter = 0;	
 		return;
 	}
 
@@ -214,7 +225,7 @@ void Holywater::Render()
 
 	SubWeapon::renderlisthit();
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void Holywater::SetV()
@@ -248,6 +259,13 @@ void Holywater::SetPosSubWeapon(D3DXVECTOR3 pos, bool isstanding)
 	SubWeapon::SetPosSubWeapon(D3DXVECTOR3(pos.x, pos.y, 0), isstanding);
 	POSX = pos.x;
 }
+
+void Holywater::StartHolyWater()
+{
+	isHolyWaterShattered = true; 
+	holyWaterShatteredCounter = GetTickCount();
+}
+
 void Holywater::SetState(int State)
 {
 	CGameObject::SetState(State);

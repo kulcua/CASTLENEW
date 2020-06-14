@@ -169,6 +169,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
+					
 					raven->loseHp(1);
 					if (raven->GetState() != raven_ani_die)
 						listHit.push_back(CreateHit(raven->GetPositionX(), raven->GetPositionY() + 10));
@@ -176,6 +177,22 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					if (raven->getHp() <= 0)
 						raven->SetState(raven_ani_die);
+				}
+			}
+			else if (dynamic_cast<Zombie*>(e->obj))
+			{
+				Zombie *zombie = dynamic_cast<Zombie*>(e->obj);
+
+				if (e->nx != 0 || e->ny != 0)
+				{
+					zombie->colliwhip = true;
+					zombie->loseHp(1);
+					if (zombie->GetState() != zombie_ani_die)
+						listHit.push_back(CreateHit(zombie->GetPositionX(), zombie->GetPositionY() + 10));
+
+
+					if (zombie->getHp() <= 0)
+						zombie->SetState(zombie_ani_die);
 				}
 			}
 		}
@@ -190,7 +207,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	
-
+	SubWeapon::ClearListHit();
 	SubWeapon::Update(dt);
 
 	if (nx > 0) vx -= 0.01;

@@ -231,6 +231,12 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			
 		}
 
+		/*for (int i = 0; i < listHit.size(); i++)
+		{
+			if (listHit[i]->timedestroy())
+				listHit.erase(listHit.begin() + i);
+		}*/
+		//DebugOut(L" SO PHAN TU TRONG LISTHIT %d \n", listHit.size());
 }
 
 void Whip::Render(int currentID)
@@ -239,6 +245,7 @@ void Whip::Render(int currentID)
 	{
 
 		listHit[i]->Render();
+	
 	}
 
 	if (currentID >= 0)		
