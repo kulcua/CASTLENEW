@@ -2,6 +2,11 @@
 #include"GameObject.h"
 #define break_candle 1
 #define smallcandle_time 300
+#define smallcandle_box_width 16
+#define smallcandle_box_height 32
+#define smallcandle_time 300
+
+
 class SmallCandle :public CGameObject
 {
 public:

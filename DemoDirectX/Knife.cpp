@@ -47,9 +47,9 @@ void Knife::SetV()
 	//CGameObject::SetState(State);
 
 	if (nx > 0)
-		vx = 0.35;
+		vx = knife_vx;
 	else
-		vx = -0.35;
+		vx = -knife_vx;
 	vy = 0;
 }
 
@@ -75,12 +75,12 @@ bool Knife::CheckPosKnife(float a)
 {
 	if (vx > 0)
 	{
-		if (x - a >= ((SCREEN_WIDTH / 2) + 100))
+		if (x - a >= ((SCREEN_WIDTH / 2) + add_dis_max))
 			return true;
 	}
 	else if (vx < 0)
 	{
-		if (a - x >= ((SCREEN_WIDTH / 2) + 100))
+		if (a - x >= ((SCREEN_WIDTH / 2) + add_dis_max))
 			return true;
 	}
 	return false;

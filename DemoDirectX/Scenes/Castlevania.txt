@@ -11,6 +11,7 @@
 8	textures\BlackBoard.png	0	0	0
 9	textures\HP.png	0	0	0
 10	textures\Texts.png	255	0	255
+20	textures\Piece.png	255	0	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -128,6 +129,8 @@
 112	64	0	96	60	6
 #Effect Hit
 113	0	0	16	20	7
+#Effect Piece
+114	32	0	64	32	20
 #Board
 125	0	0	520	80	8
 #SimonBossHealth
@@ -254,6 +257,8 @@
 94	127	100
 #=====bossheal=====
 95	128	100
+#=====effectpiece====
+300	114	100
 
 
 
@@ -292,6 +297,8 @@
 8	92
 #Health
 9	93	94	95
+#EffectPiece
+300	300
 
 [SETTINGS]
 start	1

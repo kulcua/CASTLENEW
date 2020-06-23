@@ -20,9 +20,9 @@ void SubWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects)
 void SubWeapon::SetPosSubWeapon(D3DXVECTOR3 pos, bool isstanding)
 {
 	if (!isstanding)
-		pos.y += 25;
+		pos.y += set_pos_sub_nsit;
 	else
-		pos.y += 10;
+		pos.y += set_pos_sub_sit;
 	SetPosition(pos.x, pos.y);
 }
 
@@ -71,7 +71,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	COOBJECTS.clear();
 	for (int i = 0; i < coObjects->size(); i++)
 	{
-		if (coObjects->at(i) != dynamic_cast<Gate*>(coObjects->at(i)) && coObjects->at(i) != dynamic_cast<Ground*>(coObjects->at(i))&&(coObjects->at(i) != dynamic_cast<BreakWall*>(coObjects->at(i))))
+		if (coObjects->at(i) != dynamic_cast<Gate*>(coObjects->at(i)) && coObjects->at(i) != dynamic_cast<Ground*>(coObjects->at(i))&&(coObjects->at(i) != dynamic_cast<BreakWall*>(coObjects->at(i)))&&(coObjects->at(i) != dynamic_cast<GroundMoving*>(coObjects->at(i))))
 		{
 			COOBJECTS.push_back(coObjects->at(i));
 		}
@@ -123,7 +123,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				
 				if (e->nx != 0 || e->ny != 0)
 				{
-					knight->loseHp(2);
+					knight->loseHp(dame_into_knight);
 					if (knight->GetState() != knight_ani_die)
 						listHit.push_back(CreateHit(knight->GetPositionX(), knight->GetPositionY() + 10));
 
@@ -140,7 +140,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					bat->loseHp(1);
+					bat->loseHp(dame_into_bat);
 					if(bat->GetState()!=bat_ani_die)
 						listHit.push_back(CreateHit(bat->GetPositionX(), bat->GetPositionY() + 10));
 
@@ -157,7 +157,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					monkey->loseHp(1);
+					monkey->loseHp(dame_into_monkey);
 					if (monkey->GetState() != monkey_ani_die)
 						listHit.push_back(CreateHit(monkey->GetPositionX(), monkey->GetPositionY() + 10));
 
@@ -174,7 +174,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					frog->loseHp(2);
+					frog->loseHp(dame_into_frog);
 					if (frog->GetState() != frog_ani_die)
 						listHit.push_back(CreateHit(frog->GetPositionX(), frog->GetPositionY() + 10));
 
@@ -204,7 +204,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					skele->loseHp(1);
+					skele->loseHp(dame_into_skele);
 					if (skele->GetState() != skeleton_ani_die)
 						listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + 10));
 
@@ -221,7 +221,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					raven->loseHp(1);
+					raven->loseHp(dame_into_raven);
 					if (raven->GetState() != raven_ani_die)
 						listHit.push_back(CreateHit(raven->GetPositionX(), raven->GetPositionY() + 10));
 
@@ -239,7 +239,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (e->nx != 0 || e->ny != 0)
 				{
 					zombie->colliwhip = true;
-					zombie->loseHp(1);
+					zombie->loseHp(dame_into_zombie);
 					if (zombie->GetState() != zombie_ani_die)
 						listHit.push_back(CreateHit(zombie->GetPositionX(), zombie->GetPositionY() + 10));
 

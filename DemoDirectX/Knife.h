@@ -10,6 +10,9 @@
 #define SCREEN_HEIGHT 500
 #define knife_box_width 34
 #define knife_box_height 18
+
+#define knife_vx 0.35
+#define add_dis_max 100
 class Knife :public SubWeapon
 {
 	

@@ -5,11 +5,11 @@
 Bat::Bat(LPGAMEOBJECT simon)
 {
 	this->simon = simon;
-	hp = 1;
+	hp = bat_hp;
 	isDone = false;
 	SetState(bat_ani_idle);
-	damage = 2;
-	score = 200;
+	damage = bat_damage;
+	score = bat_score;
 }
 
 void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
@@ -28,7 +28,7 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 
 	if (state!= bat_ani_die)
 	{
-		if (simon->GetState() != simon_ani_stair_down && simon->GetState() != simon_ani_stair_up && simon->GetState() != 2 && simon->GetState() != 4)
+		if (simon->GetState() != simon_ani_stair_down && simon->GetState() != simon_ani_stair_up && simon->GetState() != simon_ani_jump && simon->GetState() != simon_ani_stand_hit)
 		{
 			if (sqrt(pow(x - simon->GetPositionX(), 2) + pow(y - simon->GetPositionY(), 2))<= bat_distance_max)
 			{
@@ -86,7 +86,7 @@ void Bat::SetState(int State)
 	case bat_ani_fly:
 		if (nx > 0) vx = bat_speed;
 		else vx = -bat_speed;
-		vy = 0.00004;
+		vy = bat_ani_fly_vy;
 		break;
 	case bat_ani_die:
 		vx = vy = 0;

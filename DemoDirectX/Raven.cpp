@@ -5,9 +5,9 @@
 Raven::Raven(LPGAMEOBJECT simon)
 {
 	this->simon = simon;
-	hp = 1;
-	damage = 3;
-	score = 200;
+	hp = raven_hp;
+	damage = raven_damage;
+	score = raven_score;
 }
 
 
@@ -37,8 +37,8 @@ void Raven::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 	{
 		if(!timeflydown)
 			timerstopdown->Start();
-		int a = 30 + rand() % 400;
-		int b = 40 + rand() % 400;
+		int a = rand_dis1_min + rand() % rand_dis_max;
+		int b = rand_dis2_min + rand() % rand_dis_max;
 		if (x < simon->GetPositionX())
 		{
 			//float a = 30 + rand() % 120;//% 91;
@@ -48,7 +48,7 @@ void Raven::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 				if (!wait1->IsTimeUp())
 					vx = 0;
 				else
-					vx = 0.2;
+					vx = raven_vx;
 				nx = 1;
 			}
 		}
@@ -62,7 +62,7 @@ void Raven::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 					vx = 0;		
 				}
 				else {
-					vx = -0.2;
+					vx = -raven_vx;
 					
 				}
 					
@@ -70,25 +70,25 @@ void Raven::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 			}
 		}
 
-		int c = 40 + rand() % 69;
-		int d = 30 + rand() % 31;
+		int c = rand_dis3_min + rand() % rand_dis3_max;
+		int d = rand_dis4_min + rand() % rand_dis4_max;
 		if (checkstar)
 		{
-			if (simon->GetPositionY() - c/*20*/ > y)
+			if (simon->GetPositionY() - c > y)
 			{
 				dow->Start();
 				if (!dow1->IsTimeUp())
 					vy = 0;
 				else
-					vy = 0.1;
+					vy = raven_vy;
 			}
-			else if (simon->GetPositionY() + d/*50*/ < y)
+			else if (simon->GetPositionY() + d< y)
 			{
 				dow1->Start();
 				if (!dow->IsTimeUp())
 					vy = 0;
 				else
-					vy = -0.1;
+					vy = -raven_vy;
 			}
 		}
 
@@ -122,12 +122,12 @@ void Raven::SetState(int State)
 	Enemy::SetState(State);
 	switch (State)
 	{
-	case 0:
+	case raven_ani_idle:
 		vx = vy = 0;
 		break;
-	case 1:
+	case raven_ani_fly:
 		break;
-	case 2:
+	case raven_ani_die:
 		vx = vy = 0;
 		animation_set->at(State)->StartAni();
 		break;
@@ -151,8 +151,8 @@ void Raven::GetBoundingBox(float &l, float &t, float &r, float &b)
 	{
 		l = x;
 		t = y;
-		r = l + 32;
-		b = t + 32;
+		r = l + raven_box_width;
+		b = t + raven_box_height;
 	}
 }
 

@@ -74,16 +74,31 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 
 		}
 		
+		/*if (GetTickCount() - timerunfar >= 8000 && check)
+		{
+			runfar = true;
+			vx = this->nx*monkey_vx_notjump;
+			if ((((rand() % 10000 < 650) && (abs(simon->GetPositionX() - x) < 150)) && y > 330) || nx !=0 )
+			{
+				vy = monkey_vy;
+			}
+		}*/
 	}
 
 	
+	
 	//else
-	if(CheckCam() && state != monkey_ani_die)
+	if (CheckCam() && state != monkey_ani_die /*&& !runfar*/)
 	{
+		/*if (!check)
+			timerunfar = GetTickCount();
+		check = true;*/
+		
+		
 		active = true;
 		if (x < simon->GetPositionX())
 		{
-			if (abs(simon->GetPositionX() - x) > 100)
+			if (abs(simon->GetPositionX() - x) > small_dis)
 			{
 				//vx =0.16;
 				nx = 1;
@@ -91,14 +106,14 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 		}
 		else if (x > simon->GetPositionX())
 		{
-			if ((abs(simon->GetPositionX() - x) > 100))
+			if ((abs(simon->GetPositionX() - x) > small_dis))
 			{
 				//vx = -0.16;
 				nx = -1;
 			}
 		}
 		
-		if (((rand() % 10000 < 350)&& (abs(simon->GetPositionX() - x) < 150)) && y > 330)
+		if (((rand() % rand_max < rand_min)&& (abs(simon->GetPositionX() - x) < dis_si_monkey)) && y > allow_y_jump)
 		{
 			vy = monkey_vy;
 			//jump = false;

@@ -2,7 +2,7 @@
 
 Axe::Axe()
 {
-	SetAnimationSet(CAnimationSets::GetInstance()->Get(20));
+	SetAnimationSet(CAnimationSets::GetInstance()->Get(axe_ani_set));
 	isDone = true;
 	isFire = false;
 }
@@ -15,7 +15,7 @@ void Axe::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	SubWeapon::Update(dt);
 	SubWeapon::ClearListHit();
 
-	vy += 0.001*dt;
+	vy += axe_gra *dt;
 
 
 	if (CheckPosKnife(POSX))
@@ -41,10 +41,10 @@ void Axe::Render()
 void Axe::SetV()
 {
 	if (nx > 0)
-		vx = 0.2;
+		vx = axe_vx;
 	else
-		vx = -0.2;
-	vy = -0.45;
+		vx = -axe_vx;
+	vy = axe_vy;
 }
 
 void Axe::GetBoundingBox(float &left, float &top, float &right, float &bottom)
@@ -53,8 +53,8 @@ void Axe::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	{
 		left = x;
 		top = y;
-		right = left + 30;
-		bottom = top + 28;
+		right = left + axe_box_width;
+		bottom = top + axe_box_height;
 	}
 
 }
@@ -68,12 +68,12 @@ bool Axe::CheckPosKnife(float a)
 {
 	if (vx > 0)
 	{
-		if (x - a >= ((530 / 2) + 100))
+		if (x - a >= ((SCREEN_WIDTH / 2) + axe_max_dis))
 			return true;
 	}
 	else if (vx < 0)
 	{
-		if (a - x >= ((530 / 2) + 100))
+		if (a - x >= ((SCREEN_WIDTH / 2) + axe_max_dis))
 			return true;
 	}
 	return false;

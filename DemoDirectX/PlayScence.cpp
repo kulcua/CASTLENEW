@@ -10,6 +10,9 @@
 #define map1 1
 #define map2 2
 #define map3 3
+#define map4 4
+#define map5 5
+#define map6 6
 #define SCENE_SECTION_UNKNOWN -1
 #define SCENE_SECTION_TEXTURES 2
 #define SCENE_SECTION_SPRITES 3
@@ -457,10 +460,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new Skeleton(simon);
+		//Skeleton *asd = dynamic_cast<Skeleton*>(obj);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		//objects.push_back(obj);
 		listpush.push_back(obj);
+		//listpush.push_back(asd->GetBone());
 		break;
 	}
 	case OBJECT_TYPE_FROG:
@@ -694,34 +699,34 @@ void CPlayScene::Load(LPCWSTR sceneFilePath)
 
 int CPlayScene::RandomItems()
 {
-	int a = rand() % 191;
-	if (0 < a &&a <= 30)
+	int a = rand() % rand_items_max;
+	if (min_rand_1 < a &&a <= max_rand_2)
 		return items_small_heart;
-	else if (30 < a && a <= 50)
+	else if (max_rand_2 < a && a <= max_rand_3)
 		return items_big_heart;
-	else if (50 < a&&a <= 60)
+	else if (max_rand_3 < a&&a <= max_rand_4 && simon->GetWhip()->GetState() < whip_lv3)
 		return items_for_whip;
-	else if (60 < a &&a <= 70)
+	else if (max_rand_5 < a &&a <= max_rand_6&&simon->currentWeapon==-1)
 		return items_knife;
-	else if (70 < a&&a <= 80)
+	else if (max_rand_6 < a&&a <= max_rand_7 && simon->currentWeapon == -1)
 		return items_axe;
-	else if (80 < a&&a <= 90)
+	else if (max_rand_7 < a&&a <= max_rand_8 && simon->currentWeapon == -1)
 		return items_boom;
-	else if (90 < a &&a <= 100)
+	else if (max_rand_8 < a &&a <= max_rand_9 && simon->currentWeapon == -1)
 		return items_holywater;
-	else if (100 < a &&a <= 110)
+	else if (max_rand_9 < a &&a <= max_rand_10)
 		return items_watterbottle;
-	else if (110 < a&&a <= 120)
+	else if (max_rand_10 < a&&a <= max_rand_11)
 		return items_corss;
-	else if (125 < a &&a <= 130)
+	else if (max_rand_12 < a &&a <= max_rand_13)
 		return items_double;
-	else if (130 < a&&a <= 135)
+	else if (max_rand_13 < a&&a <= max_rand_14)
 		return items_triple;
-	else if (135 < a&&a <= 145)
+	else if (max_rand_14 < a&&a <= max_rand_15)
 		return items_meat;
-	else if (145 < a&&a <= 165)
+	else if (max_rand_15 < a&&a <= max_rand_16)
 		return items_bluemoney;
-	else if (165 < a&&a <= 180)
+	else if (max_rand_16 < a&&a <= max_rand_4)
 		return items_redmoney;
 	else
 		return items_whitemoney;
@@ -801,11 +806,11 @@ void CPlayScene::Revival()
 	{
 		timedeadsimon->Stop();
 
-		board->settimeremain(300);
+		board->settimeremain(def_time_max);
 		simon->isDead = false;
 		simon->GetWhip()->SetState(whip_lv1);
 		simon->setHealth(max_heal);
-		simon->setMana(5);
+		simon->setMana(simon_mana);
 		if (simon->getlife() > 0)
 		{
 			//board->settimeremain(300);
@@ -814,9 +819,9 @@ void CPlayScene::Revival()
 		}
 		else //if (simon->getlife() == 0)
 		{
-			simon->setLife(3);
+			simon->setLife(simon_life);
 			SwitchScene(map1);
-			simon->setScore(0);
+			simon->setScore(simon_score);
 		}
 	}
 
@@ -851,8 +856,11 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 
+	for (int i = 0; i < listpiece.size(); i++)
+		listpiece[i]->Update(dt);
 
-	if (simon->animation_set->at(simon_ani_stand_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stand_hit || (simon->animation_set->at(simon_ani_sit_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_sit_hit) || (simon->animation_set->at(simon_ani_stair_up_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stair_up_hit))
+
+	if (simon->animation_set->at(simon_ani_stand_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stand_hit || (simon->animation_set->at(simon_ani_sit_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_sit_hit) || (simon->animation_set->at(simon_ani_stair_up_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stair_up_hit)|| (simon->animation_set->at(simon_ani_stair_down_hit)->GetcurrentFrame() == 2 && simon->GetState() == simon_ani_stair_down_hit))
 	{
 		
 		if(!simon->isHitSubWeapon)
@@ -968,6 +976,12 @@ void CPlayScene::Update(DWORD dt)
 		if (dynamic_cast<BreakWall*>(obj) && (obj->isDone) && !(obj->isFire))
 		{
 			obj->isFire = true;
+
+			listpiece.push_back(CreatePiece(obj->x+3, obj->y, piece_type_0));
+			listpiece.push_back(CreatePiece(obj->x+10, obj->y+10, piece_type_1));
+			listpiece.push_back(CreatePiece(obj->x+10, obj->y-40, piece_type_2));
+			listpiece.push_back(CreatePiece(obj->x-5, obj->y-7, piece_type_3));
+
 			if (obj->idItems == items_crown)
 			{
 				listitems.push_back(DropItem(CGame::GetInstance()->GetCamPosX() + SCREEN_WIDTH / 2, CGame::GetInstance()->GetCamPosY() + SCREEN_HEIGHT - 80, obj->idItems));
@@ -1069,7 +1083,7 @@ void CPlayScene::Update(DWORD dt)
 	board->Update(dt, simon->GetHealth(), 16);
 	Revival();
 	
-	
+	//DebugOut(L" SO PHAN TU TRONG LISTPIECE %d \n", listpiece.size());
 }
 
 void CPlayScene::Render()
@@ -1085,8 +1099,8 @@ void CPlayScene::Render()
 
 
 	for (int i = 0; i < liststairright.size(); i++)
-		liststairright[i]->Render();*/
-
+		liststairright[i]->Render();
+*/
 
 	
 	for (int i = 0; i < listitems.size(); i++)
@@ -1098,6 +1112,8 @@ void CPlayScene::Render()
 		if(objects[i]!=dynamic_cast<Ground*>(objects[i]))
 			objects[i]->Render();
 
+	for (int i = 0; i < listpiece.size(); i++)
+		listpiece[i]->Render();
 
 	simon->Render();
 
@@ -1116,7 +1132,7 @@ void CPlayScene::Render()
 
 	if (simon->currentWeapon != 1)
 	{
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < max_sub; i++)
 		{
 			if (simon->currentWeapon != -1)
 			{
@@ -1151,6 +1167,10 @@ void CPlayScene::Unload()
 	for (int i = 0; i < liststairright.size(); i++)
 		delete liststairright[i];
 	liststairright.clear();
+
+	for (int i = 0; i < listpiece.size(); i++)
+		delete listpiece[i];
+	listpiece.clear();
 
 	listpush.clear();
 	//simon = NULL;
@@ -1226,10 +1246,10 @@ void CPlayScenceKeyHandler::Hit_SubWeapon()
 	CPlayScene *playscene = ((CPlayScene*)scence);
 	SubWeapon * subweaponlist = NULL;
 
-	if (simon->currentWeapon == 1)
+	if (simon->currentWeapon == weapon_watch)
 	{
-		subweaponlist = simon->GetListSubWeapon()[0];
-		if (simon->getmana() < 5)
+		subweaponlist = simon->GetListSubWeapon()[first_sub];
+		if (simon->getmana() < mana_use)
 			return;
 		if (!playscene->timerclk->IsTimeUp())
 			return;
@@ -1238,12 +1258,12 @@ void CPlayScenceKeyHandler::Hit_SubWeapon()
 
 	if (simon->currentWeapon != -1 && simon->currentWeapon != 1)
 	{
-		if (!simon->GetListSubWeapon()[0]->isFire)
-			subweaponlist = simon->GetListSubWeapon()[0];
-		else if (!simon->GetListSubWeapon()[1]->isFire  && (simon->hitDoubleTriple == 0 || simon->hitDoubleTriple == 1))
-			subweaponlist = simon->GetListSubWeapon()[1];
-		else if (!simon->GetListSubWeapon()[2]->isFire && simon->hitDoubleTriple == 1)
-			subweaponlist = simon->GetListSubWeapon()[2];
+		if (!simon->GetListSubWeapon()[first_sub]->isFire)
+			subweaponlist = simon->GetListSubWeapon()[first_sub];
+		else if (!simon->GetListSubWeapon()[sec_sub]->isFire  && (simon->hitDoubleTriple == 0 || simon->hitDoubleTriple == 1))
+			subweaponlist = simon->GetListSubWeapon()[sec_sub];
+		else if (!simon->GetListSubWeapon()[last_sub]->isFire && simon->hitDoubleTriple == 1)
+			subweaponlist = simon->GetListSubWeapon()[last_sub];
 		else 
 			return;
 	}
@@ -1255,9 +1275,9 @@ void CPlayScenceKeyHandler::Hit_SubWeapon()
 		return;  //return để không bị đánh khi không có vũ khí phụ
 	}
 
-	if (simon->currentWeapon == 1)
+	if (simon->currentWeapon == weapon_watch)
 	{
-		simon->usemana(5);
+		simon->usemana(mana_use);
 		playscene->timerclk->Start();
 	}
 	
@@ -1265,7 +1285,7 @@ void CPlayScenceKeyHandler::Hit_SubWeapon()
 		return;
 	simon->isHitSubWeapon = true;
 
-	if (simon->getcurrentweapon() != -1 && simon->currentWeapon != 1)
+	if (simon->getcurrentweapon() != -1 && simon->currentWeapon != weapon_watch)
 	{
 		subweaponlist->SetNx(simon->Getnx());
 		if (simon->GetState() == simon_ani_sit)       //ko để dc trong update simon //để đây để có thể nhảy bắn
@@ -1293,9 +1313,9 @@ void CPlayScenceKeyHandler::Stair_Down()
 			float stairx;
 			stairx = simon->stairCollided->GetPositionX();
 			if (Stairnx == 1)
-				stairx -= 31.0f;
+				stairx -= dis_sub_auto_walk;//31.0f;
 			else
-				stairx += 5;
+				stairx += dis_add_auto_walk;//5;
 			simon->nx = simon->stairNx;
 			simon->SetState(simon_ani_stair_up);
 			simon->AutoWalkStair(stairx, simon_ani_idle, -simon->nx);//tránh trường hợp ra khỏi cầu thang mà ko dụng vào mặt đất
@@ -1319,9 +1339,9 @@ void CPlayScenceKeyHandler::Stair_Down()
 		stairx =simon->stairCollided->GetPositionX();
 		simonx = simon->GetPositionX();
 		if (Stairnx == 1)
-			stairx += 4.0f;
-		else 
-			stairx -= 31.0f;
+			stairx += dis_down_st_1;//4.0f;
+		else
+			stairx -= dis_sub_auto_walk;//31.0f;
 
 		if (stairx < simonx) simon->SetNx(-1);
 		else if (stairx > simonx) simon->SetNx(1);
@@ -1349,12 +1369,12 @@ void CPlayScenceKeyHandler::Stair_Up()
 	{
 		if (simon->isStandOnStair)
 		{
-			float stairx;
+			float stairx,sty;
 			stairx = simon->stairCollided->GetPositionX();
 			if (NxStair == 1)
-				stairx += 5.0f;
+				stairx += dis_add_auto_walk;//5.0f;
 			else
-				stairx -= 32.0f;
+				stairx -= dis_sub_auto_walk_up;//32.0f;
 			simon->nx = simon->stairNx;
 			simon->SetState(simon_ani_stair_up);
 			simon->AutoWalkStair(stairx, simon_ani_idle, simon->nx);//tránh trường hợp ra khỏi cầu thang mà ko dụng vào mặt đất
@@ -1372,9 +1392,9 @@ void CPlayScenceKeyHandler::Stair_Up()
 		
 		
 		if (NxStair == 1)
-			stair_x -= 31.0f;
+			stair_x -= dis_sub_auto_walk;//31.0f;
 		else
-			stair_x += 4.0f;
+			stair_x += dis_up_st;//4.0f;
 
 		if (stair_x < simon_x) simon->SetNx(-1);
 		else if (stair_x > simon_x)  simon->SetNx(1);
@@ -1449,7 +1469,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			Hit();
 		break;
 	case DIK_S:
-		if (simon->isStandOnStair == false)
+		if (simon->isStandOnStair == false && simon->GetState() != simon_ani_hurt)
 			Jump();
 		break;
 	case DIK_Q:
@@ -1480,24 +1500,24 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		if (simon->GetState() != simon_ani_dead)
 		{
 			simon->currentscene = map3;
-			simon->nextscene = 4;
-			playscene->SwitchScene(4);
+			simon->nextscene = map4;//4;
+			playscene->SwitchScene(map4/*4*/);
 		}
 		break;
 	case DIK_T:
 		if (simon->GetState() != simon_ani_dead)
 		{
-			simon->currentscene = 4;
-			simon->nextscene = 5;
+			simon->currentscene = map4;//4;
+			simon->nextscene = map5;//5;
 			playscene->SwitchScene(5);
 		}
 		break;
 	case DIK_Y:
 		if (simon->GetState() != simon_ani_dead)
 		{
-			simon->currentscene = 5;
-			simon->nextscene = 6;
-			playscene->SwitchScene(6);
+			simon->currentscene = map5;//5;
+			simon->nextscene = map6;//6;
+			playscene->SwitchScene(map6);
 		}
 		break;
 	case DIK_0:

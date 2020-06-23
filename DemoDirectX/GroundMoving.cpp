@@ -4,7 +4,7 @@
 
 GroundMoving::GroundMoving()
 {
-	vx = 0.05;
+	vx = groundmoving_vx;
 }
 
 void GroundMoving::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects,bool clk)
@@ -60,8 +60,8 @@ void GroundMoving::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
 	l = x;
 	t = y;
-	r = l + 64;
-	b = t + 16;
+	r = l + groundmoving_box_width;
+	b = t + groundmoving_box_height;
 }
 GroundMoving::~GroundMoving()
 {

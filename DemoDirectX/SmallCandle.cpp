@@ -8,7 +8,7 @@ SmallCandle::SmallCandle()
 
 void SmallCandle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 {
-	if (state == 1 && animation_set->at(1)->RenderOver(300))
+	if (state == break_candle && animation_set->at(break_candle)->RenderOver(smallcandle_time))
 		isDone = true;
 }
 
@@ -24,12 +24,12 @@ void SmallCandle::Render()
 
 void SmallCandle::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
-	if (state != 1)
+	if (state != break_candle)
 	{
 		l = x;
 		t = y;
-		r = l + 16;
-		b = t + 32;
+		r = l + smallcandle_box_width;
+		b = t + smallcandle_box_height;
 	}
 }
 
@@ -38,7 +38,7 @@ void SmallCandle::SetState(int State)
 	CGameObject::SetState(State);
 	switch (State)
 	{
-	case 1:
+	case break_candle:
 		animation_set->at(State)->StartAni();
 		break;
 	}

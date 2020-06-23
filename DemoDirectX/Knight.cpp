@@ -22,7 +22,6 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 	if (clk)
 		return;
 
-	
 
 	Enemy::Update(dt);
 
@@ -46,7 +45,7 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 		}
 	}
 
-	if(state!=1)
+	if(state!= knight_ani_die)
 		CalcPotentialCollisions(&COOBJECTS, coEvents);
 
 	if (coEvents.size() == 0)
@@ -77,14 +76,14 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 		}		
 	}
 
-	if (GetTickCount() - timestop >= 100&&state!=knight_ani_die)
+	if (GetTickCount() - timestop >= knight_time_stop && state != knight_ani_die)
 	{
 		if (nx > 0) vx = knight_speed;
 		else vx = -knight_speed;
 	}
+	//DebugOut(L"SIZE: %d\n", coEvents.size());
 
-
-	if (coEvents.size() >= 2 && ((rand() % 10000) < 100))
+	if (coEvents.size() >= coeventtwo && ((rand() % randommax) < randommin))
 	{
 		this->nx *= -1;
 		this->vx *= -1;
@@ -101,6 +100,8 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 	}
 	if (coEvents.size() > 1)
 		back = false;
+
+	
 
 	for (int i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	

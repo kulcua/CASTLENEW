@@ -2,7 +2,7 @@
 
 Boomerang::Boomerang(LPGAMEOBJECT simon)
 {
-	SetAnimationSet(CAnimationSets::GetInstance()->Get(21));
+	SetAnimationSet(CAnimationSets::GetInstance()->Get(boom_aniset));
 	isDone = true;
 	isFire = false;
 	this->simon = simon;
@@ -68,7 +68,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (e->nx != 0 )
 				{
 					
-					knight->loseHp(2);
+					knight->loseHp(dame_into_knight);
 				
 
 					if (knight->GetState() != knight_ani_die)
@@ -93,7 +93,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (e->nx != 0)
 				{				
 					
-					frog->loseHp(2);
+					frog->loseHp(dame_into_frog);
 					
 							
 					//DebugOut(L"COUNT DAMAGE %d\n", countdamage);
@@ -114,7 +114,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					monkey->loseHp(1);
+					monkey->loseHp(dame_into_monkey);
 					if (monkey->GetState() != monkey_ani_die)
 						listHit.push_back(CreateHit(monkey->GetPositionX(), monkey->GetPositionY() + 10));
 
@@ -130,7 +130,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					bat->loseHp(1);
+					bat->loseHp(dame_into_bat);
 					if (bat->GetState() != bat_ani_die)
 						listHit.push_back(CreateHit(bat->GetPositionX(), bat->GetPositionY() + 10));
 
@@ -155,7 +155,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					skele->loseHp(1);
+					skele->loseHp(dame_into_skele);
 					if (skele->GetState() != skeleton_ani_die)
 						listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + 10));
 
@@ -170,7 +170,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (e->nx != 0 || e->ny != 0)
 				{
 					
-					raven->loseHp(1);
+					raven->loseHp(dame_into_raven);
 					if (raven->GetState() != raven_ani_die)
 						listHit.push_back(CreateHit(raven->GetPositionX(), raven->GetPositionY() + 10));
 
@@ -186,7 +186,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (e->nx != 0 || e->ny != 0)
 				{
 					zombie->colliwhip = true;
-					zombie->loseHp(1);
+					zombie->loseHp(dame_into_zombie);
 					if (zombie->GetState() != zombie_ani_die)
 						listHit.push_back(CreateHit(zombie->GetPositionX(), zombie->GetPositionY() + 10));
 
@@ -210,8 +210,8 @@ void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	SubWeapon::ClearListHit();
 	SubWeapon::Update(dt);
 
-	if (nx > 0) vx -= 0.01;
-	else vx += 0.01;
+	if (nx > 0) vx -= boom_comeback_vx;
+	else vx += boom_comeback_vx;
 
 	if (CheckPosKnife(POSX))
 	{
@@ -237,8 +237,8 @@ void Boomerang::Render()
 
 void Boomerang::SetV()
 {
-	if (nx > 0) vx = 0.5;
-	else vx = -0.5;
+	if (nx > 0) vx = boom_vx;
+	else vx = -boom_vx;
 	vy = 0;
 }
 
@@ -248,8 +248,8 @@ void Boomerang::GetBoundingBox(float &left, float &top, float &right, float &bot
 	{
 		left = x;
 		top = y;
-		right = left + 28;
-		bottom = top + 28;
+		right = left + boom_box_width;
+		bottom = top + boom_box_height;
 	}
 }
 void Boomerang::SetPosSubWeapon(D3DXVECTOR3 pos, bool isstanding)
@@ -262,12 +262,12 @@ bool Boomerang::CheckPosKnife(float a)
 {
 	if (vx > 0)
 	{
-		if (x - a >= ((530 / 2)))
+		if (x - a >= ((SCREEN_WIDTH / 2)))
 			return true;
 	}
 	else if (vx < 0)
 	{
-		if (a - x >= ((530 / 2)))
+		if (a - x >= ((SCREEN_WIDTH / 2)))
 			return true;
 	}
 	return false;

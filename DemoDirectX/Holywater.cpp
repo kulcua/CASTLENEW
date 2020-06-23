@@ -2,7 +2,7 @@
 
 Holywater::Holywater()
 {
-	SetAnimationSet(CAnimationSets::GetInstance()->Get(22));
+	SetAnimationSet(CAnimationSets::GetInstance()->Get(holy_aniset));
 	isDone = true;
 	isFire = false;
 	holyWaterShatteredCounter = 0;
@@ -56,13 +56,13 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					//isFire = false;
 				}
 			}
-			else if (dynamic_cast<Ground*>(e->obj)||dynamic_cast<BreakWall*>(e->obj))
+			else if (dynamic_cast<Ground*>(e->obj)||dynamic_cast<BreakWall*>(e->obj)||dynamic_cast<GroundMoving*>(e->obj))
 			{
 				if (state == 0 /*&& e->ny == -1*/)
 				{
 					/*isDone = true;
 					isFire = false;*/
-					this->SetState(1);
+					this->SetState(holy_ani_break);
 				}
 			}
 			else if (dynamic_cast<Knight*>(e->obj))
@@ -71,7 +71,7 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					knight->loseHp(2);
+					knight->loseHp(dame_into_knight);
 					if (knight->GetState() != knight_ani_die)
 						listHit.push_back(CreateHit(knight->GetPositionX(), knight->GetPositionY() + 10));
 
@@ -86,7 +86,7 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					bat->loseHp(1);
+					bat->loseHp(dame_into_bat);
 					if (bat->GetState() != bat_ani_die)
 						listHit.push_back(CreateHit(bat->GetPositionX(), bat->GetPositionY() + 10));
 
@@ -102,7 +102,7 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					monkey->loseHp(1);
+					monkey->loseHp(dame_into_monkey);
 					if (monkey->GetState() != monkey_ani_die)
 						listHit.push_back(CreateHit(monkey->GetPositionX(), monkey->GetPositionY() + 10));
 
@@ -118,7 +118,7 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					frog->loseHp(2);
+					frog->loseHp(dame_into_frog);
 					if (frog->GetState() != frog_ani_die)
 						listHit.push_back(CreateHit(frog->GetPositionX(), frog->GetPositionY() + 10));
 
@@ -145,7 +145,7 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					skele->loseHp(1);
+					skele->loseHp(dame_into_skele);
 					if (skele->GetState() != skeleton_ani_die)
 						listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + 10));
 
@@ -160,7 +160,7 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					raven->loseHp(1);
+					raven->loseHp(dame_into_raven);
 					if (raven->GetState() != raven_ani_die)
 						listHit.push_back(CreateHit(raven->GetPositionX(), raven->GetPositionY() + 10));
 
@@ -176,7 +176,7 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (e->nx != 0 || e->ny != 0)
 				{
 					zombie->colliwhip = true;
-					zombie->loseHp(1);
+					zombie->loseHp(dame_into_zombie);
 					if (zombie->GetState() != zombie_ani_die)
 						listHit.push_back(CreateHit(zombie->GetPositionX(), zombie->GetPositionY() + 10));
 
@@ -197,7 +197,7 @@ void Holywater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		this->isDone = true;
 		this->isFire = false;
-		this->SetState(0);
+		this->SetState(holy_ani_not_break);
 		isHolyWaterShattered = false;
 		holyWaterShatteredCounter = 0;	
 		return;
@@ -212,7 +212,7 @@ void Holywater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	SubWeapon::Update(dt);
 
-	vy += 0.001 * dt;
+	vy += holy_gra * dt;
 
 	collisionwith(dt, coObjects);
 
@@ -232,13 +232,13 @@ void Holywater::SetV()
 {
 	if (nx > 0)
 	{
-		vx = 0.3;
-		vy = -0.1;
+		vx = holy_vx_right;
+		vy = holy_vy;
 	}
 	else
 	{
-		vx = -0.25;
-		vy = -0.1;
+		vx = holy_vx_left;
+		vy = holy_vy;
 	}
 
 }
@@ -249,8 +249,8 @@ void Holywater::GetBoundingBox(float &left, float &top, float &right, float &bot
 	{
 		left = x;
 		top = y;
-		right = left + 32;
-		bottom = top + 28;
+		right = left + holy_box_width;
+		bottom = top + holy_box_height;
 	}
 
 }
@@ -272,9 +272,9 @@ void Holywater::SetState(int State)
 
 	switch (State)
 	{
-	case 0:
+	case holy_ani_not_break:
 		break;
-	case 1:
+	case holy_ani_break:
 		StartHolyWater();
 		break;
 	default:
@@ -287,12 +287,12 @@ bool Holywater::CheckPosKnife(float a)
 
 	if (vx > 0)
 	{
-		if (x - a >= ((530 / 2)))
+		if (x - a >= ((SCREEN_WIDTH / 2)))
 			return true;
 	}
 	else if (vx < 0)
 	{
-		if (a - x >= ((530 / 2)))
+		if (a - x >= ((SCREEN_WIDTH / 2)))
 			return true;
 	}
 	return false;

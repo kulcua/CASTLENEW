@@ -15,11 +15,18 @@
 #define monkey_vx_notjump 0.16
 #define monkey_vy -0.4
 #define monekey_gra 0.002
+#define rand_max 10000
+#define rand_min 350
+#define dis_si_monkey 150
+#define allow_y_jump 330
+
+#define small_dis 100
 class Monkey :public Enemy
 {
 	LPGAMEOBJECT simon;
-	bool active,jump;
+	bool active, jump; //runfar, check;
 public:
+	//DWORD timerunfar;
 	Monkey(LPGAMEOBJECT simon);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL,bool clk=false);
 	void Render();

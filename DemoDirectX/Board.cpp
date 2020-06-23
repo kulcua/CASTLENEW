@@ -11,17 +11,17 @@ Board::Board(int HealSimon,int HealBoss)
 	heallost = new HealthBar(max_heal);
 	healboss = new HealthBar(HealBoss);
 
-	subweapon.push_back(CSprites::GetInstance()->Get(82));
-	subweapon.push_back(CSprites::GetInstance()->Get(83));
-	subweapon.push_back(CSprites::GetInstance()->Get(84));
-	subweapon.push_back(CSprites::GetInstance()->Get(85));
-	subweapon.push_back(CSprites::GetInstance()->Get(86));
+	subweapon.push_back(CSprites::GetInstance()->Get(sprite_knife));
+	subweapon.push_back(CSprites::GetInstance()->Get(sprite_watch));
+	subweapon.push_back(CSprites::GetInstance()->Get(sprite_axe));
+	subweapon.push_back(CSprites::GetInstance()->Get(sprite_boom));
+	subweapon.push_back(CSprites::GetInstance()->Get(sprite_holy));
 
 
-	doubletriple.push_back(CSprites::GetInstance()->Get(202));
-	doubletriple.push_back(CSprites::GetInstance()->Get(203));
+	doubletriple.push_back(CSprites::GetInstance()->Get(sprite_double));
+	doubletriple.push_back(CSprites::GetInstance()->Get(sprite_triple));
 
-	timemax = 300;
+	timemax = def_time_max;
 	time = 0;
 }
 
@@ -69,28 +69,28 @@ void Board::Render(int idmap,int camx,int camy,Simon* simon)
 
 	if (simon->hitDoubleTriple != -1)
 	{
-		doubletriple[simon->hitDoubleTriple]->Draw(-1, camx + 440, camy + 31);
+		doubletriple[simon->hitDoubleTriple]->Draw(-1, camx + add_x_doutriple, camy + add_y_doutriple);
 	}
 
 	
 
 	if (simon->getcurrentweapon() !=-1)
 	{
-		if (simon->getcurrentweapon() == 3)
-			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 312, camy + 36);
-		else if (simon->getcurrentweapon() == 4 || simon->getcurrentweapon() == 2)
-			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 312, camy + 33);
-		else if(simon->currentWeapon==1)
-			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 312, camy + 29);
+		if (simon->getcurrentweapon() == weapon_boom)
+			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + add_x_sub, camy + add_y_boom);
+		else if (simon->getcurrentweapon() == weapon_holy || simon->getcurrentweapon() == weapon_axe)
+			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + add_x_sub, camy + add_y_holy_axe);
+		else if(simon->currentWeapon== weapon_watch)
+			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + add_x_sub, camy + add_y_watch);
 		else
-			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + 310, camy + 38);
+			subweapon[simon->getcurrentweapon()]->Draw(-1, camx + add_x1_sub, camy + add_y_knife);
 	}
 
-	numb.Render(camx + 295, camy + 15, FillNumber(to_string(timeremain), max_num_time));
-	numb.Render(camx + 100, camy + 15, FillNumber(to_string(simon->getscore()), max_num_score));
-	numb.Render(camx + 393, camy + 33, FillNumber(to_string(simon->getmana()), max_num_mana));
-	numb.Render(camx + 465, camy + 15, FillNumber(to_string(idmap), max_num_stage));
-	numb.Render(camx + 393, camy + 51, FillNumber(to_string(simon->getlife()), max_num_life));
+	numb.Render(camx + add_x_time, camy + add_y_time, FillNumber(to_string(timeremain), max_num_time));
+	numb.Render(camx + add_x_score, camy + add_y_score, FillNumber(to_string(simon->getscore()), max_num_score));
+	numb.Render(camx + add_x_mana, camy + add_y_mana, FillNumber(to_string(simon->getmana()), max_num_mana));
+	numb.Render(camx + add_x_stage, camy + add_y_stage, FillNumber(to_string(idmap), max_num_stage));
+	numb.Render(camx + add_x_life, camy + add_y_life, FillNumber(to_string(simon->getlife()), max_num_life));
 	
 }
 

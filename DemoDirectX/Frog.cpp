@@ -5,16 +5,16 @@
 Frog::Frog(LPGAMEOBJECT simon)
 {
 	this->simon = simon;
-	hp = 3;
-	damage = 3;
-	score = 300;
+	hp = frog_hp;
+	damage = frog_damage;
+	score = frog_score;
 }
 void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 {
 
 	Enemy::Update(dt);
 
-	if (state == frog_ani_die && animation_set->at(frog_ani_die)->RenderOver(300))
+	if (state == frog_ani_die && animation_set->at(frog_ani_die)->RenderOver(frog_time))
 	{
 		isDone = true;
 		return;
@@ -23,22 +23,22 @@ void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 	if (clk)
 		return;
 
-	if (x - simon->GetPositionX() > 200&&!check)
+	if (x - simon->GetPositionX() > dis_appear &&!check)
 		check = true;
 	
 
 	/*if(CheckCam())*/if (CheckCam()&&check&&state!=frog_ani_die)
 	{
-		if (GetTickCount() - timestop >= 150 && state != frog_ani_die)
+		if (GetTickCount() - timestop >= frog_stop && state != frog_ani_die)
 		{
-			if (nx > 0) vx = 0.08;
-			else vx = -0.08;
+			if (nx > 0) vx = frog_vx;
+			else vx = -frog_vx;
 
 
-			if (simon->GetPositionY() - 20 > y)
-				vy = 0.05;
-			else if (simon->GetPositionY() + 20 < y)
-				vy = -0.05;
+			if (simon->GetPositionY() - dis_up_down > y)
+				vy = frog_xy;
+			else if (simon->GetPositionY() + dis_up_down < y)
+				vy = -frog_xy;
 
 		}
 
@@ -47,7 +47,7 @@ void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 
 		if (x < simon->GetPositionX())
 		{
-			if (abs(simon->GetPositionX() - x) > 40)
+			if (abs(simon->GetPositionX() - x) > dis_back)
 			{
 				//vx = 0.08;
 				nx = 1;
@@ -55,7 +55,7 @@ void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 		}
 		else if (x > simon->GetPositionX())
 		{
-			if ((abs(simon->GetPositionX() - x) > 40))
+			if ((abs(simon->GetPositionX() - x) > dis_back))
 			{
 				//vx = -0.08;
 				nx = -1;
@@ -63,10 +63,6 @@ void Frog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 		}
 		
 
-		/*if (simon->GetPositionY()-20>y)
-				vy = 0.05;
-		else if (simon->GetPositionY()+20 < y)
-				vy = -0.05;*/
 
 
 	}
@@ -91,7 +87,7 @@ void Frog::SetState(int State)
 	switch (State)
 	{
 	
-	case 1:
+	case frog_ani_die:
 		vx = vy = 0;
 		animation_set->at(State)->StartAni();
 		break;
@@ -115,8 +111,8 @@ void Frog::GetBoundingBox(float &l, float &t, float &r, float &b)
 	{
 		l = x;
 		t = y;
-		r = l + 32;
-		b = t + 32;
+		r = l + frog_box_width;
+		b = t + frog_box_height;
 	}
 }
 

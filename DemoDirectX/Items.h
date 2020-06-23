@@ -56,6 +56,14 @@
 #define items_vx 0
 #define items_vy 0.15
 
+#define value_big_heart 5
+#define value_small_heart 1
+#define value_meat 4
+#define value_bluemoney 500
+#define value_redmoney 1000
+#define value_whitemoney 1500
+#define value_crown 2000
+
 
 class Items :public CGameObject
 {

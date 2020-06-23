@@ -26,6 +26,40 @@
 #include "SmallCandle.h"
 #include "Zombie.h"
 #include "Grid.h"
+#include "Piece.h"
+
+#define time_use_cross 500
+#define time_revival 2000
+#define time_use_clk 4000
+#define dis_add_auto_walk 5.0f
+#define dis_sub_auto_walk 31.0f
+#define dis_down_st_1 4.0f
+#define dis_up_st 4.0f
+#define dis_sub_auto_walk_up 32.0f
+
+#define first_sub 0
+#define sec_sub 1
+#define last_sub 2
+#define rand_items_max 191
+#define min_rand_1 0
+#define max_rand_2 30
+#define max_rand_3 50
+#define max_rand_4 180
+#define max_rand_5 60
+#define max_rand_6 70
+#define max_rand_7 80
+#define max_rand_8 90
+#define max_rand_9 100
+
+#define max_rand_10 110
+#define max_rand_11 120
+#define max_rand_12 125
+#define max_rand_13 130
+
+#define max_rand_14 135
+#define max_rand_15 145
+#define max_rand_16 165
+
 
 class CPlayScene : public CScene
 {
@@ -49,6 +83,9 @@ protected:
 	vector<LPGAMEOBJECT> listpush;
 	vector<LPGAMEOBJECT> listget;
 	
+	
+	vector<LPPIECE> listpiece;
+
 	void _ParseSection_CLEARTEXTURES(string line);
 	void _ParseSection_CLEARSPRITES(string line);
 	void _ParseSection_CLERANIMATIONS(string line);
@@ -84,15 +121,21 @@ public:
 	virtual void Render();
 	virtual void Unload();
 	Items* DropItem(float x, float y,int id);
+
+	Piece* CreatePiece(float x, float y, int type)
+	{
+		return new Piece(x, y, type);
+	}
+
 	bool CheckInCam(LPGAMEOBJECT a);
 	void UseCross();
 	void Revival();
 	/*void SetDie();*/
 	int RandomItems();
 
-	Timer* timecross = new Timer(500);
-	Timer* timedeadsimon = new Timer(2000);
-	Timer* timerclk = new Timer(4000);
+	Timer* timecross = new Timer(time_use_cross);
+	Timer* timedeadsimon = new Timer(time_revival);
+	Timer* timerclk = new Timer(time_use_clk);
 
 	vector<LPGAMEOBJECT> * GetListStairsLeft() { return &(liststairleft); }
 	vector<LPGAMEOBJECT> * GetListStairsRight() { return &(liststairright); }

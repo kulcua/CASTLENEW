@@ -5,7 +5,7 @@
 Simon::Simon() 
 {
 	whip = new Whip();
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < max_sub; i++)
 	{
 		knife[i] = new Knife();
 		
@@ -21,10 +21,10 @@ Simon::Simon()
 	isGrounded = false;
 	health = simon_max_health;
 	//state = simon_ani_idle;
-	score = 0;
-	mana = 99;
-	life = 3;
-	this->nextscene = 99;
+	score = simon_score;
+	mana = simon_mana;
+	life = simon_life;
+	this->nextscene = simon_nextscene;
 }
 
 void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
@@ -42,8 +42,8 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 
 	if (x < max_screen_left) //để cài không cho simon đi ngược màn hình
 		x = max_screen_left;
-	if (x > 1460)
-		x = 1460;
+	if (x > max_screen_right)
+		x = max_screen_right;
 
 	
 
@@ -74,7 +74,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 
 	for (int i = 0; i < coObjects->size(); i++)
 	{	
-		if (coObjects->at(i)!= dynamic_cast<Candle*>(coObjects->at(i))&&coObjects->at(i) != dynamic_cast<SmallCandle*>(coObjects->at(i)) && (coObjects->at(i) != dynamic_cast<Monkey*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Frog*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Knight*>(coObjects->at(i)))&& coObjects->at(i) != dynamic_cast<Zombie*>(coObjects->at(i)))
+		if (coObjects->at(i)!= dynamic_cast<Candle*>(coObjects->at(i))&&coObjects->at(i) != dynamic_cast<SmallCandle*>(coObjects->at(i)) && (coObjects->at(i) != dynamic_cast<Monkey*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Frog*>(coObjects->at(i))) && (coObjects->at(i) != dynamic_cast<Knight*>(coObjects->at(i)))&& coObjects->at(i) != dynamic_cast<Zombie*>(coObjects->at(i))&& coObjects->at(i) != dynamic_cast<Skeleton*>(coObjects->at(i)))
 		{
 			COOBJECTS.push_back(coObjects->at(i));
 		}
@@ -105,8 +105,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 			y += min_ty * dy + ny * 0.4f;
 		}
 
-		/*if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;*/
+		
 		
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
@@ -133,7 +132,6 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 				{
 					if (nx != 0) x -= nx * 0.4f;
 				}
-				
 			}
 			else if (dynamic_cast<Gate*>(e->obj))
 			{
@@ -149,7 +147,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 			{					
 				if (e->ny != 0)
 				{
-					DebugOut(L"size: %d\n", e->ny);
+					//DebugOut(L"size: %d\n", e->ny);
 					if (e->ny == -1)
 					{
 						vx = e->obj->vx;
@@ -282,13 +280,13 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 						x += dx;
 				}
 			}*/
-			else if (dynamic_cast<Skeleton*>(e->obj))
+			/*else if (dynamic_cast<Bone*>(e->obj))
 			{
 				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
 				{
 					untouchtime->Start();
-					Skeleton* skele = dynamic_cast<Skeleton*>(e->obj);
-					loseHp(skele->getDamage());
+					Bone* skele = dynamic_cast<Bone*>(e->obj);
+					loseHp(1);
 					if (isStandOnStair == false || health == 0)
 					{
 						if (e->nx != 0)
@@ -308,14 +306,14 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 					if (e->nx != 0)
 						x += dx;
 				}
-			}
+			}*/
 			else if (dynamic_cast<Raven*>(e->obj))
 			{
 				if (untouchtime->IsTimeUp() && state != simon_ani_led && watertime->IsTimeUp())
 				{
 					untouchtime->Start();
 					Raven* raven = dynamic_cast<Raven*>(e->obj);
-					//ravendie = true;
+					
 					raven->Setcollisimon(true);
 					raven->SetState(raven_ani_die);
 					loseHp(raven->getDamage());
@@ -349,19 +347,19 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 
 void Simon::Render()
 {
-	int alpha = 255;
+	int alpha = simon_alpha_base;
 	if (!untouchtime->IsTimeUp())
-		alpha = rand() % 255;
+		alpha = rand() % simon_alpha_base;
 	if (!watertime->IsTimeUp() && state != simon_ani_led)
 	{
-		if ((float)(GetTickCount() - watertime->GetTimeStart()) < 1000)
-			alpha = 70;
-		else if (1000 <= (float)(GetTickCount() - watertime->GetTimeStart()) < 2500)
+		if ((float)(GetTickCount() - watertime->GetTimeStart()) < simon_one_second)
+			alpha = simon_alpha_one_second;
+		else if (simon_one_second <= (float)(GetTickCount() - watertime->GetTimeStart()) < simon_two_second)
 		{
-			alpha = rand() % 76 + 100;
+			alpha = rand() % simon_alpha_one_to_two_second + simon_alpha_random_one_to_two_second;
 		}
 		else
-			alpha = rand() & 155 + 176;
+			alpha = rand() & simon_alpha_random_more_two_second + (simon_alpha_one_to_two_second + simon_alpha_random_one_to_two_second);
 	}
 	animation_set->at(state)->Render(nx, x, y, alpha);
 	
@@ -446,9 +444,9 @@ void Simon::SetState(int State)
 		animation_set->at(State)->StartAni();
 		break;
 	case simon_ani_hurt:
-		vy = -0.3;
-		if (nx > 0) vx = -0.13;
-		else vx = 0.13;
+		vy = simon_hurt_vy;
+		if (nx > 0) vx = -simon_hurt_vx;
+		else vx = simon_hurt_vx;
 		animation_set->at(State)->ResetcurrentFrame();
 		animation_set->at(State)->StartAni();
 		break;
@@ -456,7 +454,7 @@ void Simon::SetState(int State)
 		untouchtime->Stop();
 		watertime->Stop();
 		vx = 0;
-		vy = 1000;
+		vy = simon_dead_vy;
 		//life -= 1;
 		break;
 	}
@@ -465,7 +463,7 @@ void Simon::SetState(int State)
 
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	left = x+15;
+	left = x+ box_simon_add;
 	top = y;
 	right = left +simon_box_width;
 	bottom = top +simon_box_height;
@@ -567,7 +565,16 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 				untouchtime->Start();
 				loseHp(skele->getDamage());
 				if (isStandOnStair == false || health == 0)
+				{
+					if (e->nx != 0)
+					{
+						if (e->nx == 1)
+							SetNx(-1);
+						else
+							SetNx(1);
+					}
 					SetState(simon_ani_hurt);
+				}
 			}
 		}
 		else if (dynamic_cast<Zombie*>(e))
@@ -620,8 +627,7 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 			{
 				
 				e->isDone = true;
-				//health = health - 1;
-				mana += 5;
+				mana += value_big_heart;
 			}
 			else if (e->idItems == items_knife)
 			{
@@ -672,34 +678,34 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)//hàm này đ�
 			else if (e->idItems == items_meat)
 			{
 				e->isDone = true;
-				health += 4;
+				health += value_meat;
 				if (health >= simon_max_health)
-					health = 16;
+					health = simon_max_health;
 			}
 			else if (e->idItems == items_small_heart)
 			{
 				e->isDone = true;
-				mana += 1;
+				mana += value_small_heart;
 			}
 			else if (e->idItems == items_bluemoney)
 			{
 				e->isDone = true;
-				score += 500;
+				score += value_bluemoney;
 			}
 			else if (e->idItems == items_redmoney)
 			{
 				e->isDone = true;
-				score += 1000;
+				score += value_redmoney;
 			}
 			else if (e->idItems == items_whitemoney)
 			{
 				e->isDone = true;
-				score += 1500;
+				score += value_whitemoney;
 			}
 			else if (e->idItems == items_crown)
 			{
 				e->isDone = true;
-				score += 2000;
+				score += value_crown;
 			}
 		}
 		
@@ -714,9 +720,9 @@ bool Simon::SimonColliWithStair(vector<LPGAMEOBJECT> *liststair)
 	canmovedownstair = canmoveupstair = false;
 	float l_simon, t_simon, r_simon, b_simon;
 	GetBoundingBox(l_simon, t_simon, r_simon, b_simon);
-	t_simon += 50; // để không va chạm với cục thang phía trên
-	b_simon += 10;
-	r_simon += 15; //mở rộng vùng va chạm thêm 
+	t_simon += simon_t_st; // để không va chạm với cục thang phía trên
+	b_simon += simon_b_st;
+	r_simon += simon_r_st; //mở rộng vùng va chạm thêm 
 	for (UINT i = 0; i < liststair->size(); i++)
 	{
 		float l_stair, t_stair, r_stair, b_stair;
@@ -729,10 +735,10 @@ bool Simon::SimonColliWithStair(vector<LPGAMEOBJECT> *liststair)
 
 			stairCollided = liststair->at(i);
 
-			if ((b_simon) < b_stair - 18)  canmovedownstair = true;
-			if (y >= t_stair - 32) canmoveupstair = true;
+			if ((b_simon) < b_stair - sub_distance_down)  canmovedownstair = true;
+			if (y >= t_stair - sub_distance_up) canmoveupstair = true;
 
-			float upstair_x = -999999, upstair_y = -999999; // toạ độ của bậc thang liền kề
+			float upstair_x = max_distance, upstair_y = max_distance; // toạ độ của bậc thang liền kề
 
 			for (UINT j = 0; j < liststair->size(); j++)
 			{
@@ -777,8 +783,11 @@ void Simon::DoAutoWalkStair()
 			state = stateAfterAutoWalk;
 			nx = nxAfterAutoWalk;
 			SetState(state);
-			if (state == simon_ani_stair_down)
-				y += 0.5f; // để đảm bảo simon sẽ va chạm với bậc thang 
+			
+			if (state == simon_ani_stair_down&&canmovedownstair)
+				y += simon_stari_down_y; // để đảm bảo simon sẽ va chạm với bậc thang 
+
+
 			isWalkStair = false;
 		}
 	}
@@ -788,31 +797,31 @@ void Simon::InstallKnife()
 {
 	listsub.clear();
 	currentWeapon = weapon_knfie;
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < max_sub; i++)
 		listsub.push_back(knife[i]);
 }
 
 void Simon::InstallAxe()
 {
 	listsub.clear();
-	currentWeapon = 2;
-	for (int i = 0; i < 3; i++)
+	currentWeapon = weapon_axe;
+	for (int i = 0; i < max_sub; i++)
 		listsub.push_back(axe[i]);
 }
 
 void Simon::InstallBoom()
 {
 	listsub.clear();
-	currentWeapon = 3;
-	for (int i = 0; i < 3; i++)
+	currentWeapon = weapon_boom;
+	for (int i = 0; i < max_sub; i++)
 		listsub.push_back(boom[i]);
 }
 
 void Simon::InstallHoly()
 {
 	listsub.clear();
-	currentWeapon = 4;
-	for (int i = 0; i < 3; i++)
+	currentWeapon = weapon_holy;
+	for (int i = 0; i < max_sub; i++)
 		listsub.push_back(holywater[i]);
 }
 

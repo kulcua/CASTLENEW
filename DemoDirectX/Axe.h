@@ -1,6 +1,14 @@
 #pragma once
 #include"SubWeapon.h"
 
+#define axe_gra 0.001
+#define axe_vx 0.2
+#define axe_vy -0.45
+#define axe_box_width 30
+#define axe_box_height 28
+#define axe_max_dis 100
+#define axe_ani_set 20
+
 class Axe :public SubWeapon
 {
 public:

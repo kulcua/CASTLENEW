@@ -1,5 +1,17 @@
 #pragma once
 #include"SubWeapon.h"
+#define holy_vy -0.1
+#define holy_vx_right 0.3
+#define holy_vx_left -0.25
+#define holy_gra 0.001
+#define holy_box_width 32
+#define holy_box_height 28
+
+#define holy_ani_not_break 0
+#define holy_ani_break 1
+
+#define holy_aniset 22
+
 class Holywater :public SubWeapon
 {
 	bool isHolyWaterShattered;

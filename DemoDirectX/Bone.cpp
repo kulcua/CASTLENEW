@@ -5,9 +5,9 @@
 Bone::Bone(LPGAMEOBJECT simon)
 {
 	this->s = simon;
-	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(27));
+	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(bone_aniset));
 	//isDone = true;
-	damage = 3;
+	damage = bone_hp;
 	hp = 1;
 }
 
@@ -24,7 +24,7 @@ void Bone::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	}
 
 	Enemy::Update(dt);
-	vy += 0.001*dt;
+	vy += bone_gravity * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	coEvents.clear();
@@ -93,12 +93,12 @@ void Bone::SetState(int State)
 	Enemy::SetState(State);
 	switch (State)
 	{
-	case 0:
+	case bone_ani_fly:
 		if (nx > 0)
-			vx = 0.15;
+			vx = bone_vx;
 		else
-			vx = -0.15;
-		vy = -0.45;
+			vx = -bone_vx;
+		vy = bone_vy;
 		break;
 	default:
 		break;
@@ -113,14 +113,14 @@ void Bone::GetBoundingBox(float &l, float &t, float &r, float &b)
 	{
 		l = x;
 		t = y;
-		r = l + 32;
-		b = t + 32;
+		r = l + bone_box_width;
+		b = t + bone_box_height;
 	}
 }
 
 void Bone::setpos(D3DXVECTOR2 pos)
 {
-	SetPosition(pos.x+5, pos.y+5);
+	SetPosition(pos.x+ add_dis, pos.y+ add_dis);
 	POSX = pos.x;
 }
 bool Bone::CheckCam()

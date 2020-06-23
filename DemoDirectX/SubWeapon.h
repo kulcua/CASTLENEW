@@ -2,6 +2,7 @@
 #include"GameObject.h"
 #include"Candle.h"
 #include"Gate.h"
+#include"GroundMoving.h"
 #include"Knight.h"
 #include"Monkey.h"
 #include"Frog.h"
@@ -15,6 +16,20 @@
 
 #define weapon_knfie 0
 #define weapon_watch 1
+#define weapon_axe 2
+#define weapon_boom 3
+#define weapon_holy 4
+
+#define dame_into_knight 2
+#define dame_into_bat 1
+#define dame_into_monkey 1
+#define dame_into_frog 2
+#define dame_into_skele 1
+#define dame_into_raven 1
+#define dame_into_zombie 1
+
+#define set_pos_sub_nsit 25
+#define set_pos_sub_sit 10
 class SubWeapon :public CGameObject
 {
 protected:

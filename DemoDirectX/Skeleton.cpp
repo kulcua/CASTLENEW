@@ -5,9 +5,9 @@
 Skeleton::Skeleton(LPGAMEOBJECT simon)
 {
 	this->simon = simon;
-	score = 300;
-	hp = 1;
-	damage = 3;
+	score = skeleton_score;
+	hp = skeleton_hp;
+	damage = skeleton_damage;
 	bone = new Bone(simon);
 }
 
@@ -20,7 +20,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 		{
 			bone->SetNx(nx);
 			bone->setpos(D3DXVECTOR2(x, y));
-			bone->SetState(0);
+			bone->SetState(bone_ani_fly);
 			bone->setcheck(true);
 		}
 
@@ -76,10 +76,11 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-		x += min_tx * dx + nx * 1.0f;
+		x += min_tx * dx + nx * 1.9f;
 		y += min_ty * dy + ny * 0.1f;
 
 		
+
 
 		if (ny != 0)
 		{
@@ -94,47 +95,44 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 
 		}
 
-		if (nx != 0)
-			vx *= -1;
+		
 	
 	}
 
 
 	Enemy::Update(dt);
 	if(state!=skeleton_ani_die)
-		vy += 0.001 * dt;
+		vy += skeleton_gra * dt;
 
 	
 
-	//if (simon->GetPositionX() < 200 && !check)
-		//check = true;
 
 	if (x >= simon->GetPositionX())
 		nx = -1;
 	else
 		nx = 1;
 
-	if (abs(x - simon->GetPositionX())  < 270&&CheckCam())
+	if (abs(x - simon->GetPositionX()) < active_max_dis&&CheckCam())
 	{
 		active = true;
-		if (abs(simon->GetPositionX() - x) >  200)
+		if (abs(simon->GetPositionX() - x) > small_dis_one)
 		{
 			if (coEvents.size() != 0 && state != skeleton_ani_die)
-				vx = 0.13 * nx;
+				vx = skeleton_vx * nx;
 		}
-		else if (abs(simon->GetPositionX() - x) < 70)
+		else if (abs(simon->GetPositionX() - x) < small_dis_two)
 		{
 			if (coEvents.size() != 0 && state != skeleton_ani_die)
-				vx = -0.13 * nx;
+				vx = -skeleton_vx * nx;
 		}
 
 
 
 
 
-		if (jump&&y > 250 && state != skeleton_ani_die)
+		if (jump&&y > max_y_jump && state != skeleton_ani_die)
 		{
-			vy = -0.4;
+			vy = skeleton_vy;
 			nhay1lan = jump = false;
 		}
 	}
@@ -157,7 +155,7 @@ void Skeleton::SetState(int State)
 	Enemy::SetState(State);
 	switch (State)
 	{
-	case 0:
+	case skeleton_ani_idle:
 		vx = vy = 0;
 		break;
 	case skeleton_ani_die:
@@ -179,8 +177,8 @@ void Skeleton::GetBoundingBox(float &l, float &t, float &r, float &b)
 	{
 		l = x;
 		t = y;
-		r = l + 32;
-		b = t + 62;
+		r = l + skeleton_box_width;
+		b = t + skeleton_box_height;
 	}
 }
 

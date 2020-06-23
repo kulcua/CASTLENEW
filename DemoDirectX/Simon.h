@@ -50,16 +50,47 @@
 
 #define simon_delay_hit 300
 #define simon_delay_led 600
+
+#define sub_distance_down 18
+#define sub_distance_up 32
+
+#define simon_alpha_base 255
+#define simon_one_second 1000
+#define simon_two_second 2500
+#define simon_alpha_one_second 70
+#define simon_alpha_one_to_two_second 76
+#define simon_alpha_random_one_to_two_second 100
+#define simon_alpha_random_more_two_second 155
+#define box_simon_add 15
+
+#define max_screen_right 1460
+
+#define simon_score 0
+#define simon_mana 99
+#define simon_life 3
+#define simon_t_st 50
+#define simon_b_st 10
+#define simon_r_st 15
+#define simon_stari_down_y 0.5f
+#define max_distance -999999
+#define simon_nextscene 99
+#define simon_hurt_vy -0.3
+#define simon_hurt_vx 0.1
+#define simon_dead_vy 1000
+#define simon_untouchtime 1200
+#define simon_watertime 4000
+#define max_sub 3
+#define mana_use 5
 class Simon :public CGameObject
 {
 	Whip *whip;
 
 	vector<SubWeapon*> listsub;
 
-	SubWeapon *knife[3];
-	SubWeapon *axe[3];
-	SubWeapon *boom[3];
-	SubWeapon *holywater[3];
+	SubWeapon *knife[max_sub];
+	SubWeapon *axe[max_sub];
+	SubWeapon *boom[max_sub];
+	SubWeapon *holywater[max_sub];
 
 	SubWeapon *clk;
 
@@ -71,8 +102,8 @@ class Simon :public CGameObject
 	
 public:
 
-	Timer* untouchtime = new Timer(1200);
-	Timer* watertime = new Timer(4000);
+	Timer* untouchtime = new Timer(simon_untouchtime);
+	Timer* watertime = new Timer(simon_watertime);
 	bool checkgroundmove=false;
 	bool isCross;
 	bool isDead;

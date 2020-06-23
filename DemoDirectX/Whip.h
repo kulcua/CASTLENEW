@@ -20,6 +20,16 @@
 #define whip_box_width_lv3 85
 #define whip_box_height 15
 
+#define whip_dame1 1
+#define whip_dame2 2
+
+#define pos_whip_x 90
+#define pos_whip_y 15
+
+#define pos_whip_lv3 20
+#define pos_whip_lv1_2 50
+#define pos_whip_lv3_2_1_left 135
+
 class Whip :public CGameObject
 {
 	

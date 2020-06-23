@@ -45,9 +45,9 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						e->timestop = GetTickCount();
 						e->vx = 0;
 						if (state == whip_lv1)
-							e->loseHp(1);
+							e->loseHp(whip_dame1);
 						else
-							e->loseHp(2);
+							e->loseHp(whip_dame2);
 						delaydamage = true;
 					}
 					
@@ -72,7 +72,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (WhipCheckColli(left, top, right, bottom))
 				{
-					e->loseHp(1);
+					e->loseHp(whip_dame1);
 
 					if (e->GetState() != bat_ani_die )
 						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
@@ -94,14 +94,14 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (WhipCheckColli(left, top, right, bottom))
 				{
-					e->loseHp(1);
-					if (e->GetState() != 1)
+					e->loseHp(whip_dame1);
+					if (e->GetState() != monkey_ani_die)
 						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
 
 					if (e->getHp() <= 0)
 					{
 						//score += e->getScore();
-						e->SetState(1);
+						e->SetState(monkey_ani_die);
 					}
 				}
 			}
@@ -121,9 +121,9 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 
 						if (state == whip_lv1)
-							e->loseHp(1);
+							e->loseHp(whip_dame1);
 						else
-							e->loseHp(2);
+							e->loseHp(whip_dame2);
 						delaydamage = true;
 					}
 
@@ -147,7 +147,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (WhipCheckColli(left, top, right, bottom))
 				{
-					e->loseHp(1);
+					e->loseHp(whip_dame1);
 					if (e->GetState() != skeleton_ani_die)
 						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
 
@@ -167,7 +167,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (WhipCheckColli(left, top, right, bottom))
 				{
-					e->loseHp(1);
+					e->loseHp(whip_dame1);
 
 					if (e->GetState() != raven_ani_die )
 						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
@@ -216,7 +216,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (WhipCheckColli(left, top, right, bottom))
 				{
-					e->loseHp(1);
+					e->loseHp(whip_dame1);
 					e->colliwhip = true;
 					if (e->GetState() != zombie_ani_die )
 						listHit.push_back(CreateHit(e->GetPositionX(), e->GetPositionY() + 10));
@@ -266,9 +266,9 @@ void Whip::Render()
 
 void Whip::SetPosWhip(D3DXVECTOR3 pos, bool isstanding)
 {
-	pos.x -= 90;
+	pos.x -= pos_whip_x;
 	if (!isstanding)
-		pos.y += 15;
+		pos.y += pos_whip_y;
 	SetPosition(pos.x, pos.y);
 }
 Hit* Whip::CreateHit(float x, float y)
@@ -290,21 +290,21 @@ bool Whip::WhipCheckColli(float l_b, float t_b, float r_b, float b_b)
 void Whip::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
 
-	t = y + 15;
+	t = y + pos_whip_y;
 	b = t + whip_box_height;
 	if (nx < 0)
 	{
 		if (state == whip_lv3)
-			l = x + 20;
+			l = x + pos_whip_lv3;
 		else
-			l = x + 50;
+			l = x + pos_whip_lv1_2;
 	}
 	else if (nx > 0)
 	{
 		if (state == whip_lv3)
-			l = x + 135;
+			l = x + pos_whip_lv3_2_1_left;
 		else
-			l = x + 135;
+			l = x + pos_whip_lv3_2_1_left;
 	}
 
 	if (state == whip_lv3)
