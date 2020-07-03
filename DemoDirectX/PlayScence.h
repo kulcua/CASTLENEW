@@ -27,9 +27,11 @@
 #include "Zombie.h"
 #include "Grid.h"
 #include "Piece.h"
+#include "Boss.h"
 
 #define time_use_cross 500
 #define time_revival 2000
+#define time_delay_hp 100
 #define time_use_clk 4000
 #define dis_add_auto_walk 5.0f
 #define dis_sub_auto_walk 31.0f
@@ -60,6 +62,21 @@
 #define max_rand_15 145
 #define max_rand_16 165
 
+#define zombie_drop_item_x 10
+#define breakwall_drop_item_y 10
+#define breakwall_drop_item_y_crown 80
+#define piece_0_x 3
+#define piece_1_x_y 10
+#define piece_2_x 10
+#define piece_2_y 40
+#define piece_3_x 5
+#define piece_3_y 8
+#define skele_drop_item_x 10
+#define monkey_drop_item_y 6
+#define boss_drop_item_y 40
+
+#define add_score_time_up 100
+
 
 class CPlayScene : public CScene
 {
@@ -72,7 +89,10 @@ protected:
 	TileMap *tilemap;
 	Board *board;
 	Grid* grid;
+	Grid* grididle;
 	
+	Boss* boss;
+
 	vector<LPGAMEOBJECT> objects;
 	
 	vector<LPGAMEOBJECT> listitems;
@@ -81,6 +101,7 @@ protected:
 	vector<LPGAMEOBJECT> liststairright;
 
 	vector<LPGAMEOBJECT> listpush;
+	vector<LPGAMEOBJECT> listidle;
 	vector<LPGAMEOBJECT> listget;
 	
 	
@@ -136,6 +157,9 @@ public:
 	Timer* timecross = new Timer(time_use_cross);
 	Timer* timedeadsimon = new Timer(time_revival);
 	Timer* timerclk = new Timer(time_use_clk);
+	Timer* delayaddhp = new Timer(time_delay_hp);
+	//Timer* turnback = new Timer(10000);
+	//bool checkturnback;
 
 	vector<LPGAMEOBJECT> * GetListStairsLeft() { return &(liststairleft); }
 	vector<LPGAMEOBJECT> * GetListStairsRight() { return &(liststairright); }

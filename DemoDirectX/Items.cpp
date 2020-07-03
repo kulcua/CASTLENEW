@@ -17,7 +17,7 @@ void Items::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 
 	if (state == items_small_heart&&vy!=0)
 	{
-		vx += 0.005;
+		vx += small_heart_vx;
 		if (vx >= 0.1|| vx <= -0.1)
 			vx *= -1;
 	}
@@ -27,7 +27,7 @@ void Items::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 		timeStart = GetTickCount();
 	else
 	{
-		if (GetTickCount() - timeStart > time_items_des)
+		if (GetTickCount() - timeStart > time_items_des&&state != items_boss)
 		{
 			isDone = true;
 			return;
@@ -40,7 +40,18 @@ void Items::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 
 	coEvents.clear();
 
-	CalcPotentialCollisions(coObjects, coEvents);
+	vector<LPGAMEOBJECT> COOBJECTS;
+	COOBJECTS.clear();
+
+	for (int i = 0; i < coObjects->size(); i++)
+	{
+		if (coObjects->at(i) == dynamic_cast<Ground*>(coObjects->at(i)) || coObjects->at(i) == dynamic_cast<BreakWall*>(coObjects->at(i)))
+		{
+			COOBJECTS.push_back(coObjects->at(i));
+		}
+	}
+
+	CalcPotentialCollisions(&COOBJECTS, coEvents);
 
 	if (coEvents.size() == 0)
 	{
@@ -60,9 +71,9 @@ void Items::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 		
 	}
 
-	if (state == items_crown && y > 400)
-		vy = -0.03;
-	if (state == items_crown && y <= 400)
+	if (state == items_crown && y > crown_hight)
+		vy = -crown_appear_vy;
+	if (state == items_crown && y <= crown_hight)
 		vy = 0;
 	
 	for (int i = 0; i < coEvents.size(); i++) delete coEvents[i];
@@ -177,6 +188,12 @@ void Items::GetBoundingBox(float &l, float &t, float &r, float &b)
 			r = l + items_crown_box_width;
 			b = t + items_crown_box_height;
 			break;
+		case items_boss:
+			l = x;
+			t = y;
+			r = l + items_boss_box_width;
+			b = t + items_boss_box_height;
+			break;
 		default:
 			l = t = r = b = 0;
 			break;
@@ -248,6 +265,10 @@ void Items::SetState(int State)
 		vy = items_vy;
 		break;
 	case items_crown:
+		vx = items_vx;
+		vy = items_vy;
+		break;
+	case items_boss:
 		vx = items_vx;
 		vy = items_vy;
 		break;

@@ -1,5 +1,7 @@
 #pragma once
 #include"GameObject.h"
+#include"Ground.h"
+#include"BreakWall.h"
 #define time_items_des 4500
 #define items_for_whip 0
 #define items_big_heart 1
@@ -18,9 +20,15 @@
 #define items_redmoney 14
 #define items_whitemoney 15
 #define items_crown 16
+#define items_boss 17
 
+#define small_heart_vx 0.005
 #define items_ani_set 5
+#define crown_hight 400
+#define crown_appear_vy 0.03
 
+#define items_boss_box_width 26
+#define items_boss_box_height 32
 
 #define items_whip_box_width 32
 #define items_whip_box_height 32

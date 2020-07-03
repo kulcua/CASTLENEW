@@ -7,8 +7,6 @@ Grid::Grid(int cell_width, int cell_height)
 	this->cell_width = cell_width;
 	this->cell_height = cell_height;
 
-
-
 }
 
 void Grid::Resize(int map_width, int map_height)

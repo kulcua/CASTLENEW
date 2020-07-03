@@ -92,7 +92,7 @@ void Zombie::Render()
 	if (!isDone)
 		animation_set->at(state)->Render(nx, x, y);
 	else return;
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Zombie::SetState(int State)

@@ -19,6 +19,7 @@
 #include "Raven.h"
 #include "Zombie.h"
 #include "Timer.h"
+#include "Boss.h"
 #include "Clock.h"
 
 #define simon_jump -0.5f
@@ -110,6 +111,7 @@ public:
 
 	
 
+	bool bossdie;
 
 	int hitDoubleTriple = -1;
 	int currentscene;
@@ -171,5 +173,10 @@ public:
 	void setLife(int a) { life = a; }
 	void addScore(int a) { score += a; }
 	int GetHealth() { return health; }
+	void addHp(int a) {
+		health += a;
+		if (health >= simon_max_health)
+			health = simon_max_health;
+	}
 };
 

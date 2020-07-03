@@ -21,7 +21,7 @@
 #define bat_hp 1
 #define bat_damage 2
 #define bat_score 200
-class Bat:public Enemy
+class Bat :public Enemy
 {
 	LPGAMEOBJECT simon;
 	bool checkpos,collisimon;//kt xem vị trí dơi đã thấp chưa

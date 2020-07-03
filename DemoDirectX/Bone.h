@@ -18,11 +18,10 @@
 
 class Bone :public Enemy
 {
-	LPGAMEOBJECT s;
 	bool checkset;
 	float POSX;
 public:
-	Bone(LPGAMEOBJECT s);
+	Bone();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
 	void Render();
 	void SetState(int State);
@@ -31,19 +30,7 @@ public:
 	bool CheckCam();
 	void setcheck(bool a) { checkset = a; }
 	bool getcheck() { return checkset; }
-	bool checkposX(float a) {
-		if (vx > 0)
-		{
-			if (x - a >= ((SCREEN_WIDTH / 2) + dis_add))
-				return true;
-		}
-		else if (vx < 0)
-		{
-			if (a - x >= ((SCREEN_WIDTH / 2) + dis_add))
-				return true;
-		}
-		return false;
-	}
+	bool checkposX(float a);
 	~Bone();
 };
 

@@ -46,6 +46,7 @@
 #define OBJECT_TYPE_BREAKWALL 12
 #define OBJECT_TYPE_SMALLCANDLE 13
 #define OBJECT_TYPE_ZOMBIE 14
+#define OBJECT_TYPE_BOSS 15
 
 
 #define OBJECT_TYPE_PORTAL	50
@@ -76,9 +77,11 @@ void CPlayScene::LoadBaseObject()
 		simon = new Simon();
 		DebugOut(L"[INFO]SIMON CREATED \n");
 	}
-	board = new Board(simon->GetHealth(), 16);
-	tilemap = new TileMap();
+	//boss = new Boss(simon);
+	board = new Board(simon->GetHealth(), /*boss->hp*/boss_max_hp);
+	tilemap = new TileMap();	
 	grid = new Grid();
+	grididle = new Grid();
 }
 
 
@@ -90,11 +93,11 @@ void CPlayScene::SwitchScene(int idmap)
 		ClearAll(ToLPCWSTR(linkmap[simon->beforescene-1/*idmap - 2*/]));
 	CGame::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
 	LPCWSTR a = ToLPCWSTR(linkmap[idmap - 1]);	
-	/*CGame::GetInstance()->SetCamPos(0.0f, 0.0f);*/
 	Load(a);
 	LoadMap(a);
 	LoadObject();
 	grid->PushGrid(listpush);
+	grididle->PushGrid(listidle);
 	CGame::GetInstance()->SetCamPos(CGame::GetInstance()->GetCamPosX(), 0.0f);
 	simon->currentscene=simon->beforescene = idmap;
 }
@@ -214,6 +217,7 @@ void CPlayScene::_ParseSection_INFOMAP(string line)
 		CGame::GetInstance()->SetCamPosX(atof(tokens[11].c_str()));
 
 	grid->Resize(atoi(tokens[12].c_str()), atoi(tokens[13].c_str()));
+	grididle->Resize(atoi(tokens[12].c_str()), atoi(tokens[13].c_str()));
 }
 
 void CPlayScene::_ParseSection_LINKMAP(string line)
@@ -359,7 +363,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			simon->SetPosition(x, y);	
 			simon->SetState(state1);
 		}
-		else if (simon->currentscene > simon->nextscene)
+		else /*if (simon->currentscene > simon->nextscene)*/
 		{
 			simon->SetPosition(x2, y2);
 			simon->SetNx(nx2);
@@ -376,7 +380,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		//objects.push_back(obj);
-		listpush.push_back(obj);
+		//listpush.push_back(obj);
+		listidle.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_CANDLE: 
@@ -409,10 +414,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		obj->stairdir = stairnx;
-		/*if(stairnx==-1)
-			liststairright.push_back(obj);
-		else
-			liststairleft.push_back(obj);*/
 		listpush.push_back(obj);
 		break;
 	}
@@ -460,7 +461,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new Skeleton(simon);
-		//Skeleton *asd = dynamic_cast<Skeleton*>(obj);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		//objects.push_back(obj);
@@ -519,15 +519,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		listpush.push_back(obj);
 		break;
 	}
+	case OBJECT_TYPE_BOSS:
+	{
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		boss = new Boss(simon);
+		boss->SetAnimationSet(ani_set);
+		boss->SetPosition(x, y);
+		listpush.push_back(boss);
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 		break;
 	}
 
-	// General object setup
-	
-	/*obj->SetPosition(x, y);*/
 }
 
 
@@ -538,7 +544,10 @@ void CPlayScene::GetObjectGrid()
 	liststairright.clear();
 	listget.clear();
 
+	grididle->GetGrid(listget);
 	grid->GetGrid(listget);
+	//DebugOut(L" SO PHAN TU TRONG LIST TĨNH %d \n", listidle.size());
+	//DebugOut(L" SO PHAN TU TRONG LIST ĐỘNG %d \n", listpush.size());
 	//DebugOut(L" SO PHAN TU TRONG LIST %d \n", listget.size());
 	for (UINT i = 0; i < listget.size(); i++)
 	{
@@ -704,7 +713,7 @@ int CPlayScene::RandomItems()
 		return items_small_heart;
 	else if (max_rand_2 < a && a <= max_rand_3)
 		return items_big_heart;
-	else if (max_rand_3 < a&&a <= max_rand_4 && simon->GetWhip()->GetState() < whip_lv3)
+	else if (max_rand_3 < a&&a <= max_rand_5 && simon->GetWhip()->GetState() < whip_lv3)
 		return items_for_whip;
 	else if (max_rand_5 < a &&a <= max_rand_6&&simon->currentWeapon==-1)
 		return items_knife;
@@ -793,16 +802,17 @@ void CPlayScene::UseCross()
 
 void CPlayScene::Revival()
 {
+	
 	CGame* game = CGame::GetInstance();
 	if ((simon->GetPositionY() >= (game->GetCamPosY() + SCREEN_HEIGHT /*+ 200*/)))
 		simon->SetState(simon_ani_dead);
-	if (board->getCheckTime())
+	if (board->getCheckTime()&&!simon->bossdie)
 	{
 		simon->SetState(simon_ani_dead);
 		board->setCheckTime(false);
 	}
 
-	if ((simon->isDead && timedeadsimon->IsTimeUp()) || board->getCheckTime() == true)
+	if ((simon->isDead && timedeadsimon->IsTimeUp()) || (board->getCheckTime() == true))
 	{
 		timedeadsimon->Stop();
 
@@ -852,6 +862,12 @@ void CPlayScene::Update(DWORD dt)
 	
 	for (int i = 0; i < objects.size(); i++)
 	{
+		if (dynamic_cast<Skeleton*>(objects[i]))
+		{
+			Skeleton* skele = dynamic_cast<Skeleton*>(objects[i]);
+			coObjects.push_back(skele->GetBone());
+		}
+
 		coObjects.push_back(objects[i]);
 	}
 
@@ -940,7 +956,7 @@ void CPlayScene::Update(DWORD dt)
 				Monkey* e = dynamic_cast<Monkey *>(obj);
 				simon->addScore(e->getScore());
 				obj->isFire = true;
-				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY()-5, RandomItems()));
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY()- monkey_drop_item_y, RandomItems()));
 			}
 		}
 
@@ -951,7 +967,7 @@ void CPlayScene::Update(DWORD dt)
 				Skeleton* e = dynamic_cast<Skeleton *>(obj);
 				simon->addScore(e->getScore());
 				obj->isFire = true;
-				listitems.push_back(DropItem(obj->GetPositionX()+10, obj->GetPositionY(), RandomItems()));
+				listitems.push_back(DropItem(obj->GetPositionX() + skele_drop_item_x, obj->GetPositionY(), RandomItems()));
 			}
 		}
 
@@ -977,17 +993,17 @@ void CPlayScene::Update(DWORD dt)
 		{
 			obj->isFire = true;
 
-			listpiece.push_back(CreatePiece(obj->x+3, obj->y, piece_type_0));
-			listpiece.push_back(CreatePiece(obj->x+10, obj->y+10, piece_type_1));
-			listpiece.push_back(CreatePiece(obj->x+10, obj->y-40, piece_type_2));
-			listpiece.push_back(CreatePiece(obj->x-5, obj->y-7, piece_type_3));
+			listpiece.push_back(CreatePiece(obj->x+ piece_0_x, obj->y, piece_type_0));
+			listpiece.push_back(CreatePiece(obj->x+ piece_1_x_y, obj->y+ piece_1_x_y, piece_type_1));
+			listpiece.push_back(CreatePiece(obj->x + piece_2_x, obj->y - piece_2_y, piece_type_2));
+			listpiece.push_back(CreatePiece(obj->x- piece_3_x, obj->y- piece_3_y, piece_type_3));
 
 			if (obj->idItems == items_crown)
 			{
-				listitems.push_back(DropItem(CGame::GetInstance()->GetCamPosX() + SCREEN_WIDTH / 2, CGame::GetInstance()->GetCamPosY() + SCREEN_HEIGHT - 80, obj->idItems));
+				listitems.push_back(DropItem(CGame::GetInstance()->GetCamPosX() + SCREEN_WIDTH / 2, CGame::GetInstance()->GetCamPosY() + SCREEN_HEIGHT - breakwall_drop_item_y_crown, obj->idItems));
 			}
 			else
-				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY() - 10, obj->idItems));
+				listitems.push_back(DropItem(obj->GetPositionX(), obj->GetPositionY() - breakwall_drop_item_y, obj->idItems));
 		}
 
 		if (dynamic_cast<SmallCandle*>(obj) && obj->GetState() == break_candle && !(obj->isDone) && !(obj->isFire))
@@ -1008,9 +1024,20 @@ void CPlayScene::Update(DWORD dt)
 				if (e->colliwhip)
 				{
 					simon->addScore(e->getScore());
-					listitems.push_back(DropItem(obj->GetPositionX() + 10, obj->GetPositionY(), RandomItems()));
+					listitems.push_back(DropItem(obj->GetPositionX() + zombie_drop_item_x, obj->GetPositionY(), RandomItems()));
 				}
 				e->colliwhip = false;
+			}
+		}
+
+		if (dynamic_cast<Boss*>(obj) && obj->GetState() == boss_ani_die && !(obj->isDone) && !(obj->isFire))
+		{
+			if (obj->animation_set->at(boss_ani_die)->RenderOver(boss_time))
+			{
+				Boss* e = dynamic_cast<Boss*>(obj);
+				simon->addScore(e->getScore());
+				obj->isFire = true;
+				listitems.push_back(DropItem(CGame::GetInstance()->GetCamPosX() + (SCREEN_WIDTH / 2), CGame::GetInstance()->GetCamPosY() + ((SCREEN_HEIGHT - boss_drop_item_y) / 2), items_boss));
 			}
 		}
 
@@ -1043,9 +1070,9 @@ void CPlayScene::Update(DWORD dt)
 
 	
 	
-	if (simon->currentWeapon != 1)
+	if (simon->currentWeapon != weapon_watch)
 	{
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < max_sub; i++)
 		{
 			if (simon->currentWeapon != -1 && !simon->GetListSubWeapon()[i]->isDone)
 				simon->GetListSubWeapon()[i]->Update(dt, &objects);
@@ -1067,23 +1094,64 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 
-	//if (tilemap->getid() != 4000)
+	if (boss == nullptr)
 	{
 		if (simon->GetPositionX() > (SCREEN_WIDTH / 2) && simon->GetPositionX() + (SCREEN_WIDTH / 2) < tilemap->getwidthmap())
 		{
 			cx = simon->GetPositionX() - (SCREEN_WIDTH / 2);
-			CGame::GetInstance()->SetCamPos(cx, 0.0f );
+			CGame::GetInstance()->SetCamPos(cx, 0.0f);
 		}
 	}
-	
+	else
+	{
+		if (simon->GetPositionX() > (SCREEN_WIDTH / 2) && simon->GetPositionX() + (SCREEN_WIDTH / 2) < tilemap->getwidthmap() && !boss->checkactive)
+		{
+			cx = simon->GetPositionX() - (SCREEN_WIDTH / 2);
+			CGame::GetInstance()->SetCamPos(cx, 0.0f);
+		}
+		if (boss->checkactive)
+			if (simon->x < CGame::GetInstance()->GetCamPosX() - 10)
+				simon->x = CGame::GetInstance()->GetCamPosX() - 10;
+	}
 	
 	
 	grid->ResetGrid(listpush);
 
-	board->Update(dt, simon->GetHealth(), 16);
+	if (boss == nullptr)
+		board->Update(dt, simon->GetHealth(), boss_max_hp);
+	else
+		board->Update(dt, simon->GetHealth(), boss->hp);
+
 	Revival();
+
+
+	
 	
 	//DebugOut(L" SO PHAN TU TRONG LISTPIECE %d \n", listpiece.size());
+
+	if (simon->bossdie)
+	{
+		if (simon->GetHealth() < simon_max_health)
+		{
+			if (delayaddhp->IsTimeUp())
+			{
+				delayaddhp->Start();
+				simon->addHp(1);
+			}
+		}
+		if (simon->getmana() > 0)
+		{
+			simon->usemana(1);
+			simon->addScore(add_score_time_up);
+		}
+
+		/*if (board->gettimemax() > 0)
+		{
+			board->subtimemax(1);
+			simon->addScore(10);
+		}*/
+
+	}
 }
 
 void CPlayScene::Render()
@@ -1173,7 +1241,10 @@ void CPlayScene::Unload()
 	listpiece.clear();
 
 	listpush.clear();
+	listidle.clear();
 	//simon = NULL;
+
+	boss = nullptr;
 }
 
 void CPlayScenceKeyHandler::RunRight()
@@ -1288,7 +1359,7 @@ void CPlayScenceKeyHandler::Hit_SubWeapon()
 	if (simon->getcurrentweapon() != -1 && simon->currentWeapon != weapon_watch)
 	{
 		subweaponlist->SetNx(simon->Getnx());
-		if (simon->GetState() == simon_ani_sit)       //ko để dc trong update simon //để đây để có thể nhảy bắn
+		if (simon->GetState() == simon_ani_sit)       
 			subweaponlist->SetPosSubWeapon(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), false);
 		else
 			subweaponlist->SetPosSubWeapon(D3DXVECTOR3(simon->GetPositionX(), simon->GetPositionY(), 0), true);
@@ -1324,11 +1395,7 @@ void CPlayScenceKeyHandler::Stair_Down()
 			simon->SetState(simon_ani_sit);
 			return; 
 		}
-		/*if (simon->isStandOnStair)
-			simon->SetState(simon_ani_idle);
-		else
-			simon->SetState(simon_ani_sit);*/
-		//return;
+
 	}
 	
 
@@ -1574,6 +1641,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		if (simon->GetState() != simon_ani_dead)
 		{
 			simon->InstallClk();
+		}
+		break;
+	case DIK_O:
+		if (simon->GetState() != simon_ani_dead)
+		{
+			simon->addHp(simon_max_health);
 		}
 		break;
 	}

@@ -72,5 +72,14 @@ public:
 	bool getCheckTime() {return checktime;}
 	void setCheckTime(bool a) { checktime = a; }
 	void settimeremain(int a) { timemax = a; time = 0; }
+	void settimer(int a) { timeremain = a; }
+	int gettimemax() { return timemax; }
+	int gettimeremain() { return timeremain; }
+	void subtimemax(int a)
+	{
+		timemax -= a;
+		if (timemax <= 0)
+			timemax = 0;
+	}
 };
 

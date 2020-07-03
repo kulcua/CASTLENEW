@@ -228,8 +228,40 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				}
 			}
+			else if (dynamic_cast<Boss*>(obj))
+			{
+				Boss * e = dynamic_cast<Boss*>(obj);
+				float left, top, right, bottom;
+				e->GetBoundingBox(left, top, right, bottom);
+
+				if (WhipCheckColli(left, top, right, bottom))
+				{						
+					if (!delaydamage)
+					{			
+						//e->timestop = GetTickCount();
+						//e->vx = 0;
+						if (state == whip_lv1)
+							e->loseHp(whip_dame1);
+						else
+							e->loseHp(whip_dame2);
+						delaydamage = true;
+					}
+					
+
+					if (e->GetState() != 2)
+						listHit.push_back(CreateHit(e->GetPositionX()+20, e->GetPositionY() + 10));
+					
+					if (e->getHp() <= 0)
+					{
+	
+						e->SetState(2);
+					}
+
+				}
+			}
 			
 		}
+		
 
 		/*for (int i = 0; i < listHit.size(); i++)
 		{

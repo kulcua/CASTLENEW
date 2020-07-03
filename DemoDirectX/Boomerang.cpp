@@ -68,7 +68,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (e->nx != 0 )
 				{
 					
-					knight->loseHp(dame_into_knight);
+					knight->loseHp(/*dame_into_knight*/1);
 				
 
 					if (knight->GetState() != knight_ani_die)

@@ -10,6 +10,7 @@
 #include"SmallCandle.h"
 #include"Frog.h"
 #include"Zombie.h"
+#include"Boss.h"
 #define whip_lv1 0
 #define whip_lv2 1
 #define whip_lv3 2

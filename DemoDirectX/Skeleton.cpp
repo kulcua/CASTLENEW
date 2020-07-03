@@ -8,7 +8,7 @@ Skeleton::Skeleton(LPGAMEOBJECT simon)
 	score = skeleton_score;
 	hp = skeleton_hp;
 	damage = skeleton_damage;
-	bone = new Bone(simon);
+	bone = new Bone();
 }
 
 void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
@@ -31,7 +31,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 	if (bone->isDone)
 		bone->isDone = false;
 
-	if (!CheckCam()&& state == 0&&active)
+	if (!CheckCam() && state == skeleton_ani_idle && active)
 		state = skeleton_ani_die;
 
 	if (state == skeleton_ani_die && animation_set->at(skeleton_ani_die)->RenderOver(skeleton_time))
@@ -39,6 +39,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 		isDone = true;
 		return;
 	}
+
 
 	if (clk)
 		return;

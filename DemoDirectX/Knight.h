@@ -23,7 +23,7 @@ class Knight :public Enemy
 	
 public:
 	DWORD timestop;
-	Knight(/*float maxX1, float maxX2*/);
+	Knight();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL,bool clk=false);
 	void Render();
 	void SetState(int State);
