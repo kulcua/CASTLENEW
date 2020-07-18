@@ -402,8 +402,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->nextscene = atof(tokens[3].c_str());
 		/*current_scene = NEXTMAP;*/
 		obj->SetPosition(x, y);
-		//objects.push_back(obj);
-		listpush.push_back(obj);
+		//listpush.push_back(obj);
+		listidle.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_STAIR:
@@ -551,16 +551,15 @@ void CPlayScene::GetObjectGrid()
 	//DebugOut(L" SO PHAN TU TRONG LIST %d \n", listget.size());
 	for (UINT i = 0; i < listget.size(); i++)
 	{
-		LPGAMEOBJECT obj = listget[i];
-		if (dynamic_cast<Stair*>(obj))
+		if (dynamic_cast<Stair*>(listget[i]))
 		{
-			if(obj->stairdir==-1)
-				liststairright.push_back(obj);
+			if(listget[i]->stairdir==-1)
+				liststairright.push_back(listget[i]);
 			else
-				liststairleft.push_back(obj);
+				liststairleft.push_back(listget[i]);
 		}
 		else
-			objects.push_back(obj);
+			objects.push_back(listget[i]);
 	}
 }
 
@@ -713,8 +712,8 @@ int CPlayScene::RandomItems()
 		return items_small_heart;
 	else if (max_rand_2 < a && a <= max_rand_3)
 		return items_big_heart;
-	else if (max_rand_3 < a&&a <= max_rand_5 && simon->GetWhip()->GetState() < whip_lv3)
-		return items_for_whip;
+	//else if (max_rand_3 < a&&a <= max_rand_5 && simon->GetWhip()->GetState() < whip_lv3)
+		//return items_for_whip;
 	else if (max_rand_5 < a &&a <= max_rand_6&&simon->currentWeapon==-1)
 		return items_knife;
 	else if (max_rand_6 < a&&a <= max_rand_7 && simon->currentWeapon == -1)
@@ -799,50 +798,153 @@ void CPlayScene::UseCross()
 }
 
 
-
-void CPlayScene::Revival()
+void CPlayScene::ResetGame()
 {
-	
-	CGame* game = CGame::GetInstance();
-	if ((simon->GetPositionY() >= (game->GetCamPosY() + SCREEN_HEIGHT /*+ 200*/)))
-		simon->SetState(simon_ani_dead);
-	if (board->getCheckTime()&&!simon->bossdie)
+	if (simon->bossdie)
 	{
-		simon->SetState(simon_ani_dead);
-		board->setCheckTime(false);
+		if (!checkreset)
+		{
+			reset->Start();
+			checkreset = true;
+		}
+
+
+
+		if (simon->GetHealth() < simon_max_health)
+		{
+			if (delayaddhp->IsTimeUp())
+			{
+				delayaddhp->Start();
+				simon->addHp(1);
+			}
+		}
+		if (simon->getmana() > 0)
+		{
+			simon->usemana(1);
+			simon->addScore(add_score_time_up);
+		}
+
+		if (board->gettimemax() > 0)
+		{
+			board->subtimemax(1);
+			simon->addScore(add_score_time);
+		}
+
 	}
 
-	if ((simon->isDead && timedeadsimon->IsTimeUp()) || (board->getCheckTime() == true))
+	if (simon->bossdie&&reset->IsTimeUp())
 	{
-		timedeadsimon->Stop();
-
+		reset->Stop();
+		simon->bossdie = false;
+		board->setCheckTime(false);
+		checkreset = false;
 		board->settimeremain(def_time_max);
 		simon->isDead = false;
+
+		simon->isWalkStair = false;
+
 		simon->GetWhip()->SetState(whip_lv1);
 		simon->setHealth(max_heal);
 		simon->setMana(simon_mana);
-		if (simon->getlife() > 0)
-		{
-			//board->settimeremain(300);
-			simon->setLife(simon->getlife() - 1);
-			SwitchScene(simon->currentscene);
-		}
-		else //if (simon->getlife() == 0)
-		{
-			simon->setLife(simon_life);
-			SwitchScene(map1);
-			simon->setScore(simon_score);
-		}
+		simon->setLife(simon_life);
+		simon->currentWeapon = -1;
+		simon->hitDoubleTriple = -1;
+		SwitchScene(map1);
+		simon->setScore(simon_score);
 	}
+}
 
-	if (simon->GetState() == simon_ani_dead)
+
+
+void CPlayScene::Revival()
+{
+	if (!simon->bossdie)
 	{
-		if (!simon->isDead)
+		CGame* game = CGame::GetInstance();
+		if ((simon->GetPositionY() >= (game->GetCamPosY() + SCREEN_HEIGHT/*+ 200*/)))
+			simon->SetState(simon_ani_dead);
+		if (board->getCheckTime() /*&& !simon->bossdie*/)
 		{
-			simon->isDead = true;
-			timedeadsimon->Start();
+			simon->SetState(simon_ani_dead);
+			board->setCheckTime(false);
+		}
+
+		if ((simon->isDead && timedeadsimon->IsTimeUp()) || (board->getCheckTime() == true))
+		{
+			timedeadsimon->Stop();
+
+			board->settimeremain(def_time_max);
+			simon->isDead = false;
+			simon->GetWhip()->SetState(whip_lv1);
+			simon->setHealth(max_heal);
+			simon->setMana(simon_mana);
+			
+			simon->isWalkStair = false;
+
+
+			if (simon->getlife() > 0)
+			{
+				//board->settimeremain(300);
+				simon->setLife(simon->getlife() - 1);
+				SwitchScene(simon->currentscene);
+			}
+			else //if (simon->getlife() == 0)
+			{
+				simon->setLife(simon_life);
+				SwitchScene(map1);
+				simon->setScore(simon_score);
+			}
+		}
+
+		if (simon->GetState() == simon_ani_dead)
+		{
+			if (!simon->isDead)
+			{
+				simon->isDead = true;
+				timedeadsimon->Start();
+			}
 		}
 	}
+	//CGame* game = CGame::GetInstance();
+	//if ((simon->GetPositionY() >= (game->GetCamPosY() + SCREEN_HEIGHT /*+ 200*/)))
+	//	simon->SetState(simon_ani_dead);
+	//if (board->getCheckTime()&&!simon->bossdie)
+	//{
+	//	simon->SetState(simon_ani_dead);
+	//	board->setCheckTime(false);
+	//}
+
+	//if ((simon->isDead && timedeadsimon->IsTimeUp()) || (board->getCheckTime() == true))
+	//{
+	//	timedeadsimon->Stop();
+
+	//	board->settimeremain(def_time_max);
+	//	simon->isDead = false;
+	//	simon->GetWhip()->SetState(whip_lv1);
+	//	simon->setHealth(max_heal);
+	//	simon->setMana(simon_mana);
+	//	if (simon->getlife() > 0)
+	//	{
+	//		//board->settimeremain(300);
+	//		simon->setLife(simon->getlife() - 1);
+	//		SwitchScene(simon->currentscene);
+	//	}
+	//	else //if (simon->getlife() == 0)
+	//	{
+	//		simon->setLife(simon_life);
+	//		SwitchScene(map1);
+	//		simon->setScore(simon_score);
+	//	}
+	//}
+
+	//if (simon->GetState() == simon_ani_dead)
+	//{
+	//	if (!simon->isDead)
+	//	{
+	//		simon->isDead = true;
+	//		timedeadsimon->Start();
+	//	}
+	//}
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -865,7 +967,8 @@ void CPlayScene::Update(DWORD dt)
 		if (dynamic_cast<Skeleton*>(objects[i]))
 		{
 			Skeleton* skele = dynamic_cast<Skeleton*>(objects[i]);
-			coObjects.push_back(skele->GetBone());
+			for(int i=0;i< max_bone;i++)
+				coObjects.push_back(skele->getBone()[i]);
 		}
 
 		coObjects.push_back(objects[i]);
@@ -1110,8 +1213,8 @@ void CPlayScene::Update(DWORD dt)
 			CGame::GetInstance()->SetCamPos(cx, 0.0f);
 		}
 		if (boss->checkactive)
-			if (simon->x < CGame::GetInstance()->GetCamPosX() - 10)
-				simon->x = CGame::GetInstance()->GetCamPosX() - 10;
+			if (simon->x < CGame::GetInstance()->GetCamPosX() - sub_dis_cam_boss)
+				simon->x = CGame::GetInstance()->GetCamPosX() - sub_dis_cam_boss;
 	}
 	
 	
@@ -1122,6 +1225,7 @@ void CPlayScene::Update(DWORD dt)
 	else
 		board->Update(dt, simon->GetHealth(), boss->hp);
 
+	
 	Revival();
 
 
@@ -1129,8 +1233,16 @@ void CPlayScene::Update(DWORD dt)
 	
 	//DebugOut(L" SO PHAN TU TRONG LISTPIECE %d \n", listpiece.size());
 
-	if (simon->bossdie)
+	/*if (simon->bossdie)
 	{
+		if (!checkreset)
+		{
+			reset->Start();
+			checkreset = true;
+		}
+
+
+
 		if (simon->GetHealth() < simon_max_health)
 		{
 			if (delayaddhp->IsTimeUp())
@@ -1145,13 +1257,14 @@ void CPlayScene::Update(DWORD dt)
 			simon->addScore(add_score_time_up);
 		}
 
-		/*if (board->gettimemax() > 0)
+		if (board->gettimemax() > 0)
 		{
 			board->subtimemax(1);
 			simon->addScore(10);
-		}*/
+		}
 
-	}
+	}*/
+	ResetGame();
 }
 
 void CPlayScene::Render()
@@ -1509,7 +1622,7 @@ bool CPlayScenceKeyHandler::StairCollisionsDetectionLeft()
 {
 	Simon *simon = ((CPlayScene*)scence)->simon;
 	CPlayScene* playscene = ((CPlayScene*)scence);
-	simon->StairLeftFirst = true;
+	//simon->StairLeftFirst = true;
 	return	simon->SimonColliWithStair(playscene->GetListStairsLeft());
 }
 
@@ -1544,6 +1657,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		{
 			simon->currentscene = 0;
 			simon->nextscene = map1;
+			simon->bossdie = false;
 			playscene->SwitchScene(map1);
 		}
 		break;
@@ -1552,6 +1666,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		{
 			simon->currentscene = map1;
 			simon->nextscene = map2;
+			simon->bossdie = false;
 			playscene->SwitchScene(map2);
 		}
 		break;
@@ -1560,6 +1675,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		{
 			simon->currentscene = map2;
 			simon->nextscene = map3;
+			simon->bossdie = false;
 			playscene->SwitchScene(map3);
 		}
 		break;
@@ -1568,6 +1684,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		{
 			simon->currentscene = map3;
 			simon->nextscene = map4;//4;
+			simon->bossdie = false;
 			playscene->SwitchScene(map4/*4*/);
 		}
 		break;
@@ -1576,6 +1693,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		{
 			simon->currentscene = map4;//4;
 			simon->nextscene = map5;//5;
+			simon->bossdie = false;
 			playscene->SwitchScene(5);
 		}
 		break;
@@ -1584,6 +1702,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		{
 			simon->currentscene = map5;//5;
 			simon->nextscene = map6;//6;
+			simon->bossdie = false;
 			playscene->SwitchScene(map6);
 		}
 		break;
@@ -1664,6 +1783,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	if (simon->GetState() == simon_ani_dead||(simon->isWalkStair == true))
 		return;
 
+
 	if (simon->GetState() == simon_ani_stand_hit && simon->animation_set->at(simon_ani_stand_hit)->RenderOver(simon_delay_hit))//để cho ko bị đánh 2 lần
 	{
 		if (!(simon->isGrounded))
@@ -1675,19 +1795,19 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	if (!(simon->isGrounded))
 		return;
 
-	if (simon->GetState() == simon_ani_hurt && !(simon->animation_set->at(simon_ani_hurt)->RenderOver(600)))
+	if (simon->GetState() == simon_ani_hurt && !(simon->animation_set->at(simon_ani_hurt)->RenderOver(simon_delay_hurt)))
 		return;
 
-	if (simon->GetState() == simon_ani_stair_up_hit && !(simon->animation_set->at(simon_ani_stair_up_hit)->RenderOver(300)))
+	if (simon->GetState() == simon_ani_stair_up_hit && !(simon->animation_set->at(simon_ani_stair_up_hit)->RenderOver(simon_delay_hit)))
 		return;
 
-	if (simon->GetState() == simon_ani_stair_down_hit && !(simon->animation_set->at(simon_ani_stair_down_hit)->RenderOver(300)))
+	if (simon->GetState() == simon_ani_stair_down_hit && !(simon->animation_set->at(simon_ani_stair_down_hit)->RenderOver(simon_delay_hit)))
 		return;
 
-	if (simon->GetState() == simon_ani_stair_up && !(simon->animation_set->at(simon_ani_stair_up)->RenderOver(200)))
+	if (simon->GetState() == simon_ani_stair_up && !(simon->animation_set->at(simon_ani_stair_up)->RenderOver(simon_delay_stair)))
 		return;
 
-	if (simon->GetState() == simon_ani_stair_down && !(simon->animation_set->at(simon_ani_stair_down)->RenderOver(200)))
+	if (simon->GetState() == simon_ani_stair_down && !(simon->animation_set->at(simon_ani_stair_down)->RenderOver(simon_delay_stair)))
 		return;
 	
 	if (simon->GetState() == simon_ani_led && !(simon->animation_set->at(simon_ani_led)->RenderOver(simon_delay_led)))
@@ -1707,7 +1827,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	if (game->IsKeyDown(DIK_DOWN))
 	{
-		if (StairCollisionsDetectionRight() && !simon->StairLeftFirst)
+		if (StairCollisionsDetectionRight() /*&& !simon->StairLeftFirst*/)
 		{
 			Stair_Down();
 			return;
@@ -1730,14 +1850,14 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	{
 		if (StairCollisionsDetectionLeft())
 		{
-			simon->StairLeftFirst = false;
+			//simon->StairLeftFirst = false;
 			Stair_Up();
 			return;
 		}
 
 		if (StairCollisionsDetectionRight())
 		{
-			simon->StairLeftFirst = false;
+			//simon->StairLeftFirst = false;
 			Stair_Up();
 			return;
 		}

@@ -9,12 +9,13 @@
 
 #define holy_ani_not_break 0
 #define holy_ani_break 1
-
+#define time_fire 1500
 #define holy_aniset 22
+#define add_dis_hit 10
 
 class Holywater :public SubWeapon
 {
-	bool isHolyWaterShattered;
+	bool isHolyWaterShattered,checkdamage1;
 	int holyWaterShatteredCounter;
 public:
 	Holywater();

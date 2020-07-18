@@ -110,7 +110,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + 10));
+					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + add_dis_hit));
 					candle->SetState(break_candle);
 					isDone = true;
 					isFire = false;
@@ -125,7 +125,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					knight->loseHp(dame_into_knight);
 					if (knight->GetState() != knight_ani_die)
-						listHit.push_back(CreateHit(knight->GetPositionX(), knight->GetPositionY() + 10));
+						listHit.push_back(CreateHit(knight->GetPositionX(), knight->GetPositionY() + add_dis_hit));
 
 					
 					if (knight->getHp() <= 0)
@@ -142,7 +142,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					bat->loseHp(dame_into_bat);
 					if(bat->GetState()!=bat_ani_die)
-						listHit.push_back(CreateHit(bat->GetPositionX(), bat->GetPositionY() + 10));
+						listHit.push_back(CreateHit(bat->GetPositionX(), bat->GetPositionY() + add_dis_hit));
 
 
 					if (bat->getHp() <= 0)
@@ -159,7 +159,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					monkey->loseHp(dame_into_monkey);
 					if (monkey->GetState() != monkey_ani_die)
-						listHit.push_back(CreateHit(monkey->GetPositionX(), monkey->GetPositionY() + 10));
+						listHit.push_back(CreateHit(monkey->GetPositionX(), monkey->GetPositionY() + add_dis_hit));
 
 
 					if (monkey->getHp() <= 0)
@@ -176,7 +176,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					frog->loseHp(dame_into_frog);
 					if (frog->GetState() != frog_ani_die)
-						listHit.push_back(CreateHit(frog->GetPositionX(), frog->GetPositionY() + 10));
+						listHit.push_back(CreateHit(frog->GetPositionX(), frog->GetPositionY() + add_dis_hit));
 
 
 					if (frog->getHp() <= 0)
@@ -191,7 +191,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + 10));
+					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + add_dis_hit));
 					candle->SetState(break_candle);
 					isDone = true;
 					isFire = false;
@@ -206,7 +206,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					skele->loseHp(dame_into_skele);
 					if (skele->GetState() != skeleton_ani_die)
-						listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + 10));
+						listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + add_dis_hit));
 
 
 					if (skele->getHp() <= 0)
@@ -223,7 +223,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					raven->loseHp(dame_into_raven);
 					if (raven->GetState() != raven_ani_die)
-						listHit.push_back(CreateHit(raven->GetPositionX(), raven->GetPositionY() + 10));
+						listHit.push_back(CreateHit(raven->GetPositionX(), raven->GetPositionY() + add_dis_hit));
 
 
 					if (raven->getHp() <= 0)
@@ -241,10 +241,27 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					zombie->colliwhip = true;
 					zombie->loseHp(dame_into_zombie);
 					if (zombie->GetState() != zombie_ani_die)
-						listHit.push_back(CreateHit(zombie->GetPositionX(), zombie->GetPositionY() + 10));
+						listHit.push_back(CreateHit(zombie->GetPositionX(), zombie->GetPositionY() + add_dis_hit));
 
 					if (zombie->getHp() <= 0)
 						zombie->SetState(zombie_ani_die);
+					isDone = true;
+					isFire = false;
+				}
+			}
+			else if (dynamic_cast<Boss*>(e->obj))
+			{
+				Boss *boss = dynamic_cast<Boss*>(e->obj);
+				
+				if (e->nx != 0 || e->ny != 0)
+				{
+					boss->loseHp(dame_into_boss);
+					if (boss->GetState() != boss_ani_die)
+						listHit.push_back(CreateHit(boss->GetPositionX(), boss->GetPositionY() + add_dis_hit));
+
+					
+					if (boss->getHp() <= 0)
+						boss->SetState(boss_ani_die);
 					isDone = true;
 					isFire = false;
 				}

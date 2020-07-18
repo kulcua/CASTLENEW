@@ -2,7 +2,7 @@
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Simon , 1 = Ground 
 # Simon
-0	160	405	-1	7	0	0	1	0
+0	165	405	-1	7	0	0	1	0
 # Brick
 1	32	80	24
 1	32	112	24
@@ -65,6 +65,7 @@
 # Stair
 4	128	400	30	-1
 4	160	432	26	-1
+4	192	464	26	-1
 4	128	368	11	1
 4	160	336	11	1
 4	192	304	11	1

@@ -75,7 +75,11 @@
 #define monkey_drop_item_y 6
 #define boss_drop_item_y 40
 
+#define sub_dis_cam_boss 10
+
 #define add_score_time_up 100
+#define add_score_time 10
+#define time_reset 7000
 
 
 class CPlayScene : public CScene
@@ -151,6 +155,7 @@ public:
 	bool CheckInCam(LPGAMEOBJECT a);
 	void UseCross();
 	void Revival();
+	void ResetGame();
 	/*void SetDie();*/
 	int RandomItems();
 
@@ -158,8 +163,8 @@ public:
 	Timer* timedeadsimon = new Timer(time_revival);
 	Timer* timerclk = new Timer(time_use_clk);
 	Timer* delayaddhp = new Timer(time_delay_hp);
-	//Timer* turnback = new Timer(10000);
-	//bool checkturnback;
+	Timer* reset = new Timer(time_reset);
+	bool checkreset;
 
 	vector<LPGAMEOBJECT> * GetListStairsLeft() { return &(liststairleft); }
 	vector<LPGAMEOBJECT> * GetListStairsRight() { return &(liststairright); }

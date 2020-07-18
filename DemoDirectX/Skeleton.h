@@ -21,12 +21,21 @@
 #define small_dis_one 200
 #define small_dis_two 70
 #define max_y_jump 250
+#define max_bone 3
+#define max_rand 10000
+#define rand_fire_bone1 100
+#define rand_fire_bone2 50
+#define rand_fire_bone3 20
+#define bone_1 0
+#define bone_2 1
+#define bone_3 2
 class Skeleton :public Enemy
 {
 	LPGAMEOBJECT simon;
-	Bone* bone;
-	bool jump,nhay1lan,active;
 
+	Bone* bone[max_bone];
+	bool jump, nhay1lan, active, checkfirst;
+	int delay;
 
 public:
 	Skeleton(LPGAMEOBJECT simon);
@@ -36,8 +45,9 @@ public:
 	void GetBoundingBox(float &l, float &t, float &r, float &b);
 	void loseHp(int x);
 	int getHp();
-	
-	Bone* GetBone() { return bone; }
+	Bone** getBone() { return bone; }
+
+
 	bool CheckCam();
 	~Skeleton();
 };

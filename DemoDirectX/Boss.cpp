@@ -179,7 +179,7 @@ void Boss::Render()
 	if (!isDone)
 		animation_set->at(state)->Render(1, x, y);
 	else return;
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Boss::SetState(int State)
@@ -194,12 +194,7 @@ void Boss::SetState(int State)
 	}
 }
 
-//bool Boss::CheckCam()
-//{
-//	//CGame *game = CGame::GetInstance();
-//	//return (x >= game->GetCamPosX() && x < game->GetCamPosX() + (SCREEN_WIDTH - 10) && y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT));
-//	return true;
-//}
+
 
 int Boss::getHp()
 {

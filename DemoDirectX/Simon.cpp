@@ -31,8 +31,11 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 {
 	CGameObject::Update(dt);
 	
-	
-
+	/*if (!isStandOnStair&&y > 400)
+	{
+		SetState(simon_ani_dead);
+		return;
+	}*/
 
 	if (untouchtime->IsTimeUp())
 		untouchtime->Stop();
@@ -156,8 +159,8 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects,bool clk)
 						isGrounded = true;				
 						vy = 0;
 					}
-					else
-						y += dy;
+					//else
+						//y += dy;
 				}
 				/*else
 					vx = 0;*/
@@ -238,7 +241,7 @@ void Simon::SetState(int State)
 			vx = -simon_run;
 		break;
 	case simon_ani_idle:
-		this->StairLeftFirst = false;
+		//this->StairLeftFirst = false;
 		if (!checkgroundmove)
 			vx = 0;
 		isStandOnStair = false;
@@ -255,7 +258,8 @@ void Simon::SetState(int State)
 		break;
 	case simon_ani_sit:
 		isStandOnStair = false;
-		vx = 0;
+		if(!checkgroundmove)
+			vx = 0;
 		break;
 	case simon_ani_stand_hit:
 		isStandOnStair = false;
@@ -343,7 +347,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 			{
 				untouchtime->Start();
 				loseHp(knight->getDamage());
-				if (isStandOnStair == false || health == 0)
+				if (isStandOnStair == false /*|| health == 0*/)
 				{
 					if (e->nx != 0)
 					{
@@ -369,7 +373,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 				loseHp(bat->getDamage());
 				bat->Setcollisimon(true);
 				bat->SetState(bat_ani_die);
-				if (isStandOnStair == false || health == 0)
+				if (isStandOnStair == false /*|| health == 0*/)
 				{
 					if (e->nx != 0)
 					{
@@ -390,7 +394,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 			{
 				untouchtime->Start();
 				loseHp(frog->getDamage());
-				if (isStandOnStair == false || health == 0)
+				if (isStandOnStair == false /*|| health == 0*/)
 				{
 					if (e->nx != 0)
 					{
@@ -411,7 +415,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 			{
 				untouchtime->Start();
 				loseHp(monkey->getDamage());
-				if (isStandOnStair == false || health == 0)
+				if (isStandOnStair == false /*|| health == 0*/)
 				{
 					if (e->nx != 0)
 					{
@@ -433,7 +437,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 			{
 				untouchtime->Start();
 				loseHp(skele->getDamage());
-				if (isStandOnStair == false || health == 0)
+				if (isStandOnStair == false /*|| health == 0*/)
 				{
 					if (e->nx != 0)
 					{
@@ -454,7 +458,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 			{
 				untouchtime->Start();
 				loseHp(zombie->getDamage());
-				if (isStandOnStair == false || health == 0)
+				if (isStandOnStair == false /*|| health == 0*/)
 				{
 					if (e->nx != 0)
 					{
@@ -475,7 +479,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 			{
 				untouchtime->Start();
 				loseHp(boss->getDamage());
-				if (isStandOnStair == false || health == 0)
+				if (isStandOnStair == false /*|| health == 0*/)
 				{
 					if (e->nx != 0)
 					{
@@ -496,7 +500,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 			{
 				untouchtime->Start();
 				loseHp(bone->getDamage());
-				if (isStandOnStair == false || health == 0)
+				if (isStandOnStair == false /*|| health == 0*/)
 				{
 					if (e->nx != 0)
 					{
@@ -519,7 +523,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 				raven->Setcollisimon(true);
 				raven->SetState(raven_ani_die);
 				loseHp(raven->getDamage());
-				if (isStandOnStair == false || health == 0)
+				if (isStandOnStair == false /*|| health == 0*/)
 				{
 					if (e->nx != 0)
 					{
@@ -546,102 +550,102 @@ void Simon::SimonColliWithItems(vector<LPGAMEOBJECT> *listitems)
 		e->GetBoundingBox(l_items, t_items, r_items, b_items);
 		if (CGameObject::AABBCheck(l_simon, t_simon, r_simon, b_simon, l_items, t_items, r_items, b_items))
 		{
-			if (e->idItems == items_for_whip)
+			if (e->idItems == items_for_whip && !e->isDone)
 			{
 				SetState(simon_ani_led);
-				e->isDone = true;
+				
 				if (whip->GetState() == whip_lv1)
 					whip->SetState(whip_lv2);
 				else if (whip->GetState() == whip_lv2)
 					whip->SetState(whip_lv3);
-				
+				e->isDone = true;
 
 			}
-			else if (e->idItems == items_big_heart)
+			else if (e->idItems == items_big_heart && !e->isDone)
 			{
-				
-				e->isDone = true;
+							
 				mana += value_big_heart;
+				e->isDone = true;
 			}
-			else if (e->idItems == items_knife)
+			else if (e->idItems == items_knife && !e->isDone)
 			{
 				InstallKnife();
 				e->isDone = true;
 			}
-			else if (e->idItems == items_watch)
+			else if (e->idItems == items_watch && !e->isDone)
 			{
 				InstallClk();
 				e->isDone = true;
 				//currentWeapon = weapon_watch;
 			}
-			else if (e->idItems == items_axe)
+			else if (e->idItems == items_axe && !e->isDone)
 			{
 				InstallAxe();			
 				e->isDone = true;
 			}
-			else if (e->idItems == items_boom)
+			else if (e->idItems == items_boom && !e->isDone)
 			{
 				InstallBoom();
 				e->isDone = true;
 			}
-			else if (e->idItems == items_holywater)
+			else if (e->idItems == items_holywater && !e->isDone)
 			{
 				InstallHoly();
 				e->isDone = true;
 			}
-			else if (e->idItems == items_watterbottle)
+			else if (e->idItems == items_watterbottle && !e->isDone)
 			{
 				e->isDone = true;
 				watertime->Start();
 			}
-			else if (e->idItems == items_corss)
+			else if (e->idItems == items_corss && !e->isDone)
 			{
 				isCross = true;
 				e->isDone = true;
 			}
-			else if (e->idItems == items_double)
+			else if (e->idItems == items_double && !e->isDone)
 			{
 				hitDoubleTriple = 0;
 				e->isDone = true;
 			}
-			else if (e->idItems == items_triple)
+			else if (e->idItems == items_triple && !e->isDone)
 			{
 				hitDoubleTriple = 1;
 				e->isDone = true;
 			}
-			else if (e->idItems == items_meat)
+			else if (e->idItems == items_meat && !e->isDone)
 			{
 				e->isDone = true;
 				health += value_meat;
 				if (health >= simon_max_health)
 					health = simon_max_health;
 			}
-			else if (e->idItems == items_small_heart)
+			else if (e->idItems == items_small_heart && !e->isDone)
 			{
 				e->isDone = true;
 				mana += value_small_heart;
 			}
-			else if (e->idItems == items_bluemoney)
+			else if (e->idItems == items_bluemoney && !e->isDone)
 			{
 				e->isDone = true;
 				score += value_bluemoney;
 			}
-			else if (e->idItems == items_redmoney)
+			else if (e->idItems == items_redmoney && !e->isDone)
 			{
 				e->isDone = true;
 				score += value_redmoney;
 			}
-			else if (e->idItems == items_whitemoney)
+			else if (e->idItems == items_whitemoney && !e->isDone)
 			{
 				e->isDone = true;
 				score += value_whitemoney;
 			}
-			else if (e->idItems == items_crown)
+			else if (e->idItems == items_crown && !e->isDone)
 			{
 				e->isDone = true;
 				score += value_crown;
 			}
-			else if (e->idItems == items_boss)
+			else if (e->idItems == items_boss && !e->isDone)
 			{
 				e->isDone = true;
 				bossdie = true;
@@ -716,7 +720,22 @@ void Simon::DoAutoWalkStair()
 	if (x != newPosX)
 	{
 		x += dx;
-		y += dy;
+		
+
+		if (state != simon_ani_stair_down)
+		{
+			y += dy;
+		}
+		else if(!canmovedownstair)
+		{
+			if (abs(stairCollided->y - stair_box_height) > (y + dy))
+				y += dy;
+			else
+				y = abs(stairCollided->y - stair_box_height);
+			
+		}
+
+
 		if ((nx == 1 && x >= newPosX) || (nx == -1 && x <= newPosX))
 		{
 			x = newPosX;
@@ -724,10 +743,10 @@ void Simon::DoAutoWalkStair()
 			nx = nxAfterAutoWalk;
 			SetState(state);
 			
-			if (state == simon_ani_stair_down&&canmovedownstair)
-				y += simon_stari_down_y; // để đảm bảo simon sẽ va chạm với bậc thang 
-
-
+			if (state == simon_ani_stair_down && canmovedownstair)
+				y += 2;// để đảm bảo simon sẽ va chạm với bậc thang 
+				//y += simon_stari_down_y; // để đảm bảo simon sẽ va chạm với bậc thang 
+			
 			isWalkStair = false;
 		}
 	}

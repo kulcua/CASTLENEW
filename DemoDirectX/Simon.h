@@ -52,6 +52,9 @@
 #define simon_delay_hit 300
 #define simon_delay_led 600
 
+#define simon_delay_hurt 600
+#define simon_delay_stair 200
+
 #define sub_distance_down 18
 #define sub_distance_up 32
 
@@ -78,7 +81,7 @@
 #define simon_hurt_vy -0.3
 #define simon_hurt_vx 0.1
 #define simon_dead_vy 1000
-#define simon_untouchtime 1200
+#define simon_untouchtime 2000
 #define simon_watertime 4000
 #define max_sub 3
 #define mana_use 5

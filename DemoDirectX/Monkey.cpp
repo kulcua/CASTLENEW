@@ -73,16 +73,6 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject,bool clk)
 			}
 
 		}
-		
-		/*if (GetTickCount() - timerunfar >= 8000 && check)
-		{
-			runfar = true;
-			vx = this->nx*monkey_vx_notjump;
-			if ((((rand() % 10000 < 650) && (abs(simon->GetPositionX() - x) < 150)) && y > 330) || nx !=0 )
-			{
-				vy = monkey_vy;
-			}
-		}*/
 	}
 
 	
@@ -144,9 +134,6 @@ void Monkey::SetState(int State)
 	Enemy::SetState(State);
 	switch (State)
 	{
-	/*case 0:
-		vx = vy = 0;
-		break;*/
 	case monkey_ani_die:
 		vx = vy = 0;
 		animation_set->at(State)->StartAni();

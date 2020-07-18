@@ -16,12 +16,15 @@
 
 #define bone_ani_fly 0
 
+#define max_x -99
+#define max_y -99
+
 class Bone :public Enemy
 {
 	bool checkset;
 	float POSX;
 public:
-	Bone();
+	Bone(float x = max_x, float y = max_y);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
 	void Render();
 	void SetState(int State);

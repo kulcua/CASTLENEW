@@ -24,6 +24,11 @@
 #define MAX_SCENE_LINE 1024
 #define map2 4000
 #define map3 6000
+#define map6 12000
+#define map4 8000
+
+#define max_row 100
+#define max_col 100
 
 class TileMap
 {
@@ -35,7 +40,7 @@ class TileMap
 	int id;
 
 	
-	int tilemap[100][100];
+	int tilemap[max_row][max_col];
 	
 public:
 	TileMap();

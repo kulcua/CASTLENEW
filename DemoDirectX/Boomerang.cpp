@@ -10,6 +10,8 @@ Boomerang::Boomerang(LPGAMEOBJECT simon)
 
 void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -35,6 +37,8 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 	else
 	{
+		
+
 		// kiểm tra va chạm với object
 		float min_tx, min_ty, nx = 0, ny;
 
@@ -51,7 +55,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + 10));
+					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + add_dis_hit));
 					candle->SetState(break_candle);
 
 				}
@@ -60,53 +64,58 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				this->isDone = true;
 				this->isFire = false;
+				checkdamage1 = false;
 			}
 			else if (dynamic_cast<Knight*>(e->obj))
 			{
+				x += dx;
+
 				Knight *knight = dynamic_cast<Knight*>(e->obj);
 
-				if (e->nx != 0 )
+				if (!checkdamage1)
 				{
-					
-					knight->loseHp(/*dame_into_knight*/1);
-				
-
-					if (knight->GetState() != knight_ani_die)
+					checkdamage1 = true;
+					if (e->nx != 0)
 					{
-						listHit.push_back(CreateHit(knight->GetPositionX(), knight->GetPositionY() + 10));
-						
+						knight->loseHp(dame_into_knight);
+						if (knight->GetState() != knight_ani_die)
+						{
+							listHit.push_back(CreateHit(knight->GetPositionX(), knight->GetPositionY() + add_dis_hit));
+
+						}
+						if (knight->getHp() <= 0)
+						{
+							knight->SetState(knight_ani_die);
+						}
 					}
-
-
-					if (knight->getHp() <= 0)
-					{
-						knight->SetState(knight_ani_die);
-					}
-
-					
+					checkdamage1 = false;
+					return;
 				}
 			}
 			else if (dynamic_cast<Frog*>(e->obj))
 			{
+				x += dx;
 				Frog *frog = dynamic_cast<Frog*>(e->obj);
 
-				if (e->nx != 0)
-				{				
-					
-					frog->loseHp(dame_into_frog);
-					
-							
-					//DebugOut(L"COUNT DAMAGE %d\n", countdamage);
+				if (!checkdamage1)
+				{
+					checkdamage1 = true;
+					if (e->nx != 0)
+					{
+
+						frog->loseHp(dame_into_frog);
+
+						if (frog->GetState() != frog_ani_die)
+							listHit.push_back(CreateHit(frog->GetPositionX(), frog->GetPositionY() + add_dis_hit));
 
 
-					if (frog->GetState() != frog_ani_die)
-						listHit.push_back(CreateHit(frog->GetPositionX(), frog->GetPositionY() + 10));
+						if (frog->getHp() <= 0)
+							frog->SetState(frog_ani_die);
 
-
-					if (frog->getHp() <= 0)
-						frog->SetState(frog_ani_die);
-
+					}
+					checkdamage1 = false;
 				}
+				return;
 			}
 			else if (dynamic_cast<Monkey*>(e->obj))
 			{
@@ -116,7 +125,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					monkey->loseHp(dame_into_monkey);
 					if (monkey->GetState() != monkey_ani_die)
-						listHit.push_back(CreateHit(monkey->GetPositionX(), monkey->GetPositionY() + 10));
+						listHit.push_back(CreateHit(monkey->GetPositionX(), monkey->GetPositionY() + add_dis_hit));
 
 
 					if (monkey->getHp() <= 0)
@@ -132,7 +141,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					bat->loseHp(dame_into_bat);
 					if (bat->GetState() != bat_ani_die)
-						listHit.push_back(CreateHit(bat->GetPositionX(), bat->GetPositionY() + 10));
+						listHit.push_back(CreateHit(bat->GetPositionX(), bat->GetPositionY() + add_dis_hit));
 
 
 					if (bat->getHp() <= 0)
@@ -145,7 +154,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (e->nx != 0 || e->ny != 0)
 				{
-					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + 10));
+					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + add_dis_hit));
 					candle->SetState(break_candle);
 				}
 			}
@@ -157,7 +166,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					skele->loseHp(dame_into_skele);
 					if (skele->GetState() != skeleton_ani_die)
-						listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + 10));
+						listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + add_dis_hit));
 
 					if (skele->getHp() <= 0)
 						skele->SetState(skeleton_ani_die);
@@ -172,7 +181,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					
 					raven->loseHp(dame_into_raven);
 					if (raven->GetState() != raven_ani_die)
-						listHit.push_back(CreateHit(raven->GetPositionX(), raven->GetPositionY() + 10));
+						listHit.push_back(CreateHit(raven->GetPositionX(), raven->GetPositionY() + add_dis_hit));
 
 
 					if (raven->getHp() <= 0)
@@ -188,11 +197,35 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					zombie->colliwhip = true;
 					zombie->loseHp(dame_into_zombie);
 					if (zombie->GetState() != zombie_ani_die)
-						listHit.push_back(CreateHit(zombie->GetPositionX(), zombie->GetPositionY() + 10));
+						listHit.push_back(CreateHit(zombie->GetPositionX(), zombie->GetPositionY() + add_dis_hit));
 
 
 					if (zombie->getHp() <= 0)
 						zombie->SetState(zombie_ani_die);
+				}
+			}
+			else if (dynamic_cast<Boss*>(e->obj))
+			{
+				x += dx;
+				Boss *boss = dynamic_cast<Boss*>(e->obj);
+
+				if (!checkdamage1)
+				{
+					checkdamage1 = true;
+					if (e->nx != 0)
+					{
+
+						boss->loseHp(dame_into_boss);
+						if (boss->GetState() != boss_ani_die)
+							listHit.push_back(CreateHit(boss->GetPositionX(), boss->GetPositionY() + add_dis_hit));
+
+
+						if (boss->getHp() <= 0)
+							boss->SetState(boss_ani_die);
+
+					}
+					checkdamage1 = false;
+					return;
 				}
 			}
 		}
@@ -200,23 +233,31 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		
 	}
 
+
+
 	for (UINT i = 0; i < coEvents.size(); i++)
 		delete coEvents[i];
 }
 
 void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	
+	/*if (GetTickCount() - timereset >= 30)
+		checkreset = true;
+*/
+
+
 	SubWeapon::ClearListHit();
 	SubWeapon::Update(dt);
 
 	if (nx > 0) vx -= boom_comeback_vx;
 	else vx += boom_comeback_vx;
+	
 
 	if (CheckPosKnife(POSX))
 	{
 		isFire = false;
 		isDone = true;
+		checkdamage1 = false;
 		return;
 	}
 
@@ -262,12 +303,12 @@ bool Boomerang::CheckPosKnife(float a)
 {
 	if (vx > 0)
 	{
-		if (x - a >= ((SCREEN_WIDTH / 2)))
+		if (x - a >= ((SCREEN_WIDTH / 2) + add_dis_cam))
 			return true;
 	}
 	else if (vx < 0)
 	{
-		if (a - x >= ((SCREEN_WIDTH / 2)))
+		if (a - x >= ((SCREEN_WIDTH / 2) + add_dis_cam))
 			return true;
 	}
 	return false;

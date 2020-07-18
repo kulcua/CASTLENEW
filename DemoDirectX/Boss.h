@@ -25,11 +25,12 @@
 #define vy_donw 0.09
 #define add_x 13
 #define vx_close 0.12
+#define time_attack_stop 1500
 class Boss :public Enemy
 {
 	LPGAMEOBJECT s;
 	int ny;
-	Timer* timer1 = new Timer(1500);
+	Timer* timer1 = new Timer(time_attack_stop);
 public:
 	bool checkactive,target,checkstop,fly;
 	Boss(LPGAMEOBJECT s);

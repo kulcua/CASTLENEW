@@ -2,16 +2,19 @@
 #include"Simon.h"
 
 
-Bone::Bone()
+Bone::Bone(float x,float y)
 {
+	this->x = x;
+	this->y = y;
 	this->SetAnimationSet(CAnimationSets::GetInstance()->Get(bone_aniset));
 	damage = bone_hp;
 	hp = 1;
 }
 
+
 void Bone::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 {
-	
+
 	
 	if (!CheckCam())
 	{

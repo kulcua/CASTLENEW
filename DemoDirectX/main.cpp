@@ -153,7 +153,7 @@ int Run()
 		// dt: the time between (beginning of last frame) and now
 		// this frame: the frame we are about to render
 		DWORD dt = now - frameStart;
-
+		//DebugOut(L"DT:%d\n", dt);
 		if (dt >= tickPerFrame)
 		{
 			frameStart = now;

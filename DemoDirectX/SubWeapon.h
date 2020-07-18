@@ -13,6 +13,7 @@
 #include"Raven.h"
 #include"Ground.h"
 #include"Zombie.h"
+#include"Boss.h"
 
 #define weapon_knfie 0
 #define weapon_watch 1
@@ -27,9 +28,11 @@
 #define dame_into_skele 1
 #define dame_into_raven 1
 #define dame_into_zombie 1
+#define dame_into_boss 2
 
 #define set_pos_sub_nsit 25
 #define set_pos_sub_sit 10
+#define add_dis_hit 10
 class SubWeapon :public CGameObject
 {
 protected:

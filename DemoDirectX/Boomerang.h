@@ -4,11 +4,13 @@
 #define boom_aniset 21
 #define boom_box_width 28
 #define boom_box_height 28
-#define boom_vx 0.5
-#define boom_comeback_vx 0.01
+#define boom_vx 0.4
+#define boom_comeback_vx 0.006
+#define add_dis_cam 135
+#define add_dis_hit 10
 class Boomerang :public SubWeapon
 {
-	//bool checkdamage1, checkdamage2;
+	bool checkdamage1;
 public:
 	Boomerang(LPGAMEOBJECT simon);
 	~Boomerang();
