@@ -81,7 +81,7 @@
 #define simon_hurt_vy -0.3
 #define simon_hurt_vx 0.1
 #define simon_dead_vy 1000
-#define simon_untouchtime 2000
+#define simon_untouchtime 1500
 #define simon_watertime 4000
 #define max_sub 3
 #define mana_use 5

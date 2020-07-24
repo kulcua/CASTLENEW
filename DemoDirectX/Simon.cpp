@@ -513,6 +513,28 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 				}
 			}
 		}
+		else if (dynamic_cast<FireBall*>(e))
+		{
+			FireBall* fireball = dynamic_cast<FireBall*>(e);
+			fireball->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
+			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp())
+			{
+				untouchtime->Start();
+				loseHp(fireball->getDamage());
+				if (isStandOnStair == false)
+				{
+					if (e->nx != 0)
+					{
+						if (e->nx == 1)
+							SetNx(-1);
+						else
+							SetNx(1);
+					}
+					SetState(simon_ani_hurt);
+				}
+			}
+
+		}
 		else if (dynamic_cast<Raven*>(e))
 		{
 			Raven* raven = dynamic_cast<Raven*>(e);

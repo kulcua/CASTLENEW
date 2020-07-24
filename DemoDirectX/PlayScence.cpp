@@ -650,7 +650,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		for (int row = top; row < bot; row++)
 		{
 			for (int col = left; col < right; col++)
-				grid->PushGridStart(obj, row, col);
+				grid->PushGridStart(/*obj*/boss, row, col);
 		}
 		break;
 	}
@@ -1096,6 +1096,11 @@ void CPlayScene::Update(DWORD dt)
 			Skeleton* skele = dynamic_cast<Skeleton*>(objects[i]);
 			for(int i=0;i< max_bone;i++)
 				coObjects.push_back(skele->getBone()[i]);
+		}
+		if (dynamic_cast<Boss*>(objects[i]))
+		{
+			Boss *boss = dynamic_cast<Boss*>(objects[i]);
+			coObjects.push_back(boss->getFireBall());
 		}
 
 		coObjects.push_back(objects[i]);

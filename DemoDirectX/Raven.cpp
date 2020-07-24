@@ -137,7 +137,7 @@ void Raven::SetState(int State)
 bool Raven::CheckCam()
 {
 	CGame *game = CGame::GetInstance();
-	return (x >= game->GetCamPosX() + 10 && x < game->GetCamPosX() + (SCREEN_WIDTH-50) && y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT - 10));
+	return (x >= game->GetCamPosX() + 10 && x < game->GetCamPosX() + (SCREEN_WIDTH) && y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT - 30));
 }
 
 int Raven::getHp()

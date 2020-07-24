@@ -10,6 +10,7 @@ Knife::Knife()
 
 void Knife::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	aabbmob(coObjects);
 	SubWeapon::collisionwith(dt, coObjects);
 }
 
@@ -36,7 +37,7 @@ void Knife::Render()
 
 	SubWeapon::renderlisthit();
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 
 }
 
@@ -59,15 +60,42 @@ void Knife::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	{
 		left = x;
 		top = y;
-		right = left + knife_box_width;
+		right = left + 28;//knife_box_width;
 		bottom = top + knife_box_height;
 	}
 
 }
 
+void Knife::aabbmob(vector<LPGAMEOBJECT>* listmob)
+{
+	float l, t, r, b, l_mob, t_mob, r_mob, b_mob;
+	this->GetBoundingBox(l, t, r, b);
+	for (int i = 0; i < listmob->size(); i++)
+	{
+		LPGAMEOBJECT e = listmob->at(i);
+		if (dynamic_cast<Skeleton*>(e))
+		{
+			Skeleton *skele = dynamic_cast<Skeleton*>(e);
+			skele->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
+			if (CGameObject::AABBCheck(l, t, r, b, l_mob, t_mob, r_mob, b_mob))
+			{
+				skele->loseHp(dame_into_skele);
+				if (skele->GetState() != skeleton_ani_die)
+					listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + add_dis_hit));
+
+
+				if (skele->getHp() <= 0)
+					skele->SetState(skeleton_ani_die);
+				isDone = true;
+				isFire = false;
+			}
+		}
+	}
+}
+
 void Knife::SetPosSubWeapon(D3DXVECTOR3 pos, bool isstanding)
 {
-	SubWeapon::SetPosSubWeapon(D3DXVECTOR3(pos.x, pos.y, 0), isstanding);
+	SubWeapon::SetPosSubWeapon(D3DXVECTOR3(pos.x+5, pos.y, 0), isstanding);
 	POSX = pos.x;
 }
 

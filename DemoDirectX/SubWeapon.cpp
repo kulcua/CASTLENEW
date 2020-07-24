@@ -108,7 +108,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				Candle *candle = dynamic_cast<Candle *>(e->obj);
 
-				if (e->nx != 0 || e->ny != 0)
+				//if (e->nx != 0 || e->ny != 0)
 				{
 					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + add_dis_hit));
 					candle->SetState(break_candle);
@@ -121,7 +121,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				Knight *knight = dynamic_cast<Knight*>(e->obj);
 				
-				if (e->nx != 0 || e->ny != 0)
+				//if (e->nx != 0 || e->ny != 0)
 				{
 					knight->loseHp(dame_into_knight);
 					if (knight->GetState() != knight_ani_die)
@@ -138,7 +138,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				Bat  *bat = dynamic_cast<Bat*>(e->obj);
 
-				if (e->nx != 0 || e->ny != 0)
+				//if (e->nx != 0 || e->ny != 0)
 				{
 					bat->loseHp(dame_into_bat);
 					if(bat->GetState()!=bat_ani_die)
@@ -155,7 +155,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				Monkey *monkey = dynamic_cast<Monkey*>(e->obj);
 
-				if (e->nx != 0 || e->ny != 0)
+				//if (e->nx != 0 || e->ny != 0)
 				{
 					monkey->loseHp(dame_into_monkey);
 					if (monkey->GetState() != monkey_ani_die)
@@ -195,7 +195,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				SmallCandle *candle = dynamic_cast<SmallCandle *>(e->obj);
 
-				if (e->nx != 0 || e->ny != 0)
+				//if (e->nx != 0 || e->ny != 0)
 				{
 					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + add_dis_hit));
 					candle->SetState(break_candle);
@@ -206,9 +206,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Skeleton*>(e->obj))
 			{
-				Skeleton *skele = dynamic_cast<Skeleton*>(e->obj);
-
-				//if (e->nx != 0 || e->ny != 0)
+				/*Skeleton *skele = dynamic_cast<Skeleton*>(e->obj);
 				{
 					skele->loseHp(dame_into_skele);
 					if (skele->GetState() != skeleton_ani_die)
@@ -219,13 +217,13 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						skele->SetState(skeleton_ani_die);
 					isDone = true;
 					isFire = false;
-				}
+				}*/
 			}
 			else if (dynamic_cast<Raven*>(e->obj))
 			{
 				Raven *raven = dynamic_cast<Raven*>(e->obj);
 
-				if (e->nx != 0 || e->ny != 0)
+				//if (e->nx != 0 || e->ny != 0)
 				{
 					raven->loseHp(dame_into_raven);
 					if (raven->GetState() != raven_ani_die)
@@ -242,7 +240,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				Zombie *zombie = dynamic_cast<Zombie*>(e->obj);
 
-				if (e->nx != 0 || e->ny != 0)
+				//if (e->nx != 0 || e->ny != 0)
 				{
 					zombie->colliwhip = true;
 					zombie->loseHp(dame_into_zombie);

@@ -8,6 +8,7 @@ Boss::Boss(LPGAMEOBJECT s)
 	hp = boss_max_hp;//1; 
 	damage = boss_damage;
 	score = boss_score;
+	fireball = new FireBall();
 }
 
 void Boss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject, bool clk)
@@ -16,6 +17,8 @@ void Boss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject, bool clk)
 	Enemy::Update(dt);
 	
 	
+
+
 
 	if (state == boss_ani_die && animation_set->at(boss_ani_die)->RenderOver(boss_time))
 	{
@@ -170,12 +173,30 @@ void Boss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject, bool clk)
 
 	}
 
+
+	if (!fireball->isDone&&vx == 0 && vy == 0 && checkactive &&state != boss_ani_die)
+	{
+		if (!fireball->checkset)
+		{
+			fireball->setpos(D3DXVECTOR2(x, y));
+			fireball->setspeed(s->x, s->y,this->nx,this->ny);
+			fireball->checkset = true;
+		}
+
+	}
+	fireball->Update(dt);
+	if (fireball->isDone)
+		fireball->isDone = false;
+
+
+
 	x += dx;
 	y += dy;
 }
 
 void Boss::Render()
 {
+	fireball->Render();
 	if (!isDone)
 		animation_set->at(state)->Render(1, x, y);
 	else return;

@@ -28,8 +28,9 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 	COOBJECTS.push_back(simon);
 
+	
 	CalcPotentialCollisions(&COOBJECTS, coEvents);
-
+	aabbmob(&COOBJECTS);
 	if (coEvents.size() == 0)
 	{
 		x += dx;
@@ -157,7 +158,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				x += dx;
 				SmallCandle *candle = dynamic_cast<SmallCandle *>(e->obj);
 
-				if (e->nx != 0 || e->ny != 0)
+				if (candle->GetState() != break_candle)
 				{
 					listHit.push_back(CreateHit(candle->GetPositionX(), candle->GetPositionY() + add_dis_hit));
 					candle->SetState(break_candle);
@@ -166,17 +167,17 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			else if (dynamic_cast<Skeleton*>(e->obj))
 			{
 				x += dx;
-				Skeleton *skele = dynamic_cast<Skeleton*>(e->obj);
+				//Skeleton *skele = dynamic_cast<Skeleton*>(e->obj);
 
-				//if (e->nx != 0 || e->ny != 0)
-				{
-					skele->loseHp(dame_into_skele);
-					if (skele->GetState() != skeleton_ani_die)
-						listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + add_dis_hit));
+				////if (e->nx != 0 || e->ny != 0)
+				//{
+				//	skele->loseHp(dame_into_skele);
+				//	if (skele->GetState() != skeleton_ani_die)
+				//		listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + add_dis_hit));
 
-					if (skele->getHp() <= 0)
-						skele->SetState(skeleton_ani_die);
-				}
+				//	if (skele->getHp() <= 0)
+				//		skele->SetState(skeleton_ani_die);
+				//}
 			}
 			else if (dynamic_cast<Raven*>(e->obj))
 			{
@@ -247,6 +248,31 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		delete coEvents[i];
 }
 
+void Boomerang::aabbmob(vector<LPGAMEOBJECT>* listmob)
+{
+	float l, t, r, b, l_mob, t_mob, r_mob, b_mob;
+	this->GetBoundingBox(l, t, r, b);
+	for (int i = 0; i < listmob->size(); i++)
+	{
+		LPGAMEOBJECT e = listmob->at(i);
+		if (dynamic_cast<Skeleton*>(e))
+		{
+			Skeleton *skele = dynamic_cast<Skeleton*>(e);
+			skele->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
+			if (CGameObject::AABBCheck(l, t, r, b, l_mob, t_mob, r_mob, b_mob))
+			{
+				skele->loseHp(dame_into_skele);
+				if (skele->GetState() != skeleton_ani_die)
+					listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + add_dis_hit));
+
+
+				if (skele->getHp() <= 0)
+					skele->SetState(skeleton_ani_die);
+			}
+		}
+	}
+}
+
 void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	/*if (GetTickCount() - timereset >= 30)
@@ -309,6 +335,7 @@ void Boomerang::SetPosSubWeapon(D3DXVECTOR3 pos, bool isstanding)
 
 bool Boomerang::CheckPosKnife(float a)
 {
+
 	if (vx > 0)
 	{
 		if (x - a >= ((SCREEN_WIDTH / 2) + add_dis_cam))

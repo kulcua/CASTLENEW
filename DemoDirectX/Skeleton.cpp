@@ -188,7 +188,7 @@ void Skeleton::Render()
 		animation_set->at(state)->Render(nx, x, y);
 	}
 	else return;
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Skeleton::SetState(int State)

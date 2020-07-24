@@ -62,7 +62,6 @@ void Grid::PushGridStart(LPGAMEOBJECT obj, int row, int col)
 void Grid::ResetGrid(vector<LPGAMEOBJECT> list)
 {
 	ClearGrid((int)this->map_height / cell_height, (int)this->map_width / cell_width);
-
 	PushGrid(list);
 }
 
@@ -93,6 +92,7 @@ void Grid::GetGrid(vector<LPGAMEOBJECT> &list)
 			}
 		}
 	}
+
 
 	/*for (int i = 0; i < totalRow; i++)
 		for (int j = firstCol; j < lastCol; j++)
