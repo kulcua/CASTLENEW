@@ -51,6 +51,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			if (dynamic_cast<Candle *>(e->obj))
 			{
+				x += dx;
 				Candle *candle = dynamic_cast<Candle *>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -97,7 +98,8 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				x += dx;
 				Frog *frog = dynamic_cast<Frog*>(e->obj);
 
-				if (!checkdamage1)
+
+				if (!checkdamage1&&frog->check)
 				{
 					checkdamage1 = true;
 					if (e->nx != 0)
@@ -119,6 +121,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Monkey*>(e->obj))
 			{
+				x += dx;
 				Monkey *monkey = dynamic_cast<Monkey*>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -135,6 +138,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Bat*>(e->obj))
 			{
+				x += dx;
 				Bat  *bat = dynamic_cast<Bat*>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -150,6 +154,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<SmallCandle *>(e->obj))
 			{
+				x += dx;
 				SmallCandle *candle = dynamic_cast<SmallCandle *>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -160,9 +165,10 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Skeleton*>(e->obj))
 			{
+				x += dx;
 				Skeleton *skele = dynamic_cast<Skeleton*>(e->obj);
 
-				if (e->nx != 0 || e->ny != 0)
+				//if (e->nx != 0 || e->ny != 0)
 				{
 					skele->loseHp(dame_into_skele);
 					if (skele->GetState() != skeleton_ani_die)
@@ -174,6 +180,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Raven*>(e->obj))
 			{
+				x += dx;
 				Raven *raven = dynamic_cast<Raven*>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -190,6 +197,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Zombie*>(e->obj))
 			{
+				x += dx;
 				Zombie *zombie = dynamic_cast<Zombie*>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -212,7 +220,7 @@ void Boomerang::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (!checkdamage1)
 				{
 					checkdamage1 = true;
-					if (e->nx != 0)
+					//if (e->nx != 0)
 					{
 
 						boss->loseHp(dame_into_boss);

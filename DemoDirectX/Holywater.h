@@ -23,6 +23,7 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	void Render();
 	void collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
+	void aabbmob(vector<LPGAMEOBJECT>* listmob);
 	void SetV();
 	void SetPosSubWeapon(D3DXVECTOR3 pos, bool isstanding);
 	bool CheckPosKnife(float a);

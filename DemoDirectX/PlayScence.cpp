@@ -80,8 +80,8 @@ void CPlayScene::LoadBaseObject()
 	//boss = new Boss(simon);
 	board = new Board(simon->GetHealth(), /*boss->hp*/boss_max_hp);
 	tilemap = new TileMap();	
-	grid = new Grid();
-	grididle = new Grid();
+	//grid = new Grid();
+	//grididle = new Grid();
 }
 
 
@@ -89,6 +89,8 @@ void CPlayScene::SwitchScene(int idmap)
 {
 	
 	Unload();
+	grid = new Grid();
+	grididle = new Grid();
 	if (simon->beforescene >= 1)
 		ClearAll(ToLPCWSTR(linkmap[simon->beforescene-1/*idmap - 2*/]));
 	CGame::GetInstance()->SetKeyHandler(this->GetKeyEventHandler());
@@ -96,8 +98,8 @@ void CPlayScene::SwitchScene(int idmap)
 	Load(a);
 	LoadMap(a);
 	LoadObject();
-	grid->PushGrid(listpush);
-	grididle->PushGrid(listidle);
+	//grid->PushGrid(listpush);
+	//grididle->PushGrid(listidle);
 	CGame::GetInstance()->SetCamPos(CGame::GetInstance()->GetCamPosX(), 0.0f);
 	simon->currentscene=simon->beforescene = idmap;
 }
@@ -375,157 +377,281 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GROUND:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-		
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
 		obj = new Ground();
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		//objects.push_back(obj);
-		//listpush.push_back(obj);
 		listidle.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grididle->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_CANDLE: 
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		int id = atof(tokens[4].c_str());
+		int top = atoi(tokens[5].c_str());
+		int bot = atoi(tokens[6].c_str());
+		int left = atoi(tokens[7].c_str());
+		int right = atoi(tokens[8].c_str());
 		obj = new Candle();
 		obj->idItems = id;
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		//objects.push_back(obj);
 		listpush.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_GATE:
 	{
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
 		obj = new Gate();
 		obj->nextscene = atof(tokens[3].c_str());
 		/*current_scene = NEXTMAP;*/
 		obj->SetPosition(x, y);
-		//listpush.push_back(obj);
 		listidle.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grididle->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_STAIR:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		int top = atoi(tokens[5].c_str());
+		int bot = atoi(tokens[6].c_str());
+		int left = atoi(tokens[7].c_str());
+		int right = atoi(tokens[8].c_str());
 		obj = new Stair();
 		int stairnx = atof(tokens[4].c_str());
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		obj->stairdir = stairnx;
-		listpush.push_back(obj);
+		listidle.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grididle->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_GROUNDMOVING:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
 		obj = new GroundMoving();
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		//objects.push_back(obj);
 		listpush.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_KNIGHT:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-		
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
 		obj = new Knight();
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		listpush.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_BAT:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
 		obj = new Bat(simon);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		//objects.push_back(obj);
 		listpush.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_MONKEY:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
 		obj = new Monkey(simon);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		//objects.push_back(obj);
 		listpush.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_SKELETON:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
 		obj = new Skeleton(simon);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
-		//objects.push_back(obj);
 		listpush.push_back(obj);
-		//listpush.push_back(asd->GetBone());
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_FROG:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
 		obj = new Frog(simon);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		listpush.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_DRAVEN:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
 		obj = new Raven(simon);
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		listpush.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_BREAKWALL:
 	{
 		int id = atoi(tokens[4].c_str());
+		int top = atoi(tokens[5].c_str());
+		int bot = atoi(tokens[6].c_str());
+		int left = atoi(tokens[7].c_str());
+		int right = atoi(tokens[8].c_str());
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new BreakWall();
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		obj->idItems = id;
 		listpush.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_SMALLCANDLE:
 	{
 		int id = atoi(tokens[4].c_str());
+		int top = atoi(tokens[5].c_str());
+		int bot = atoi(tokens[6].c_str());
+		int left = atoi(tokens[7].c_str());
+		int right = atoi(tokens[8].c_str());
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new SmallCandle();
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		obj->idItems = id;
 		listpush.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_ZOMBIE:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		int nx = atoi(tokens[4].c_str());
+		int top = atoi(tokens[5].c_str());
+		int bot = atoi(tokens[6].c_str());
+		int left = atoi(tokens[7].c_str());
+		int right = atoi(tokens[8].c_str());
 		obj = new Zombie();
 		obj->nx = nx;
 		obj->SetAnimationSet(ani_set);
 		obj->SetPosition(x, y);
 		listpush.push_back(obj);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	case OBJECT_TYPE_BOSS:
 	{
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		int top = atoi(tokens[4].c_str());
+		int bot = atoi(tokens[5].c_str());
+		int left = atoi(tokens[6].c_str());
+		int right = atoi(tokens[7].c_str());
 		boss = new Boss(simon);
 		boss->SetAnimationSet(ani_set);
 		boss->SetPosition(x, y);
 		listpush.push_back(boss);
+		for (int row = top; row < bot; row++)
+		{
+			for (int col = left; col < right; col++)
+				grid->PushGridStart(obj, row, col);
+		}
 		break;
 	}
 	default:
@@ -949,7 +1075,8 @@ void CPlayScene::Revival()
 
 void CPlayScene::Update(DWORD dt)
 {
-	
+	grid->CheckCamGrid(listpush);
+	grididle->CheckCamGrid(listidle);
 	GetObjectGrid();
 
 	if (timerclk->IsTimeUp())
@@ -1355,7 +1482,12 @@ void CPlayScene::Unload()
 
 	listpush.clear();
 	listidle.clear();
-	//simon = NULL;
+	
+	delete grid;
+	delete grididle;
+	grid = NULL;
+	grididle = NULL;
+
 
 	boss = nullptr;
 }

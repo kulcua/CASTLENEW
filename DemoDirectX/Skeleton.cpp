@@ -188,7 +188,7 @@ void Skeleton::Render()
 		animation_set->at(state)->Render(nx, x, y);
 	}
 	else return;
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void Skeleton::SetState(int State)
@@ -214,12 +214,17 @@ int Skeleton::getHp()
 
 void Skeleton::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
+	l = x;
+	t = y;
 	if (state != skeleton_ani_die)
 	{
-		l = x;
-		t = y;
 		r = l + skeleton_box_width;
 		b = t + skeleton_box_height;
+	}
+	else if (state == skeleton_ani_die)
+	{
+		r = l + 1;
+		b = t + 1;
 	}
 }
 

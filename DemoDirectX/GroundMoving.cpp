@@ -23,7 +23,7 @@ void GroundMoving::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects,bool clk)
 	if (coEvents.size() == 0)
 	{
 		x += dx;
-		y += dy;
+		//y += dy;
 	}
 	else
 	{
@@ -33,7 +33,7 @@ void GroundMoving::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects,bool clk)
 
 		// block 
 		x += min_tx * dx + nx * 0.1f;		
-		y += min_ty * dy + ny * 0.1f;
+		//y += min_ty * dy + ny * 1.9f;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{

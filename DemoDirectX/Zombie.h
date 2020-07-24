@@ -11,7 +11,7 @@
 #define zombie_damage 2
 #define zombie_score 100
 #define zombie_gra 0.02
-#define zombie_vx 0.14
+#define zombie_vx 0.15
 class Zombie :public Enemy
 {
 public:

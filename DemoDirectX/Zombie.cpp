@@ -116,12 +116,17 @@ int Zombie::getHp()
 
 void Zombie::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
+	l = x;
+	t = y;
 	if (state != zombie_ani_die)
 	{
-		l = x;
-		t = y;
 		r = l + zombie_box_width;
 		b = t + zombie_box_height;
+	}
+	else if (state == zombie_ani_die)
+	{
+		r = l + 1;
+		b = t + 1;
 	}
 }
 
@@ -134,7 +139,7 @@ void Zombie::loseHp(int x)
 bool Zombie::CheckCam()
 {
 	CGame *game = CGame::GetInstance();
-	return (x >= game->GetCamPosX() + 10 && x < game->GetCamPosX() + (SCREEN_WIDTH-10) && y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT));
+	return (x >= game->GetCamPosX() - 10 && x < game->GetCamPosX() + (SCREEN_WIDTH-10) && y >= game->GetCamPosY() && y < game->GetCamPosY() + (SCREEN_HEIGHT));
 }
 
 Zombie::~Zombie()

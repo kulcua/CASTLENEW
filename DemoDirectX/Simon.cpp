@@ -343,7 +343,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 		{
 			Knight* knight = dynamic_cast<Knight*>(e);
 			knight->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
-			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp()&& state != simon_ani_led)
+			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led && knight->GetState() != knight_ani_die)
 			{
 				untouchtime->Start();
 				loseHp(knight->getDamage());
@@ -390,7 +390,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 		{
 			Frog* frog = dynamic_cast<Frog*>(e);
 			frog->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
-			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led)
+			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led && frog->GetState()!=frog_ani_die &&frog->check)
 			{
 				untouchtime->Start();
 				loseHp(frog->getDamage());
@@ -411,7 +411,7 @@ void Simon::SimonColliWithMob(vector<LPGAMEOBJECT> *listmob)
 		{
 			Monkey* monkey = dynamic_cast<Monkey*>(e);
 			monkey->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
-			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led)
+			if (CGameObject::AABBCheck(l_mob, t_mob, r_mob, b_mob, l_simon, t_simon, r_simon, b_simon) && untouchtime->IsTimeUp() && watertime->IsTimeUp() && state != simon_ani_led && monkey->GetState()!=monkey_ani_die)
 			{
 				untouchtime->Start();
 				loseHp(monkey->getDamage());

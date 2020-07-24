@@ -112,7 +112,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				float left, top, right, bottom;
 				e->GetBoundingBox(left, top, right, bottom);
 
-				if (WhipCheckColli(left, top, right, bottom))
+				if (WhipCheckColli(left, top, right, bottom)&&e->check)
 				{
 					if (!delaydamage)
 					{

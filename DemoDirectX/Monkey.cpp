@@ -126,7 +126,7 @@ void Monkey::Render()
 	if (!isDone)
 		animation_set->at(state)->Render(nx, x, y);
 	else return;
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Monkey::SetState(int State)
@@ -150,12 +150,17 @@ int Monkey::getHp()
 
 void Monkey::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
+	l = x;
+	t = y;
 	if (state != monkey_ani_die)
 	{
-		l = x;
-		t = y;
 		r = l + monkey_box_width;
 		b = t + monkey_box_height;
+	}
+	else if (state == monkey_ani_die)
+	{
+		r = l + 1;
+		b = t + 1;
 	}
 }
 

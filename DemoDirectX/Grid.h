@@ -17,5 +17,8 @@ public:
 	void ResetGrid(vector<LPGAMEOBJECT> list);
 	void PushGrid(vector<LPGAMEOBJECT> list);
 	void GetGrid(vector<LPGAMEOBJECT> &list);
+	void PushGridStart(LPGAMEOBJECT obj, int row, int col);
+	void CheckCamGrid(vector<LPGAMEOBJECT>& list);
+
 };
 

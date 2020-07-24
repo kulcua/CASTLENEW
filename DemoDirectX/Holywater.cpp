@@ -7,6 +7,32 @@ Holywater::Holywater()
 	isFire = false;
 	holyWaterShatteredCounter = 0;
 }
+
+void Holywater::aabbmob(vector<LPGAMEOBJECT>* listmob)
+{
+	float l, t, r, b, l_mob, t_mob, r_mob, b_mob;
+	this->GetBoundingBox(l, t, r, b);
+	for (int i = 0; i < listmob->size(); i++)
+	{
+		LPGAMEOBJECT e = listmob->at(i);
+		if (dynamic_cast<Skeleton*>(e))
+		{
+			Skeleton *skele = dynamic_cast<Skeleton*>(e);
+			skele->GetBoundingBox(l_mob, t_mob, r_mob, b_mob);
+			if (CGameObject::AABBCheck(l, t, r, b, l_mob, t_mob, r_mob, b_mob))
+			{
+				skele->loseHp(dame_into_skele);
+				if (skele->GetState() != skeleton_ani_die)
+					listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + add_dis_hit));
+
+
+				if (skele->getHp() <= 0)
+					skele->SetState(skeleton_ani_die);
+			}
+		}
+	}
+}
+
 void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -24,7 +50,7 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
-
+	aabbmob(&COOBJECTS);
 	CalcPotentialCollisions(&COOBJECTS, coEvents);
 
 	if (coEvents.size() == 0)
@@ -46,6 +72,8 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			if (dynamic_cast<Candle *>(e->obj))
 			{
+				x += dx;
+				y += dy;
 				Candle *candle = dynamic_cast<Candle *>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -92,6 +120,8 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Bat*>(e->obj))
 			{
+				x += dx;
+				y += dy;
 				Bat  *bat = dynamic_cast<Bat*>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -108,6 +138,8 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Monkey*>(e->obj))
 			{
+				x += dx;
+				y += dy;
 				Monkey *monkey = dynamic_cast<Monkey*>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -127,7 +159,7 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				x += dx;
 				y += dy;
 				Frog *frog = dynamic_cast<Frog*>(e->obj);
-				if (!checkdamage1)
+				if (!checkdamage1&&frog->check)
 				{
 					checkdamage1 = true;
 					if (e->nx != 0 || e->ny != 0)
@@ -148,6 +180,8 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<SmallCandle *>(e->obj))
 			{
+				x += dx;
+				y += dy;
 				SmallCandle *candle = dynamic_cast<SmallCandle *>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -159,21 +193,25 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Skeleton*>(e->obj))
 			{
-				Skeleton *skele = dynamic_cast<Skeleton*>(e->obj);
+				x += dx;
+				y += dy;
+				//Skeleton *skele = dynamic_cast<Skeleton*>(e->obj);
 
-				if (e->nx != 0 || e->ny != 0)
-				{
-					skele->loseHp(dame_into_skele);
-					if (skele->GetState() != skeleton_ani_die)
-						listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + add_dis_hit));
+				////if (e->nx != 0 || e->ny != 0)
+				//{
+				//	skele->loseHp(dame_into_skele);
+				//	if (skele->GetState() != skeleton_ani_die)
+				//		listHit.push_back(CreateHit(skele->GetPositionX(), skele->GetPositionY() + add_dis_hit));
 
 
-					if (skele->getHp() <= 0)
-						skele->SetState(skeleton_ani_die);
-				}
+				//	if (skele->getHp() <= 0)
+				//		skele->SetState(skeleton_ani_die);
+				//}
 			}
 			else if (dynamic_cast<Raven*>(e->obj))
 			{
+				x += dx;
+				y += dy;
 				Raven *raven = dynamic_cast<Raven*>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -189,6 +227,8 @@ void Holywater::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Zombie*>(e->obj))
 			{
+				x += dx;
+				y += dy;
 				Zombie *zombie = dynamic_cast<Zombie*>(e->obj);
 
 				if (e->nx != 0 || e->ny != 0)
@@ -298,9 +338,10 @@ void Holywater::GetBoundingBox(float &left, float &top, float &right, float &bot
 	}
 
 }
+
 void Holywater::SetPosSubWeapon(D3DXVECTOR3 pos, bool isstanding)
 {
-	SubWeapon::SetPosSubWeapon(D3DXVECTOR3(pos.x, pos.y, 0), isstanding);
+	SubWeapon::SetPosSubWeapon(D3DXVECTOR3(pos.x+5, pos.y, 0), isstanding);
 	POSX = pos.x;
 }
 

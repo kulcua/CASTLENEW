@@ -24,12 +24,17 @@ void SmallCandle::Render()
 
 void SmallCandle::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
+	l = x;
+	t = y;
 	if (state != break_candle)
 	{
-		l = x;
-		t = y;
 		r = l + smallcandle_box_width;
 		b = t + smallcandle_box_height;
+	}
+	else if (state == break_candle)
+	{
+		r = l + 1;
+		b = t + 1;
 	}
 }
 

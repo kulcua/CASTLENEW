@@ -65,6 +65,8 @@ public:
 	int nextscene;
 	int hp ;
 
+	bool checkoncam;
+
 	DWORD dt;
 
 	//vector<LPANIMATION> animations;

@@ -147,12 +147,18 @@ int Raven::getHp()
 
 void Raven::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
+
+	l = x;
+	t = y;
 	if (state != raven_ani_die)
 	{
-		l = x;
-		t = y;
 		r = l + raven_box_width;
 		b = t + raven_box_height;
+	}
+	else if (state == raven_ani_die)
+	{
+		r = l + 1;
+		b = t + 1;
 	}
 }
 

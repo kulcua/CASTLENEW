@@ -97,8 +97,8 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
+		//if (nx != 0) vx = 0;
+		//if (ny != 0) vy = 0;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
@@ -171,8 +171,14 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			else if (dynamic_cast<Frog*>(e->obj))
 			{
 				Frog *frog = dynamic_cast<Frog*>(e->obj);
+				if (!frog->check)
+				{
+					x += dx;
+					y += dy;
+				}
 
-				if (e->nx != 0 || e->ny != 0)
+
+				if ((e->nx != 0 || e->ny != 0)&&frog->check)
 				{
 					frog->loseHp(dame_into_frog);
 					if (frog->GetState() != frog_ani_die)
@@ -202,7 +208,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				Skeleton *skele = dynamic_cast<Skeleton*>(e->obj);
 
-				if (e->nx != 0 || e->ny != 0)
+				//if (e->nx != 0 || e->ny != 0)
 				{
 					skele->loseHp(dame_into_skele);
 					if (skele->GetState() != skeleton_ani_die)
@@ -253,7 +259,7 @@ void SubWeapon::collisionwith(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				Boss *boss = dynamic_cast<Boss*>(e->obj);
 				
-				if (e->nx != 0 || e->ny != 0)
+				//if (e->nx != 0 || e->ny != 0)
 				{
 					boss->loseHp(dame_into_boss);
 					if (boss->GetState() != boss_ani_die)

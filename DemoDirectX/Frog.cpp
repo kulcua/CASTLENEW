@@ -107,12 +107,17 @@ int Frog::getHp()
 
 void Frog::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
-	if (check&&state!=frog_ani_die)
+	l = x;
+	t = y;
+	if (state != frog_ani_die)
 	{
-		l = x;
-		t = y;
 		r = l + frog_box_width;
 		b = t + frog_box_height;
+	}
+	else if (state == frog_ani_die)
+	{
+		r = l+1;
+		b = t+1;
 	}
 }
 

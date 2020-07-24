@@ -108,12 +108,17 @@ int Bat::getHp()
 
 void Bat::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
+	l = x;
+	t = y;
 	if (state != bat_ani_die)
 	{
-		l = x;
-		t = y;
 		r = l + bat_box_width;
 		b = t + bat_box_height;
+	}
+	else if (state == bat_ani_die)
+	{
+		r = l + 1;
+		b = t + 1;
 	}
 }
 

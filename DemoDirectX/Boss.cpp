@@ -203,12 +203,17 @@ int Boss::getHp()
 
 void Boss::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
+	l = x + 13;
+	t = y;
 	if (state != boss_ani_die)
 	{
-		l = x+13;
-		t = y;
 		r = l + boss_box_width;
 		b = t + boss_box_height;
+	}
+	else if (state == boss_ani_die)
+	{
+		r = l + 1;
+		b = t + 1;
 	}
 }
 

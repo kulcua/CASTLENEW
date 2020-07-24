@@ -21,10 +21,8 @@
 class Frog :public Enemy
 {
 	LPGAMEOBJECT simon;
-	bool check;
-	
-	
 public:
+	bool check;
 	DWORD timestop;
 	Frog(LPGAMEOBJECT simon);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL,bool clk=false);
